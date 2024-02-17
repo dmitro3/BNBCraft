@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { useControls } from 'leva'
 import { useGLTF, GizmoHelper, GizmoViewport, OrbitControls, Center, softShadows } from '@react-three/drei'
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 import { useRef, useState, useContext } from 'react'
 import { PivotControls } from './pivotControls/index.tsx'
@@ -21,9 +21,12 @@ export default function App() {
 
 
 
-const Model = ({ assetLink }) => {
+const Model = ({ assetLink , assetIdentifer }) => {
   const gltf = useLoader(GLTFLoader, assetLink);
-  return <primitive object={gltf.scene} />;
+  return (
+  <PivotControls assetIdentifier={assetIdentifer}>
+  <primitive object={gltf.scene.clone()} />;
+  </PivotControls>)
 };
 
 function Scene() {
