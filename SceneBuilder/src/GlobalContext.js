@@ -4,6 +4,7 @@ import { useState } from "react";
 const GlobalContext = createContext();
 const initialState = {
   objectMaster: [],
+  currentObjectIdentifier: "",
 };
 
 const reducer = (state, action) => {
@@ -47,6 +48,12 @@ const reducer = (state, action) => {
 
           return object;
         }),
+      };
+
+    case "SET_CURRENT_OBJECT":
+      return {
+        ...state,
+        currentObjectIdentifier: action.payload.assetIdentifier,
       };
 
     default:

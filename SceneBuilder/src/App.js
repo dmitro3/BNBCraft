@@ -1,14 +1,14 @@
+import { useRef, useState, useContext } from 'react'
+import { useEffect } from 'react'
+import { GlobalContext, GlobalContextProvider } from './GlobalContext'
+
 import * as THREE from 'three'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { useControls } from 'leva'
 import { useGLTF, GizmoHelper, GizmoViewport, OrbitControls, Center, softShadows } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-import { useRef, useState, useContext } from 'react'
 import { PivotControls } from './pivotControls/index.tsx'
-
-import { GlobalContext, GlobalContextProvider} from './GlobalContext'
-import { useEffect } from 'react'
 
 softShadows()
 
@@ -22,42 +22,47 @@ export default function App() {
 
 // for testing https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr
 
-
-
-
 function Scene() {
   const ref = useRef()
   const { attach } = useControls({ attach: false })
-  
 
   const { state, dispatch } = useContext(GlobalContext)
   const { objectMaster } = state
-  
 
-  // Add Object
-  const [assetIdentifer, setAssetIdentifer] = useState('<not_set>')
-  const [assetLink, setAssetLink] = useState('<not_set>')
 
-  const Model = ({ assetLink , assetIdentifer }) => {
+  const Model = ({ assetLink, assetIdentifer }) => {
     const gltf = useLoader(GLTFLoader, assetLink);
     const [hovered, setHovered] = useState(false)
-    
+
     useEffect(() => {
       document.body.style.cursor = hovered ? 'grab' : 'auto'
     }, [hovered])
-    
+
     return (
       <PivotControls assetIdentifier={assetIdentifer}>
-    <primitive object={gltf.scene.clone()} 
-    onClick={(e)=>setId(assetIdentifer)}
-    onPointerEnter={(e) => setHovered(true)}
-    onPointerOut={(e) => setHovered(false)}/>;
-    </PivotControls>)
+        <primitive object={gltf.scene.clone()}
+          onClick={(e) => {
+            dispatch({
+              type: "SET_CURRENT_OBJECT",
+              payload: {
+                assetIdentifier: assetIdentifer
+              }
+            })
+
+            setId(assetIdentifer)
+          }}
+          onPointerEnter={(e) => setHovered(true)}
+          onPointerOut={(e) => setHovered(false)} />;
+      </PivotControls>)
   };
 
   function setId(id) {
     setAssetIdentifer(id)
   }
+
+  // Add Object
+  const [assetIdentifer, setAssetIdentifer] = useState('<not_set>')
+  const [assetLink, setAssetLink] = useState('<not_set>')
 
   const AddAction = () => {
     const AddAction = {
@@ -105,11 +110,17 @@ function Scene() {
             </>
           }
           <ambientLight intensity={0.5} />
-          <directionalLight castShadow position={[2.5, 5, 5]} intensity={1.5} shadow-mapSize={[1024, 1024]}>
+          <directionalLight
+            castShadow
+            position={[2.5, 5, 5]}
+            intensity={1.5}
+            shadow-mapSize={[1024, 1024]}>
             <orthographicCamera attach="shadow-camera" args={[-5, 5, 5, -5, 1, 50]} />
           </directionalLight>
 
-          <mesh scale={20} receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
+          <mesh scale={20}
+            receiveShadow
+            rotation={[-Math.PI / 2, 0, 0]}>
             <planeGeometry />
             <shadowMaterial transparent opacity={0.2} />
           </mesh>
@@ -120,6 +131,7 @@ function Scene() {
           <OrbitControls makeDefault />
         </Canvas>
       </div>
+
       {/* Panel */}
       <div style={{ width: "25%" }}>
         <div className='panel' style={{ height: "100vh" }}>
@@ -127,16 +139,18 @@ function Scene() {
             {/* Add Panel */}
             <div style={{ border: '1px solid black', padding: '10px', marginBottom: "10px" }}>
               <h2>Add Object</h2>
-              <input type='text' placeholder='Asset Identifier' onChange={(e) => setAssetIdentifer(e.target.value)} value= {assetIdentifer} />
+              <input type='text' placeholder='Asset Identifier' onChange={(e) => setAssetIdentifer(e.target.value)} value={assetIdentifer} />
               <input type='text' placeholder='Asset Link' onChange={(e) => setAssetLink(e.target.value)} />
               <button onClick={AddAction}>Add</button>
             </div>
+
             {/* Delete Panel */}
             <div style={{ border: '1px solid black', padding: '10px', marginBottom: "10px" }}>
               <h2>Delete Object</h2>
               <input type='text' placeholder='Asset Identifier' onChange={(e) => setAssetIdentifer(e.target.value)} />
               <button onClick={() => DeleteAction(assetIdentifer)}>Delete</button>
             </div>
+
             {/* Object Master */}
             <div style={{ border: '1px solid black', padding: '10px', marginBottom: "10px" }}>
               <h2>Object Master</h2>
@@ -185,5 +199,3 @@ function Scene() {
     </div>
   )
 }
-
-
