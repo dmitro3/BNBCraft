@@ -22,39 +22,42 @@ export default function App() {
 
 // for testing https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr
 
-function setId(id) {
-  // set the global identifier value in this function
-  console.log(id)
-}
 
 
-const Model = ({ assetLink , assetIdentifer }) => {
-  const gltf = useLoader(GLTFLoader, assetLink);
-  const [hovered, setHovered] = useState(false)
-
-  useEffect(() => {
-    document.body.style.cursor = hovered ? 'grab' : 'auto'
-  }, [hovered])
-
-  return (
-  <PivotControls assetIdentifier={assetIdentifer}>
-  <primitive object={gltf.scene.clone()} 
-  onClick={(e)=>setId(assetIdentifer)}
-  onPointerEnter={(e) => setHovered(true)}
-  onPointerOut={(e) => setHovered(false)}/>;
-  </PivotControls>)
-};
 
 function Scene() {
   const ref = useRef()
   const { attach } = useControls({ attach: false })
+  
 
   const { state, dispatch } = useContext(GlobalContext)
   const { objectMaster } = state
+  
 
   // Add Object
   const [assetIdentifer, setAssetIdentifer] = useState('<not_set>')
   const [assetLink, setAssetLink] = useState('<not_set>')
+
+  const Model = ({ assetLink , assetIdentifer }) => {
+    const gltf = useLoader(GLTFLoader, assetLink);
+    const [hovered, setHovered] = useState(false)
+    
+    useEffect(() => {
+      document.body.style.cursor = hovered ? 'grab' : 'auto'
+    }, [hovered])
+    
+    return (
+      <PivotControls assetIdentifier={assetIdentifer}>
+    <primitive object={gltf.scene.clone()} 
+    onClick={(e)=>setId(assetIdentifer)}
+    onPointerEnter={(e) => setHovered(true)}
+    onPointerOut={(e) => setHovered(false)}/>;
+    </PivotControls>)
+  };
+
+  function setId(id) {
+    setAssetIdentifer(id)
+  }
 
   const AddAction = () => {
     const AddAction = {
@@ -124,7 +127,7 @@ function Scene() {
             {/* Add Panel */}
             <div style={{ border: '1px solid black', padding: '10px', marginBottom: "10px" }}>
               <h2>Add Object</h2>
-              <input type='text' placeholder='Asset Identifier' onChange={(e) => setAssetIdentifer(e.target.value)} />
+              <input type='text' placeholder='Asset Identifier' onChange={(e) => setAssetIdentifer(e.target.value)} value= {assetIdentifer} />
               <input type='text' placeholder='Asset Link' onChange={(e) => setAssetLink(e.target.value)} />
               <button onClick={AddAction}>Add</button>
             </div>
