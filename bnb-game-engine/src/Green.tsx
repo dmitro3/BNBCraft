@@ -4,7 +4,7 @@ import './App.css';
 import { Demo } from './components/demo';
 import { Wallet } from './components/wallet';
 
-function App() {
+function Green() {
   const { isConnected } = useAccount();
 
   return (
@@ -15,4 +15,4 @@ function App() {
   )
 }
 
-export default App
+export default Green
