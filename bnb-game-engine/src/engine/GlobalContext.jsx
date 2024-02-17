@@ -15,13 +15,13 @@ const reducer = (state, action) => {
         objectMaster: [
           ...state.objectMaster,
           {
-            asset: action.payload.asset,
             assetIdentifier: action.payload.assetIdentifier,
             assetLink: action.payload.assetLink,
             position: action.payload.position,
             quaternion: action.payload.quaternion,
             scale: action.payload.scale,
             worldMatrix: action.payload.worldMatrix,
+            fixed: action.payload.fixed,
           },
         ],
       };
@@ -51,6 +51,8 @@ const reducer = (state, action) => {
           return object;
         }),
       };
+
+    
 
     case "SET_CURRENT_OBJECT":
       return {

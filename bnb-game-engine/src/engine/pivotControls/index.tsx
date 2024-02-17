@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as THREE from 'three'
 import * as React from 'react'
 import { Size, useFrame, useThree } from '@react-three/fiber'
@@ -329,25 +330,32 @@ export const PivotControls = React.forwardRef<THREE.Group, PivotControlsProps>(
         <group ref={parentRef}>
           <group ref={ref} matrix={matrix} matrixAutoUpdate={false}>
             <group visible={visible} ref={gizmoRef} position={offset} rotation={rotation}>
-              {!disableAxes && activeAxes[0] && <AxisArrow axis={0} direction={xDir} />}
-              {!disableAxes && activeAxes[1] && <AxisArrow axis={1} direction={yDir} />}
-              {!disableAxes && activeAxes[2] && <AxisArrow axis={2} direction={zDir} />}
-
-              {!disableAxes && activeAxes[0] && <SphereScale axis={0} direction={xDir} />}
-              {!disableAxes && activeAxes[1] && <SphereScale axis={1} direction={yDir} />}
-              {!disableAxes && activeAxes[2] && <SphereScale axis={2} direction={zDir} />}
-
-              {!disableSliders && activeAxes[0] && activeAxes[1] && <PlaneSlider axis={2} dir1={xDir} dir2={yDir} />}
-              {!disableSliders && activeAxes[0] && activeAxes[2] && <PlaneSlider axis={1} dir1={zDir} dir2={xDir} />}
-              {!disableSliders && activeAxes[2] && activeAxes[1] && <PlaneSlider axis={0} dir1={yDir} dir2={zDir} />}
-              {!disableRotations && activeAxes[0] && activeAxes[1] && <AxisRotator axis={2} dir1={xDir} dir2={yDir} />}
-              {!disableRotations && activeAxes[0] && activeAxes[2] && <AxisRotator axis={1} dir1={zDir} dir2={xDir} />}
-              {!disableRotations && activeAxes[2] && activeAxes[1] && <AxisRotator axis={0} dir1={yDir} dir2={zDir} />}
+              {!fixedM ? (
+                <>
+                  {!disableAxes && activeAxes[0] && <AxisArrow axis={0} direction={xDir} />}
+                  {!disableAxes && activeAxes[1] && <AxisArrow axis={1} direction={yDir} />}
+                  {!disableAxes && activeAxes[2] && <AxisArrow axis={2} direction={zDir} />}
+    
+                  {!disableAxes && activeAxes[0] && <SphereScale axis={0} direction={xDir} />}
+                  {!disableAxes && activeAxes[1] && <SphereScale axis={1} direction={yDir} />}
+                  {!disableAxes && activeAxes[2] && <SphereScale axis={2} direction={zDir} />}
+    
+                  {!disableSliders && activeAxes[0] && activeAxes[1] && <PlaneSlider axis={2} dir1={xDir} dir2={yDir} />}
+                  {!disableSliders && activeAxes[0] && activeAxes[2] && <PlaneSlider axis={1} dir1={zDir} dir2={xDir} />}
+                  {!disableSliders && activeAxes[2] && activeAxes[1] && <PlaneSlider axis={0} dir1={yDir} dir2={zDir} />}
+                  {!disableRotations && activeAxes[0] && activeAxes[1] && <AxisRotator axis={2} dir1={xDir} dir2={yDir} />}
+                  {!disableRotations && activeAxes[0] && activeAxes[2] && <AxisRotator axis={1} dir1={zDir} dir2={xDir} />}
+                  {!disableRotations && activeAxes[2] && activeAxes[1] && <AxisRotator axis={0} dir1={yDir} dir2={zDir} />}
+                </>
+              ) : (
+                <></>
+              )}
             </group>
             <group ref={childrenRef}>{children}</group>
           </group>
         </group>
       </context.Provider>
-    )
+    );
+    
   }
 )

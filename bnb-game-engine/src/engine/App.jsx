@@ -38,7 +38,7 @@ function Scene() {
     }, [hovered])
 
     return (
-      <PivotControls assetIdentifier={assetIdentifer} collision={collision} fixed={fixed} worldMatrix={worldMatrix}>
+      <PivotControls assetIdentifier={assetIdentifer} collision={collision} fixedM={fixed} worldMatrix={worldMatrix}>
         <Center top position={[2, 0, 2]}>
           <primitive object={gltf.scene.clone()}
             onClick={(e) => {
@@ -69,7 +69,6 @@ function Scene() {
     const AddAction = {
       type: "ADD_OBJECT",
       payload: {
-        asset: <Model assetIdentifer={assetIdentifer} assetLink={assetLink} />,
         link: assetLink,
         assetIdentifier: assetIdentifer,
         assetLink: assetLink,
@@ -182,7 +181,7 @@ function Scene() {
             {/* Delete Panel */}
             <div style={{ border: '1px solid black', padding: '10px', marginBottom: "10px" }}>
               <h2>Delete Object</h2>
-              <input type='text' placeholder='Asset Identifier' onChange={(e) => setAssetIdentifer(e.target.value)} />
+              <input type='text' placeholder='Asset Identifier' onChange={(e) => setAssetIdentifer(e.target.value)} value = {assetIdentifer} />
               <button onClick={() => DeleteAction(assetIdentifer)}>Delete</button>
             </div>
 
