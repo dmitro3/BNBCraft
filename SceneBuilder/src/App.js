@@ -7,7 +7,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { useRef, useState, useContext } from 'react'
 import { PivotControls } from './pivotControls/index.tsx'
 
-import { GlobalContext, GlobalContextProvider } from './GlobalContext'
+import { GlobalContext, GlobalContextProvider} from './GlobalContext'
+import { useEffect } from 'react'
 
 softShadows()
 
@@ -19,13 +20,28 @@ export default function App() {
   )
 }
 
+// for testing https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr
+
+function setId(id) {
+  // set the global identifier value in this function
+  console.log(id)
+}
 
 
 const Model = ({ assetLink , assetIdentifer }) => {
   const gltf = useLoader(GLTFLoader, assetLink);
+  const [hovered, setHovered] = useState(false)
+
+  useEffect(() => {
+    document.body.style.cursor = hovered ? 'grab' : 'auto'
+  }, [hovered])
+
   return (
   <PivotControls assetIdentifier={assetIdentifer}>
-  <primitive object={gltf.scene.clone()} />;
+  <primitive object={gltf.scene.clone()} 
+  onClick={(e)=>setId(assetIdentifer)}
+  onPointerEnter={(e) => setHovered(true)}
+  onPointerOut={(e) => setHovered(false)}/>;
   </PivotControls>)
 };
 
@@ -45,11 +61,14 @@ function Scene() {
       type: "ADD_OBJECT",
       payload: {
         asset: <Model assetIdentifer={assetIdentifer} assetLink={assetLink} />,
+        link: assetLink,
         assetIdentifier: assetIdentifer,
         assetLink: assetLink,
         position: new THREE.Vector3(0, 0, 0),
         quaternion: new THREE.Quaternion(0, 0, 0, 0),
-        scale: new THREE.Vector3(1, 1, 1)
+        scale: new THREE.Vector3(1, 1, 1),
+        collision: 'no', // no, yes, box, hull, trimesh (yes=box)
+        fixed: false // true, false
       }
     }
 

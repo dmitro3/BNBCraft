@@ -1,4 +1,5 @@
 import React, { createContext, useReducer } from "react";
+import { useState } from "react";
 
 const GlobalContext = createContext();
 const initialState = {
@@ -56,7 +57,6 @@ const reducer = (state, action) => {
 
 const GlobalContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
   return (
     <GlobalContext.Provider value={{ state, dispatch }}>
       {children}
@@ -64,4 +64,5 @@ const GlobalContextProvider = ({ children }) => {
   );
 };
 
-export { GlobalContext, GlobalContextProvider };
+
+export { GlobalContext, GlobalContextProvider};
