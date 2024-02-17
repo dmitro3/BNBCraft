@@ -1,7 +1,8 @@
 import * as THREE from 'three'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useLoader } from '@react-three/fiber'
 import { useControls } from 'leva'
 import { useGLTF, GizmoHelper, GizmoViewport, OrbitControls, Center, softShadows } from '@react-three/drei'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader';
 
 import { useRef, useState, useContext } from 'react'
 import { PivotControls } from './pivotControls/index.tsx'
@@ -18,6 +19,13 @@ export default function App() {
   )
 }
 
+
+
+const Model = ({ assetLink }) => {
+  const gltf = useLoader(GLTFLoader, assetLink);
+  return <primitive object={gltf.scene} />;
+};
+
 function Scene() {
   const ref = useRef()
   const { attach } = useControls({ attach: false })
@@ -33,7 +41,7 @@ function Scene() {
     const AddAction = {
       type: "ADD_OBJECT",
       payload: {
-        asset: <Asset assetIdentifer={assetIdentifer} assetLink={assetLink} />,
+        asset: <Model assetIdentifer={assetIdentifer} assetLink={assetLink} />,
         assetIdentifier: assetIdentifer,
         assetLink: assetLink,
         position: new THREE.Vector3(0, 0, 0),
@@ -153,23 +161,4 @@ function Scene() {
   )
 }
 
-function Asset(props) {
-  const { assetIdentifer, assetLink } = props
-  const { nodes, materials } = useGLTF(assetLink)
-
-  return (
-    <PivotControls anchor={[1, 1, 1]} rotation={[Math.PI, -Math.PI / 2, 0]} scale={0.8} assetIdentifier={assetIdentifer}>
-      <Center top scale={1.5} position={[-0.5, 0, -1]}>
-        <mesh
-          receiveShadow
-          castShadow
-          geometry={nodes.coffee_cup_top_16oz.geometry}
-          material={materials['13 - Default']}
-          {...props}
-          dispose={null}
-        />
-      </Center>
-    </PivotControls>
-  )
-}
 
