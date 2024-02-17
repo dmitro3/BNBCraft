@@ -1,6 +1,12 @@
-yarn install
+steps:
+    yarn install
+    yarn run dev
 
-yarn run dev
+for bucket name: just use "hackathon"
+object name: "<file_name>.glb"
+upload file
+click create object tx
+then upload
 
 
 walletconnect account has been registered via sachin's account number
