@@ -1,5 +1,4 @@
 import React, { createContext, useReducer } from "react";
-import { useState } from "react";
 
 const GlobalContext = createContext();
 const initialState = {
@@ -7,6 +6,7 @@ const initialState = {
   currentObjectIdentifier: "",
 };
 
+// asset is redundant :(, only worldMatrix, assetID, assetLink are enough
 const reducer = (state, action) => {
   switch (action.type) {
     case "ADD_OBJECT":
@@ -21,6 +21,7 @@ const reducer = (state, action) => {
             position: action.payload.position,
             quaternion: action.payload.quaternion,
             scale: action.payload.scale,
+            worldMatrix: action.payload.worldMatrix,
           },
         ],
       };
@@ -43,6 +44,7 @@ const reducer = (state, action) => {
               position: action.payload.position,
               quaternion: action.payload.quaternion,
               scale: action.payload.scale,
+              worldMatrix: action.payload.worldMatrix,
             };
           }
 
@@ -72,4 +74,4 @@ const GlobalContextProvider = ({ children }) => {
 };
 
 
-export { GlobalContext, GlobalContextProvider};
+export { GlobalContext, GlobalContextProvider };

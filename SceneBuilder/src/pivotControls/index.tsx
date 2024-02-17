@@ -143,6 +143,9 @@ export const PivotControls = React.forwardRef<THREE.Group, PivotControlsProps>(
       userData,
       children,
       assetIdentifier,
+      collisionM,
+      fixedM,
+      worldMatrix,
     },
     fRef
   ) => {
@@ -154,6 +157,20 @@ export const PivotControls = React.forwardRef<THREE.Group, PivotControlsProps>(
     const translation = React.useRef<[number, number, number]>([0, 0, 0])
     const { state, dispatch } = React.useContext(GlobalContext)
     const { objectMaster } = state
+
+    const recreateModel = () => {
+      ref.current.matrix.copy(worldMatrix)
+
+      const target = resolveObject(object)
+      if (target) target.matrix.copy(worldMatrix)
+      invalidate()
+    }
+
+    React.useEffect(() => {
+      if (worldMatrix) {
+        recreateModel()
+      }
+    }, [worldMatrix])
 
     React.useEffect(() => {
       if (object) {
@@ -245,7 +262,8 @@ export const PivotControls = React.forwardRef<THREE.Group, PivotControlsProps>(
               assetIdentifier: assetIdentifier,
               position: position,
               quaternion: quaternion,
-              scale: scale
+              scale: scale,
+              worldMatrix: ref.current.matrixWorld,
             }
           }
 

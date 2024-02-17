@@ -9,6 +9,7 @@ import { useGLTF, GizmoHelper, GizmoViewport, OrbitControls, Center, softShadows
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 import { PivotControls } from './pivotControls/index.tsx'
+import objJSON from './objectMaster.json'
 
 softShadows()
 
@@ -29,8 +30,7 @@ function Scene() {
   const { state, dispatch } = useContext(GlobalContext)
   const { objectMaster } = state
 
-
-  const Model = ({ assetLink, assetIdentifer }) => {
+  const Model = ({ assetLink, assetIdentifer, collision, fixed, worldMatrix }) => {
     const gltf = useLoader(GLTFLoader, assetLink);
     const [hovered, setHovered] = useState(false)
 
@@ -39,20 +39,22 @@ function Scene() {
     }, [hovered])
 
     return (
-      <PivotControls assetIdentifier={assetIdentifer}>
-        <primitive object={gltf.scene.clone()}
-          onClick={(e) => {
-            dispatch({
-              type: "SET_CURRENT_OBJECT",
-              payload: {
-                assetIdentifier: assetIdentifer
-              }
-            })
+      <PivotControls assetIdentifier={assetIdentifer} collision={collision} fixed={fixed} worldMatrix={worldMatrix}>
+        <Center top position={[2, 0, 2]}>
+          <primitive object={gltf.scene.clone()}
+            onClick={(e) => {
+              dispatch({
+                type: "SET_CURRENT_OBJECT",
+                payload: {
+                  assetIdentifier: assetIdentifer
+                }
+              })
 
-            setId(assetIdentifer)
-          }}
-          onPointerEnter={(e) => setHovered(true)}
-          onPointerOut={(e) => setHovered(false)} />;
+              setId(assetIdentifer)
+            }}
+            onPointerEnter={(e) => setHovered(true)}
+            onPointerOut={(e) => setHovered(false)} />
+        </Center>
       </PivotControls>)
   };
 
@@ -61,8 +63,8 @@ function Scene() {
   }
 
   // Add Object
-  const [assetIdentifer, setAssetIdentifer] = useState('<not_set>')
-  const [assetLink, setAssetLink] = useState('<not_set>')
+  const [assetIdentifer, setAssetIdentifer] = useState('chest0')
+  const [assetLink, setAssetLink] = useState('https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr')
 
   const AddAction = () => {
     const AddAction = {
@@ -75,6 +77,7 @@ function Scene() {
         position: new THREE.Vector3(0, 0, 0),
         quaternion: new THREE.Quaternion(0, 0, 0, 0),
         scale: new THREE.Vector3(1, 1, 1),
+        worldMatrix: new THREE.Matrix4(),
         collision: 'no', // no, yes, box, hull, trimesh (yes=box)
         fixed: false // true, false
       }
@@ -95,6 +98,31 @@ function Scene() {
     dispatch(DeleteAction)
   }
 
+  // Load objectMaster.json
+  const LoadObjectMaster = () => {
+    // Should be a fetch request or load on upload
+
+    objJSON.map((object) => {
+      const AddAction = {
+        type: "ADD_OBJECT",
+        payload: {
+          asset: <Model assetIdentifer={object.assetIdentifier} assetLink={object.assetLink} />,
+          link: object.assetLink,
+          assetIdentifier: object.assetIdentifier,
+          assetLink: object.assetLink,
+          position: new THREE.Vector3(object.position.x, object.position.y, object.position.z),
+          quaternion: new THREE.Quaternion(object.quaternion.x, object.quaternion.y, object.quaternion.z, object.quaternion.w),
+          scale: new THREE.Vector3(object.scale.x, object.scale.y, object.scale.z),
+          worldMatrix: new THREE.Matrix4().fromArray(object.worldMatrix.elements),
+          collision: object.collision,
+          fixed: object.fixed
+        }
+      }
+
+      dispatch(AddAction)
+    })
+  }
+
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <div style={{ width: "75%" }}>
@@ -104,7 +132,14 @@ function Scene() {
             <>
               {
                 objectMaster.map((object) => {
-                  return object.asset
+                  return <Model
+                    assetIdentifer={object.assetIdentifier}
+                    assetLink={object.assetLink}
+                    collision={object.collision}
+                    fixed={object.fixed}
+                    worldMatrix={object.worldMatrix}
+                  />
+                  // return object.asset
                 })
               }
             </>
@@ -140,7 +175,7 @@ function Scene() {
             <div style={{ border: '1px solid black', padding: '10px', marginBottom: "10px" }}>
               <h2>Add Object</h2>
               <input type='text' placeholder='Asset Identifier' onChange={(e) => setAssetIdentifer(e.target.value)} value={assetIdentifer} />
-              <input type='text' placeholder='Asset Link' onChange={(e) => setAssetLink(e.target.value)} />
+              <input type='text' placeholder='Asset Link' onChange={(e) => setAssetLink(e.target.value)} value={assetLink} />
               <button onClick={AddAction}>Add</button>
             </div>
 
@@ -154,6 +189,7 @@ function Scene() {
             {/* Object Master */}
             <div style={{ border: '1px solid black', padding: '10px', marginBottom: "10px" }}>
               <h2>Object Master</h2>
+              <button onClick={LoadObjectMaster}>Load</button>
               <button
                 onClick={() => {
                   const a = document.createElement("a");
