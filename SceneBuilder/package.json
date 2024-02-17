@@ -5,7 +5,7 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
-    "@react-three/drei": "9.47.1",
+    "@react-three/drei": "^9.47.1",
     "@react-three/fiber": "8.9.1",
     "@types/three": "0.146.0",
     "leva": "0.9.34",
@@ -14,7 +14,6 @@
     "react-scripts": "5.0.1",
     "three": "0.147.0"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
