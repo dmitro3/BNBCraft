@@ -24,8 +24,7 @@ export default function App() {
 
 function Scene() {
   const ref = useRef()
-  const { attach } = useControls({ attach: false })
-
+  // const { attach } = useControls({ attach: false })
   const { state, dispatch } = useContext(GlobalContext)
   const { objectMaster } = state
 
@@ -123,8 +122,7 @@ function Scene() {
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-      <Green/>
-      <div style={{ width: "75%" }}>
+      <div style={{ width: "70%" }}>
         <Canvas shadows raycaster={{ params: { Line: { threshold: 0.15 } } }} camera={{ position: [-10, 10, 10], fov: 20 }} id='objectScene'>
           {/* Objects Append Here */}
           {
@@ -149,7 +147,7 @@ function Scene() {
             position={[2.5, 5, 5]}
             intensity={1.5}
             shadow-mapSize={[1024, 1024]}>
-            <orthographicCamera attach="shadow-camera" args={[-5, 5, 5, -5, 1, 50]} />
+            {/* <orthographicCamera attach="shadow-camera" args={[-5, 5, 5, -5, 1, 50]} /> */}
           </directionalLight>
 
           <mesh scale={20}
@@ -167,8 +165,9 @@ function Scene() {
       </div>
 
       {/* Panel */}
-      <div style={{ width: "25%" }}>
-        <div className='panel' style={{ height: "100vh" }}>
+      <div style={{ width: "30%" }}>
+      <Green/>
+        <div className='panel' style={{ height: "10vh" }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {/* Add Panel */}
             <div style={{ border: '1px solid black', padding: '10px', marginBottom: "10px" }}>
