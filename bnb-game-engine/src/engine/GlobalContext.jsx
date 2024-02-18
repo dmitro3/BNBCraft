@@ -2,7 +2,15 @@ import React, { createContext, useReducer } from "react";
 
 const GlobalContext = createContext();
 const initialState = {
-  objectMaster: [],
+
+  objectMaster: [
+    {
+      "assetIdentifier": "Environment_Game_Engine",
+      "gravity": 9.8,
+      "flycontrol": false,
+  },
+
+  ],
   currentObjectIdentifier: "",
 };
 

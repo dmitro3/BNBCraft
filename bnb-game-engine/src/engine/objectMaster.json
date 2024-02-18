@@ -1,1 +1,86 @@
-[{"assetIdentifier":"chest0","assetLink":"https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr","position":{"x":-1.8192894524992638,"y":0,"z":-3.533682824227138},"quaternion":{"isQuaternion":true,"_x":0,"_y":0,"_z":0,"_w":1},"scale":{"x":1,"y":1,"z":1},"worldMatrix":{"elements":[1,0,0,0,0,1,0,0,0,0,1,0,-1.8192894524992638,0,-3.533682824227138,1]},"fixed":false},{"assetIdentifier":"chest1","assetLink":"https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr","position":{"x":0,"y":0,"z":0},"quaternion":{"isQuaternion":true,"_x":0,"_y":0,"_z":0,"_w":0},"scale":{"x":1,"y":1,"z":1},"worldMatrix":{"elements":[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]},"fixed":false}]
+[
+    {
+        "assetIdentifier": "chest0",
+        "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
+        "position": {
+            "x": -1.8192894524992638,
+            "y": 0,
+            "z": -3.533682824227138
+        },
+        "quaternion": {
+            "isQuaternion": true,
+            "_x": 0,
+            "_y": 0,
+            "_z": 0,
+            "_w": 1
+        },
+        "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "worldMatrix": {
+            "elements": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                -1.8192894524992638,
+                0,
+                -3.533682824227138,
+                1
+            ]
+        },
+        "fixed": false
+    },
+    {
+        "assetIdentifier": "chest1",
+        "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
+        "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "quaternion": {
+            "isQuaternion": true,
+            "_x": 0,
+            "_y": 0,
+            "_z": 0,
+            "_w": 0
+        },
+        "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "worldMatrix": {
+            "elements": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ]
+        },
+        "fixed": false
+    }
+]

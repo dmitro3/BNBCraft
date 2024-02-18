@@ -3,9 +3,9 @@
         "assetIdentifier": "chest0",
         "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
         "position": {
-            "x": -4.170938189256237,
+            "x": 0,
             "y": 0,
-            "z": -1.1383852401009265
+            "z": 0
         },
         "quaternion": {
             "isQuaternion": true,
