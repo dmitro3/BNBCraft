@@ -19,7 +19,7 @@
         "onClick": "none",
         "onHover": "none",
         "colliders": "ball",
-        "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
+        "assetLink": "https://gnfd-testnet-sp2.nodereal.io/download/hackathon/NissanSkyline.glb",
         "position": {
             "x": 10,
             "y": 10,

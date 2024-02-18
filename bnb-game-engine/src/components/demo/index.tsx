@@ -330,6 +330,8 @@ export const Demo = () => {
                 console.log('getObjectPreviewUrl', res2);
                 setGreenfieldURL(res2);
 
+                navigator.clipboard.writeText(res2);
+
                 dispatch({
                   type: "ADD_OBJECT",
                   payload: {
@@ -442,11 +444,12 @@ export const Demo = () => {
                   return (
                     <button key={index} onClick={
                       (e) => {
+                        navigator.clipboard.writeText(url);
                         dispatch({
                           type: "ADD_OBJECT",
                           payload: {
                             link: url,
-                            assetIdentifier: objectName,
+                            assetIdentifier: objectNameWithTimeStamp,
                             assetLink: url,
                             position: new THREE.Vector3(0, 0, 0),
                             quaternion: new THREE.Quaternion(0, 0, 0, 0),
@@ -456,7 +459,7 @@ export const Demo = () => {
                             fixed: false // true, false
                           }
                         })
-                        console.log("dispatch objectName", objectName);
+                        console.log("dispatch objectName", objectNameWithTimeStamp);
                       }
                     }
                     >
