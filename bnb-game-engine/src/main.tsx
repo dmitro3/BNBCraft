@@ -1,6 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+
 import App from './engine/App.jsx'
+
+// Bootstrap & Bootstrap Icons
+import 'jquery/dist/jquery.min.js';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 import './index.css'
 import { WagmiConfig, createConfig } from 'wagmi'
 import { RainbowKitProvider, connectorsForWallets, getDefaultWallets } from '@rainbow-me/rainbowkit'
