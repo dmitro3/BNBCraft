@@ -4,7 +4,7 @@ import { getOffchainAuthKeys } from '@/utils/offchainAuth';
 import { useContext, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ReedSolomon } from '@bnb-chain/reed-solomon';
-import { GlobalContext } from '../../engine/GlobalContext.jsx';
+// import { GlobalContext } from '../../engine/GlobalContext.jsx';
 import * as THREE from 'three'
 
 export const Demo = () => {
@@ -21,7 +21,7 @@ export const Demo = () => {
     file: null
   });
   const [txnHash, setTxnHash] = useState('');
-  const { dispatch } = useContext(GlobalContext);
+  // const { dispatch } = useContext(GlobalContext);
   const fetchAssets = async () => {
     if (!address) return;
 
@@ -428,21 +428,20 @@ export const Demo = () => {
                   <button key={index} onClick={
                     (e) => {
                       navigator.clipboard.writeText(url)
-                      // TODO
-                      // dispatch({
-                      //   type: "ADD_OBJECT",
-                      //   payload: {
-                      //     link: url,
-                      //     assetIdentifier: objectName,
-                      //     assetLink: url,
-                      //     position: new THREE.Vector3(0, 0, 0),
-                      //     quaternion: new THREE.Quaternion(0, 0, 0, 0),
-                      //     scale: new THREE.Vector3(1, 1, 1),
-                      //     worldMatrix: new THREE.Matrix4(),
-                      //     collision: 'no', // no, yes, box, hull, trimesh (yes=box)
-                      //     fixed: false // true, false
-                      //   }
-                      // })
+                      dispatch({
+                        type: "ADD_OBJECT",
+                        payload: {
+                          link: url,
+                          assetIdentifier: objectName,
+                          assetLink: url,
+                          position: new THREE.Vector3(0, 0, 0),
+                          quaternion: new THREE.Quaternion(0, 0, 0, 0),
+                          scale: new THREE.Vector3(1, 1, 1),
+                          worldMatrix: new THREE.Matrix4(),
+                          collision: 'no', // no, yes, box, hull, trimesh (yes=box)
+                          fixed: false // true, false
+                        }
+                      })
                       console.log("dispatch objectName", objectName);
                     }
                   }
