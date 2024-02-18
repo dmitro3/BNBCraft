@@ -13,15 +13,24 @@ contract PlayerStatus{
         }
     }
 
+    function checkTaskExists(string memory _task) public view returns(bool){
+        for (uint i = 0; i < taskNames.length; i++){
+            if(keccak256(abi.encodePacked(taskNames[i])) == keccak256(abi.encodePacked(_task))){
+                return true;
+            }
+        }
+        return false;
+    }
+
     // function to mark the task as completed
     function completeTask(string memory _task) public {
-        //[TODO] check if the task exists
+        require(checkTaskExists(_task), "Task does not exist");
         tasks[_task] = true;
     }
 
     // function to check if the task is completed
     function isTaskCompleted(string memory _task) public view returns(bool){
-        // [TODO] check if the task exists
+        require(checkTaskExists(_task), "Task does not exist");
         return tasks[_task];
     }
 
@@ -32,9 +41,11 @@ contract PlayerStatus{
         }
     }
 
-    // function to get status of all tasks
-    // [TODO] This function is not working as expected. Fix it
-    // function getStatus() public view returns(mapping(string => bool) memory){
-    //     return tasks;
-    // }
+    function getTaskStatus() public view returns(string[] memory, bool[] memory){
+        bool[] memory status;
+        for(uint i = 0; i < taskNames.length; i++){
+            status[i] = tasks[taskNames[i]];
+        }
+        return (taskNames, status);
+    }
 }
