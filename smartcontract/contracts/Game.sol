@@ -38,7 +38,9 @@ contract Game is Ownable {
     }
 
     // function to get the map of players
-    function getPlayers() public view returns(mapping(address => address) memory){
-        return players;
-    }
+    // [TODO] This function is not working as expected. Fix it
+    // Types containing (nested) mappings can only be parameters or return variables of internal or library functions.
+    // function getPlayers() public view returns(mapping(address => address) memory){
+    //     return players;
+    // }
 }
