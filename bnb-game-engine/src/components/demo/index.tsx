@@ -6,12 +6,13 @@ import { ReedSolomon } from '@bnb-chain/reed-solomon';
 
 export const Demo = () => {
   const { address, connector } = useAccount();
+  const [greenfieldURL, setGreenfieldURL] = useState('');
   const [info, setInfo] = useState<{
     bucketName: string;
     objectName: string;
     file: File | null;
   }>({
-    bucketName: '',
+    bucketName: 'hackathon',
     objectName: '',
     file: null
   });
@@ -22,11 +23,8 @@ export const Demo = () => {
       <section className="section">
         <div className="container">
           <h1 className="title">
-            Greenfield Storage Demo
+            BNB Game Engine
           </h1>
-          <p className="subtitle">
-            Create Bucket / Create Object / Upload File / Download File
-          </p>
         </div>
       </section>
 
@@ -123,7 +121,7 @@ export const Demo = () => {
       </div>
 
       <div className='box'>
-        <div className="field is-horizontal">
+        {/* <div className="field is-horizontal">
           <div className="field-label is-normal">
             <label className="label">Object</label>
           </div>
@@ -142,16 +140,19 @@ export const Demo = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="field is-horizontal">
           <div className="file">
             <label className="file-label">
               <input className="file-input" type="file" name="resume" onChange={(e) => {
                 if (e.target.files) {
+                  console.log("e.target.files[0]", e.target.files[0]);
+                  console.log("e.target.files[0].name", e.target.files[0].name);
                   setInfo({
                     ...info,
-                    file: e.target.files[0]
+                    file: e.target.files[0],
+                    objectName: e.target.files[0].name
                   })
                 }
               }} />
@@ -194,7 +195,7 @@ export const Demo = () => {
                     bucketName: info.bucketName,
                     objectName: info.objectName,
                     creator: address,
-                    visibility: 'VISIBILITY_TYPE_PRIVATE',
+                    visibility: 'VISIBILITY_TYPE_PUBLIC_READ',
                     fileType: info.file.type,
                     redundancyType: 'REDUNDANCY_EC_TYPE',
                     contentLength: fileBytes.byteLength,
@@ -275,16 +276,41 @@ export const Demo = () => {
               );
 
               if (uploadRes.code === 0) {
-                alert('success');
+                alert('upload success');
+                const res = await client.object.listObjects({
+                  bucketName: info.bucketName,
+                  endpoint: 'https://gnfd-testnet-sp1.nodereal.io',
+                });
+                console.log('listObjects', res);
+                const res2 = await client.object.getObjectPreviewUrl(
+                  {
+                    bucketName: info.bucketName,
+                    objectName: info.objectName,
+                    queryMap: {
+                      view: '1',
+                      'X-Gnfd-User-Address': address,
+                      'X-Gnfd-App-Domain': window.location.origin,
+                      'X-Gnfd-Expiry-Timestamp': '2023-09-03T09%3A23%3A39Z',
+                    },
+                  },
+                  {
+                    type: 'EDDSA',
+                    address,
+                    domain: window.location.origin,
+                    seed: offChainData.seedString,
+                  },
+                );
+                console.log('getObjectPreviewUrl', res2);
+                setGreenfieldURL(res2);
               }
             }}
           >
-            Upload
+            Confirm
           </button>
         </div>
 
         {/* Download */}
-        <div className='field'>
+        {/* <div className='field'>
           <button
             className="button is-primary"
             onClick={async () => {
@@ -318,7 +344,37 @@ export const Demo = () => {
           >
             Download
           </button>
-        </div>
+        </div> */}
+        {/* create input filed with*/}
+        {
+          greenfieldURL &&
+          <>
+
+            <div className="field">
+              <div className="control">
+                <input
+                  className="input"
+                  type="text"
+                  value={greenfieldURL}
+                  placeholder="Greenfield URL"
+                  readOnly
+                />
+              </div>
+            </div>
+            <div className='field'>
+              <button
+                className="button is-primary"
+                onClick={() => {
+                  navigator.clipboard.writeText(greenfieldURL);
+                  alert('Copied to clipboard');
+                }}
+              >
+                Copy to Clipboard
+              </button>
+
+            </div>
+          </>
+        }
       </div>
     </>
   );
