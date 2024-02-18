@@ -27,6 +27,69 @@ function Scene() {
   const ref = useRef()
   const { state, dispatch } = useContext(GlobalContext)
   const { objectMaster, currentObjectIdentifer } = state
+  const [ skycolor , setSkycolor ] = useState('#000000')
+
+  const [stateEnv,setStateEnv] = useState(
+    {
+      Environment: {
+        gravity: 0,
+        friction: 0.5,
+        sky_color: '#000000',
+        ambient_light: 0.5,
+        stars: false
+      },
+      Player: {
+        speed: 10,
+        mass: 50,
+        size: 1,
+        jump: 0.5
+      },
+      Object: {
+        assetLink: 'https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr',
+        fixed: false,
+        followPlayer: false,
+        initialVelocity: 1,
+        mass: 1,
+        colliders: 'No',
+        OnClick: "",
+        OnHover: "",
+        OnCollision: ""
+      }
+    });
+
+  
+    const handleEnvChange = (e) => {
+      const { name, value } = e.target;
+      setStateEnv((prevState) => ({
+        ...prevState,
+        Environment: {
+          ...prevState.Environment,
+          [name]: value,
+        },
+      }));
+    };
+
+    const handlePlayerChange = (e) => {
+      const { name, value } = e.target;
+      setStateEnv((prevState) => ({
+        ...prevState,
+        Player: {
+          ...prevState.Player,
+          [name]: value,
+        },
+      }));
+    }
+
+    const handleObjectChange = (e) => {
+      const { name, value } = e.target;
+      setStateEnv((prevState) => ({
+        ...prevState,
+        Object: {
+          ...prevState.Object,
+          [name]: value,
+        },
+      }));
+    }
 
   const Model = ({ assetLink, assetIdentifer, collision, fixed, worldMatrix }) => {
     const gltf = useLoader(GLTFLoader, assetLink);
@@ -79,6 +142,7 @@ function Scene() {
         worldMatrix: new THREE.Matrix4(),
         initialVelocity: new THREE.Vector3(0, 0, 0),
         followPlayer: false,
+        scaleFactor: 1,
 
         // State
         fixed: false,
@@ -172,6 +236,9 @@ function Scene() {
           quaternion: new THREE.Quaternion(object.quaternion.x, object.quaternion.y, object.quaternion.z, object.quaternion.w),
           scale: new THREE.Vector3(object.scale.x, object.scale.y, object.scale.z),
           worldMatrix: new THREE.Matrix4().fromArray(object.worldMatrix.elements),
+          initialVelocity: new THREE.Vector3(object.initialVelocity.x, object.initialVelocity.y, object.initialVelocity.z),
+          followPlayer: object.followPlayer,
+          scaleFactor: object.scaleFactor,
 
           // State
           fixed: object.fixed,
@@ -234,6 +301,7 @@ function Scene() {
           </div>
           <div style={{ height: (height === "20%" ? "80%" : "100%") }}>
             <Canvas shadows raycaster={{ params: { Line: { threshold: 0.15 } } }} camera={{ position: [-10, 10, 10], fov: 20 }} id='objectScene'>
+              <color attach="background" args={[skycolor]} />
               {
                 <>
                   {
@@ -319,7 +387,8 @@ function Scene() {
                     </div>
                     <div className='col-6'>
                       <label for="sky_color" class="form-label">Sky Color</label>
-                      <input type="color" class="form-control" id="sky_color" placeholder="black" />
+                      <input type="color" class="form-control" id="sky_color" placeholder="black"
+                      onChange={(e) => setSkycolor(e.target.value)} />
                     </div>
                     <div className='col-6'>
                       <label for="ambient_light" class="form-label
