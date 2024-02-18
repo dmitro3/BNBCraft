@@ -4,7 +4,7 @@ import { getOffchainAuthKeys } from '@/utils/offchainAuth';
 import { useContext, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ReedSolomon } from '@bnb-chain/reed-solomon';
-// import { GlobalContext } from '../../engine/GlobalContext.jsx';
+import { GlobalContext } from '../../engine/GlobalContext.jsx';
 import * as THREE from 'three'
 
 export const Demo = () => {
@@ -21,10 +21,11 @@ export const Demo = () => {
     file: null
   });
   const [txnHash, setTxnHash] = useState('');
-  // const { dispatch } = useContext(GlobalContext);
+  const { state, dispatch } = useContext(GlobalContext);
+  const { objectMaster } = state
+
   const fetchAssets = async () => {
     if (!address) return;
-
     const spInfo = await selectSp();
     console.log('spInfo', spInfo);
 
@@ -39,7 +40,7 @@ export const Demo = () => {
       bucketName: info.bucketName,
       endpoint: 'https://gnfd-testnet-sp1.nodereal.io',
     });
-    console.log('listObjects', res);
+    console.log('listObjects all', res);
     if (res.body?.GfSpListObjectsByBucketNameResponse?.Objects) {
       setObjectList(res.body?.GfSpListObjectsByBucketNameResponse?.Objects);
     }
@@ -139,10 +140,9 @@ export const Demo = () => {
                   alert(JSON.stringify(err))
                 }
               }
-
             }}
           >
-            Create Bucket Tx
+            Connect to Greenfield
           </button>
         </div>
       </div>
@@ -265,7 +265,7 @@ export const Demo = () => {
               }
             }}
           >
-            Create Object Tx
+            Upload
           </button>
         </div>
 
@@ -329,10 +329,25 @@ export const Demo = () => {
                 );
                 console.log('getObjectPreviewUrl', res2);
                 setGreenfieldURL(res2);
+
+                dispatch({
+                  type: "ADD_OBJECT",
+                  payload: {
+                    link: res2,
+                    assetIdentifier: info.objectName.concat('_').concat(Date.now().toString()),
+                    assetLink: res2,
+                    position: new THREE.Vector3(0, 0, 0),
+                    quaternion: new THREE.Quaternion(0, 0, 0, 0),
+                    scale: new THREE.Vector3(1, 1, 1),
+                    worldMatrix: new THREE.Matrix4(),
+                    collision: 'no', // no, yes, box, hull, trimesh (yes=box)
+                    fixed: false // true, false
+                  }
+                })
               }
             }}
           >
-            Confirm
+            Add to Scene
           </button>
         </div>
 
@@ -373,10 +388,9 @@ export const Demo = () => {
           </button>
         </div> */}
         {/* create input filed with*/}
-        {
+        {/* {
           greenfieldURL &&
           <>
-
             <div className="field">
               <div className="control">
                 <input
@@ -398,17 +412,16 @@ export const Demo = () => {
               >
                 Copy to Clipboard
               </button>
-
             </div>
           </>
-        }
+        } */}
         {/* Fetch Assets */}
         <div className='field'>
           <button
             className="button is-primary"
             onClick={fetchAssets}
           >
-            Fetch Assets
+            My Assets
           </button>
           {/* {objectList.length} */}
           <div
@@ -420,35 +433,36 @@ export const Demo = () => {
 
             {
               objectList.map((object, index) => {
-                console.log("object", object["ObjectInfo"]["ObjectName"]);
                 let bucketName = object["ObjectInfo"]["BucketName"];
                 let objectName = object["ObjectInfo"]["ObjectName"];
+                let objectNameWithTimeStamp = objectName.split('.')[0].concat('_').concat(Date.now().toString())
+                let owner = object["ObjectInfo"]["Owner"];
                 let url = `https://gnfd-testnet-sp2.nodereal.io/download/${bucketName}/${objectName}`;
-                return (
-                  <button key={index} onClick={
-                    (e) => {
-                      navigator.clipboard.writeText(url)
-                      dispatch({
-                        type: "ADD_OBJECT",
-                        payload: {
-                          link: url,
-                          assetIdentifier: objectName,
-                          assetLink: url,
-                          position: new THREE.Vector3(0, 0, 0),
-                          quaternion: new THREE.Quaternion(0, 0, 0, 0),
-                          scale: new THREE.Vector3(1, 1, 1),
-                          worldMatrix: new THREE.Matrix4(),
-                          collision: 'no', // no, yes, box, hull, trimesh (yes=box)
-                          fixed: false // true, false
-                        }
-                      })
-                      console.log("dispatch objectName", objectName);
+                if (owner === address)
+                  return (
+                    <button key={index} onClick={
+                      (e) => {
+                        dispatch({
+                          type: "ADD_OBJECT",
+                          payload: {
+                            link: url,
+                            assetIdentifier: objectName,
+                            assetLink: url,
+                            position: new THREE.Vector3(0, 0, 0),
+                            quaternion: new THREE.Quaternion(0, 0, 0, 0),
+                            scale: new THREE.Vector3(1, 1, 1),
+                            worldMatrix: new THREE.Matrix4(),
+                            collision: 'no', // no, yes, box, hull, trimesh (yes=box)
+                            fixed: false // true, false
+                          }
+                        })
+                        console.log("dispatch objectName", objectName);
+                      }
                     }
-                  }
-                  >
-                    {objectName}
-                  </button>
-                );
+                    >
+                      {objectName}
+                    </button>
+                  );
               })
             }
           </div>
