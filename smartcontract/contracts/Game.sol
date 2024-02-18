@@ -2,9 +2,12 @@
 pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+
+// 0x26EC701A2866A42228Dc559Aa13190A4348f784d
 contract Game is Ownable {
     string public greenfield;
     uint public price;
+
 
     constructor(string memory _greenfield, uint _price) Ownable(msg.sender) {
         greenfield = _greenfield;
