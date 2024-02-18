@@ -23,6 +23,8 @@ export default function App() {
 // for testing https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr
 
 function Scene() {
+  const [isGreenVisible, setIsGreenVisible] = useState(true);
+
   const ref = useRef()
   // const { attach } = useControls({ attach: false })
   const { state, dispatch } = useContext(GlobalContext)
@@ -166,7 +168,10 @@ function Scene() {
 
       {/* Panel */}
       <div style={{ width: "30%" }}>
-      <Green/>
+      <button onClick={() => setIsGreenVisible(!isGreenVisible)}>
+          Import from Greenfield
+        </button>
+        {isGreenVisible && <Green />}
         <div className='panel' style={{ height: "10vh" }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {/* Add Panel */}

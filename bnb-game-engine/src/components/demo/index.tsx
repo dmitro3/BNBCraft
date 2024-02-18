@@ -1,12 +1,16 @@
+// @ts-nocheck
 import { client, selectSp } from '@/client';
 import { getOffchainAuthKeys } from '@/utils/offchainAuth';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ReedSolomon } from '@bnb-chain/reed-solomon';
+import { GlobalContext } from '../../engine/GlobalContext.jsx';
+import * as THREE from 'three'
 
 export const Demo = () => {
   const { address, connector } = useAccount();
   const [greenfieldURL, setGreenfieldURL] = useState('');
+  const [objectList, setObjectList] = useState([]);
   const [info, setInfo] = useState<{
     bucketName: string;
     objectName: string;
@@ -17,14 +21,37 @@ export const Demo = () => {
     file: null
   });
   const [txnHash, setTxnHash] = useState('');
+  const { dispatch } = useContext(GlobalContext);
+  const fetchAssets = async () => {
+    if (!address) return;
+
+    const spInfo = await selectSp();
+    console.log('spInfo', spInfo);
+
+    const provider = await connector?.getProvider();
+    const offChainData = await getOffchainAuthKeys(address, provider);
+    if (!offChainData) {
+      alert('No offchain, please create offchain pairs first');
+      return;
+    }
+
+    const res = await client.object.listObjects({
+      bucketName: info.bucketName,
+      endpoint: 'https://gnfd-testnet-sp1.nodereal.io',
+    });
+    console.log('listObjects', res);
+    if (res.body?.GfSpListObjectsByBucketNameResponse?.Objects) {
+      setObjectList(res.body?.GfSpListObjectsByBucketNameResponse?.Objects);
+    }
+  };
 
   return (
     <>
       <section className="section">
         <div className="container">
-          <h1 className="title">
+          <h4 className="title">
             BNB Game Engine
-          </h1>
+          </h4>
         </div>
       </section>
 
@@ -375,7 +402,59 @@ export const Demo = () => {
             </div>
           </>
         }
-      </div>
+        {/* Fetch Assets */}
+        <div className='field'>
+          <button
+            className="button is-primary"
+            onClick={fetchAssets}
+          >
+            Fetch Assets
+          </button>
+          {/* {objectList.length} */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '2px'
+            }}>
+
+            {
+              objectList.map((object, index) => {
+                console.log("object", object["ObjectInfo"]["ObjectName"]);
+                let bucketName = object["ObjectInfo"]["BucketName"];
+                let objectName = object["ObjectInfo"]["ObjectName"];
+                let url = `https://gnfd-testnet-sp2.nodereal.io/download/${bucketName}/${objectName}`;
+                return (
+                  <button key={index} onClick={
+                    (e) => {
+                      navigator.clipboard.writeText(url)
+                      // TODO
+                      // dispatch({
+                      //   type: "ADD_OBJECT",
+                      //   payload: {
+                      //     link: url,
+                      //     assetIdentifier: objectName,
+                      //     assetLink: url,
+                      //     position: new THREE.Vector3(0, 0, 0),
+                      //     quaternion: new THREE.Quaternion(0, 0, 0, 0),
+                      //     scale: new THREE.Vector3(1, 1, 1),
+                      //     worldMatrix: new THREE.Matrix4(),
+                      //     collision: 'no', // no, yes, box, hull, trimesh (yes=box)
+                      //     fixed: false // true, false
+                      //   }
+                      // })
+                      console.log("dispatch objectName", objectName);
+                    }
+                  }
+                  >
+                    {objectName}
+                  </button>
+                );
+              })
+            }
+          </div>
+        </div>
+      </div >
     </>
   );
 };
