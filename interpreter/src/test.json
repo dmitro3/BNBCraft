@@ -1,11 +1,29 @@
 [
     {
+        "assetIdentifier": "world_settings",
+        "gravity": 0,
+        "friction": 0.5,
+        "sky_color": "#000000",
+        "amvient_light": 0.5,
+        "player_speed": 10,
+        "player_mass": 50,
+        "player_size": 1,
+        "player_jump": 0.5,
+        "stars": true
+    },
+    {
         "assetIdentifier": "chest0",
+        "fixed": false,
+        "mass": 1,
+        "onCollision": "none",
+        "onClick": "none",
+        "onHover": "none",
+        "colliders": "ball",
         "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
         "position": {
-            "x": 0,
-            "y": 0,
-            "z": 0
+            "x": 10,
+            "y": 10,
+            "z": 100
         },
         "quaternion": {
             "isQuaternion": true,
@@ -43,8 +61,14 @@
     {
         "assetIdentifier": "chest1",
         "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
+        "fixed": true,
+        "mass": 1,
+        "onCollision": "none",
+        "onClick": "none",
+        "onHover": "none",
+        "colliders": "",
         "position": {
-            "x": 0,
+            "x": 100,
             "y": 0,
             "z": 0
         },

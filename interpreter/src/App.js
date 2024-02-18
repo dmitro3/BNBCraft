@@ -20,14 +20,18 @@ import { Scene } from "three"
 
 // Controls: WASD + left click
 
-const Model = ({ file }) => {
+const Model = ({ file , object }) => {
   console.log(file, "file")
   const gltf = useLoader(GLTFLoader, file)
-  return (<primitive object={gltf.scene} scale={10} />)
+  return (<primitive 
+    key={object.assetIdentifier}
+    object={gltf.scene.clone()} 
+    scale={[object.scale.x,object.scale.y,object.scale.z]} 
+    position={[object.position.x,object.position.y,object.position.z]}
+    />)
 }
 
 export default function App() {
-  console.log(data);
   const queryParams = new URLSearchParams(window.location.search)
   const address = queryParams.get("market") || "loading..."
 
@@ -37,6 +41,19 @@ export default function App() {
   const [marketname, setMarketName] = useState("loading...")
   const [products, setProducts] = useState([])
   const [marketdesc, setMarketDesc] = useState("loading...")
+  let [objects] = useState([])
+  const [world_settings, setWorldSettings] = useState({})
+
+  const load = () => {
+    data.map((object) => {
+      if(object.assetIdentifier === "world_settings"){
+        setWorldSettings(object)
+      }
+      else if(objects.includes(object) === false){
+        objects.push(object)
+      }
+    }
+  )}
 
   const web3Handler = async () => {
     // Use Mist/MetaMask's provider
@@ -81,6 +98,8 @@ export default function App() {
 
   useEffect(() => {
     // web3Handler()
+    load()
+    console.log(objects, "objects")
   }, [])
 
   return (<>
@@ -97,32 +116,27 @@ export default function App() {
         <Canvas camera={{ fov: 45 }} shadows>
           <ambientLight intensity={0.5} />
           <color attach="background" args={["black"]} />
-        {/* {data.map((object) => {
-               return(
-              <Model key={object.assetIdentifier}
-              file={object.assetLink} 
-              scale={[object.scale.x,object.scale.y,object.scale.z]} 
-              position={[object.position.x,object.position.y,object.position.z]}
-               />
-               )
-            })} */}
 
-
-          <Stars depth={100} />
-          <Physics gravity={[0, 0, 0]}>
+          {world_settings.stars && <Stars depth={100} />}
+          <Physics gravity={[0, -world_settings.gravity, 0]}>
             <Debug/>
-            {data.map((object) => {
+            {objects && objects.map((object) => {
                return(
-                <RigidBody key={object.assetIdentifier} type="Dynamic" mass={1} >
-              <Model key={object.assetIdentifier}
-              file={object.assetLink} 
-              scale={[object.scale.x,object.scale.y,object.scale.z]} 
-              position={[object.position.x,object.position.y,object.position.z]}
-               />
+            <RigidBody 
+            key={object.assetIdentifier} 
+            type={object.fixed ? "fixed" : "dynamic"} 
+            colliders={object.colliders}
+            mass={1} >
+              <Model key={object.assetIdentifier} object={object} file={object.assetLink} />
                </RigidBody>
                )
             })}
-            <Player />
+            <Player 
+            speed={world_settings.player_speed}
+            mass={world_settings.player_mass}
+            jump={world_settings.player_jump}
+            size={world_settings.player_size}
+            />
           </Physics>
 
 

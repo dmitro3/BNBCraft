@@ -6,14 +6,14 @@ import { useKeyboardControls  } from "@react-three/drei"
 import { CapsuleCollider , RigidBody, useRapier } from "@react-three/rapier"
 
 
-const SPEED = 10
+
 const direction = new THREE.Vector3()
 const frontVector = new THREE.Vector3()
 const sideVector = new THREE.Vector3()
 var step = new Audio('step.mp3');
 
 export function Player(props) {
-  
+  const SPEED = props.speed
   const ref = useRef()
   const rapier = useRapier()
   const { camera } = useThree()
@@ -43,7 +43,7 @@ export function Player(props) {
   })
   return (
     <>
-      <RigidBody  ref={ref} colliders={false} position={[0,10,10]}  mass={1} type="dynamic" enabledRotations={[false, false, false]}>
+      <RigidBody scale={props.size} ref={ref} colliders={false} position={[0,10,10]}  mass={props.speed} type="dynamic" enabledRotations={[false, false, false]}>
         <CapsuleCollider args={[0.75, 0.5]} /> 
       </RigidBody>
 
