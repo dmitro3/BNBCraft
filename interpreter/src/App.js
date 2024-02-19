@@ -143,6 +143,7 @@ export default function App() {
             mass={world_settings.player_mass}
             jump={world_settings.player_jump}
             size={world_settings.player_size}
+            flycontrol={world_settings.flycontrol}
             />
           </Physics>
 

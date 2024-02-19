@@ -18,6 +18,9 @@ export function Player(props) {
   const rapier = useRapier()
   const { camera } = useThree()
   const [, get] = useKeyboardControls()
+  const flycontrol = props.flycontrol
+  const jumpHeight = props.jump
+
   useFrame((state) => {
     const { forward, backward, left, right, jump } = get()
     const velocity = ref.current.linvel()
@@ -29,13 +32,17 @@ export function Player(props) {
     frontVector.set(0, 0, backward - forward)
     sideVector.set(left - right, 0, 0)
     direction.subVectors(frontVector, sideVector).normalize().multiplyScalar(SPEED).applyEuler(camera.rotation)
-    ref.current.setLinvel({ x: direction.x, y: velocity.y, z: direction.z })
+
+    if(flycontrol) ref.current.setLinvel({ x: direction.x, y: direction.y, z: direction.z })
+    else ref.current.setLinvel({ x: direction.x, y: velocity.y, z: direction.z })
+
+    
+    const world = rapier.world.raw()
 
     // jumping
-    const world = rapier.world.raw()
     const ray = world.castRay(new RAPIER.Ray(ref.current.translation(), { x: 0, y: -1, z: 0 }))
     const grounded = ray && ray.collider && Math.abs(ray.toi) <= 1.75
-    if (jump && grounded) ref.current.setLinvel({ x: 0, y: 7.5, z: 0 })
+    if (jump) ref.current.setLinvel({ x: 0, y: jumpHeight, z: 0 })
 
     //audio
     if(Math.abs(backward - forward) & grounded) step.play()
