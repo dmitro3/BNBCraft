@@ -43,15 +43,17 @@ export default function App() {
   const [marketdesc, setMarketDesc] = useState("loading...")
   let [objects] = useState([])
   const [world_settings, setWorldSettings] = useState({})
-
+  const [light] = useState([])
   const load = () => {
     data.map((object) => {
       if(object.type === "environment"){
         setWorldSettings(object)
       }
+      else if(object.type === "light"){
+        light.push(object)
+      }
       else if(objects.includes(object) === false){
         objects.push(object)
-        console.log(objects, "objects")
       }
     }
   )}
@@ -115,10 +117,21 @@ export default function App() {
 
       <Suspense>
         <Canvas camera={{ fov: 45 }} shadows>
-          <ambientLight intensity={0.5} />
+          <ambientLight intensity={world_settings.ambient_light} />
           <color attach="background" args={[world_settings.sky_color]} />
 
           {world_settings.stars && <Stars depth={100} />}
+          {
+            light && light.map((light) => {
+              return (
+                <pointLight key={light.assetIdentifier} 
+                position={[light.position.x, light.position.y, light.position.z]} 
+                intensity={light.intensity} 
+                color={light.color}
+                />
+              )
+            })
+          }
           <Physics gravity={[0, -world_settings.gravity, 0]}>
             <Debug/>
             {objects && objects.map((object) => {
@@ -149,8 +162,6 @@ export default function App() {
 
 
           <PointerLockControls />
-          <ambientLight intensity={0.1} />
-          <pointLight position={[0, 10, 0]} intensity={0.4} />
         </Canvas>
       </Suspense>
       <Loader />

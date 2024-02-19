@@ -5,13 +5,24 @@
         "gravity": 30,
         "friction": 0.5,
         "sky_color": "black",
-        "ambient_light": 0.5,
+        "ambient_light": 0,
         "player_speed": 10,
         "player_mass": 50,
         "player_size": 1,
         "player_jump": 20,
         "stars": true,
         "flycontrol": true
+    },
+    {
+        "type": "light",
+        "assetIdentifier": "sun",
+        "position": {
+            "x": 10,
+            "y": 100,
+            "z": 100
+        },
+        "intensity": 1,
+        "color": "red"
     },
     {
         "type": "object",
