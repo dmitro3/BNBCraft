@@ -7,6 +7,12 @@ import { useControls } from 'leva'
 import { useGLTF, GizmoHelper, GizmoViewport, OrbitControls, Center } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { PivotControls } from './pivotControls/index.tsx'
+import Swal from 'sweetalert2';
+
+import { ethers } from 'ethers';
+import GameFactory from '../contracts/GameFactory.json';
+import ContractAddress from '../contracts/contract-address.json';
+
 
 import objJSON from './objectMaster.json'
 import Green from '../Green.tsx'
@@ -34,7 +40,7 @@ function Scene() {
   const { state, dispatch } = useContext(GlobalContext)
   const { objectMaster, currentObjectIdentifer } = state
 
-  const [stateEnv,setStateEnv] = useState(
+  const [stateEnv, setStateEnv] = useState(
     {
       Environment: {
         gravity: 0,
@@ -195,6 +201,94 @@ function Scene() {
     })
   }
 
+  const [account, setAccount] = useState('');
+  const [signer, setSigner] = useState(null);
+  const [factoryContract, setFactoryContract] = useState(null);
+  const [gameAddress, setGameAddress] = useState('');
+
+  const web3Handler = async (e) => {
+
+    try {
+
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      setAccount(accounts[0]);
+
+      await ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x15EB' }],
+      })
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      setSigner(signer);
+
+      // window.ethereum.on('chainChanged', async (chainId) => {
+      //   // window.location.reload();
+      // })
+
+      window.ethereum.on('accountsChanged', async function (accounts) {
+        setAccount(accounts[0])
+        await web3Handler()
+      })
+
+      const factoryContract_ = new ethers.Contract(ContractAddress.GameFactory, GameFactory.abi, signer)
+      setFactoryContract(factoryContract_);
+
+      const { value: gameName } = await Swal.fire({
+        title: 'Enter Game Name',
+        input: 'text',
+        inputLabel: 'Game Name',
+        inputPlaceholder: 'Enter your game name',
+        showCancelButton: true,
+        inputValidator: (value) => {
+          if (!value) {
+            return 'You need to enter a game name!'
+          }
+        }
+      })
+
+      if (gameName) {
+        const { value: gamePrice } = await Swal.fire({
+          title: 'Enter Game Price',
+          input: 'number',
+          inputLabel: 'Game Price',
+          inputPlaceholder: 'Enter the price of your game',
+          inputAttributes: {
+            min: 0
+          },
+          showCancelButton: true,
+          inputValidator: (value) => {
+            if (!value) {
+              return 'You need to enter a game price!'
+            }
+          }
+        })
+
+
+
+        if (gamePrice) {
+          const tx = await factoryContract_.createGame(gameName, "google.com", gamePrice, ["one", "two"]);
+          await tx.wait();
+
+          const gameContractAddress = await factoryContract_.getGameAddresses();
+          setGameAddress(gameContractAddress[gameContractAddress.length - 1]);
+
+          Swal.fire({
+            title: 'Game Published!',
+            text: `Game Address: ${gameContractAddress[gameContractAddress.length - 1]}`,
+            icon: 'success',
+            confirmButtonText: 'Open Game',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.open(gameContractAddress[gameContractAddress.length - 1], '_blank');
+            }
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error in web3Handler:', error);
+    }
+  };
+
   return (
     <div className='d-flex flex-column vh-100'>
       <div className='row m-0 w-100 overflow-auto'>
@@ -230,7 +324,7 @@ function Scene() {
                   Test</button>
                 <button className='mx-1 px-2 p-1 my-0'
                   onClick={() => {
-                    LoadObjectMaster()
+                    web3Handler()
                   }
                   }>
                   <span className='me-1 bi bi-cloud-arrow-up align-text-top'></span>
@@ -256,7 +350,7 @@ function Scene() {
                         />
                       else
                         return <>
-                          
+
                         </>
                     })
                   }
