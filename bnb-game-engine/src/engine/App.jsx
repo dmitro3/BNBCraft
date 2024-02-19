@@ -11,6 +11,9 @@ import { PivotControls } from './pivotControls/index.tsx'
 
 import objJSON from './objectMaster.json'
 import Green from '../Green.tsx'
+import EnvironmentControls from './EnvironmentControls.jsx'
+import PlayerControls from './PlayerControls.jsx'
+import ObjectControls from './ObjectControls.jsx'
 
 export default function App() {
   return (
@@ -27,7 +30,6 @@ function Scene() {
   const ref = useRef()
   const { state, dispatch } = useContext(GlobalContext)
   const { objectMaster, currentObjectIdentifer } = state
-  const [ skycolor , setSkycolor ] = useState('#000000')
 
   const [stateEnv,setStateEnv] = useState(
     {
@@ -301,7 +303,7 @@ function Scene() {
           </div>
           <div style={{ height: (height === "20%" ? "80%" : "100%") }}>
             <Canvas shadows raycaster={{ params: { Line: { threshold: 0.15 } } }} camera={{ position: [-10, 10, 10], fov: 20 }} id='objectScene'>
-              <color attach="background" args={[skycolor]} />
+              <color attach="background" args={[stateEnv.Environment.sky_color]} />
               {
                 <>
                   {
@@ -367,140 +369,9 @@ function Scene() {
         {/* Panel */}
         <div className='col-3 text-light bg-danger vh-100 p-0 overflow-auto'>
           <div class="accordion accordion-flush" id="accordionFlushExample">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                  Environment
-                </button>
-              </h2>
-              <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">
-                  {/* Create a form with gravity, friction, sky_color(color), ambient_light, stars(checkbox) */}
-                  <div className='row m-0 p-0'>
-                    <div className='col-6'>
-                      <label for="gravity" class="form-label">Gravity</label>
-                      <input type="number" class="form-control" id="gravity" placeholder="0" />
-                    </div>
-                    <div className='col-6'>
-                      <label for="friction" class="form-label">Friction</label>
-                      <input type="number" class="form-control" id="friction" placeholder="0.5" />
-                    </div>
-                    <div className='col-6'>
-                      <label for="sky_color" class="form-label">Sky Color</label>
-                      <input type="color" class="form-control" id="sky_color" placeholder="black"
-                      onChange={(e) => setSkycolor(e.target.value)} />
-                    </div>
-                    <div className='col-6'>
-                      <label for="ambient_light" class="form-label
-                      ">Ambient Light</label>
-                      <input type="number" class="form-control" id="ambient_light" placeholder="0.5" />
-                    </div>
-                    <div className='col-12'>
-                      <div class="form-check
-                        ">
-                        <input class="form-check-input" type="checkbox" value="" id="stars" />
-                        <label class="form-check-label" for="stars">Stars</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                  Player
-                </button>
-              </h2>
-              <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">
-                  {/* Create for player speed, mass, size, jump */}
-                  <div className='row m-0 p-0'>
-                    <div className='col-6'>
-                      <label for="player_speed" class="form-label">Speed</label>
-                      <input type="number" class="form-control" id="player_speed" placeholder="0.5" />
-                    </div>
-                    <div className='col-6'>
-                      <label for="player_mass" class="form-label">Mass</label>
-                      <input type="number" class="form-control" id="player_mass" placeholder="1" />
-                    </div>
-                    <div className='col-6'>
-                      <label for="player_size" class="form-label">Size</label>
-                      <input type="number" class="form-control" id="player_size" placeholder="1" />
-                    </div>
-                    <div className='col-6'>
-                      <label for="player_jump" class="form-label">Jump</label>
-                      <input type="number" class="form-control" id="player_jump" placeholder="1" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                  Object {"(" + (currentObjectIdentifer? currentObjectIdentifer: "None Selected") + ")"}
-                </button>
-              </h2>
-              <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">
-                  {/* Create for assetLink, fixed, mass, colliders, [col-12] OnClick, OnHover, OnCollision */}
-                  <div className='row m-0 p-0'>
-                    <div className='col-12'>
-                      <label for="assetLink" class="form-label">Asset Link</label>
-                      <input type="text" class="form-control" id="assetLink" placeholder="https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr" />
-                    </div>
-                    <div className='col-12 pt-3 text-start m-auto'>
-                      <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Fix The Object</label>
-                      </div>
-                    </div>
-                    <div className='col-12 pt-2 mb-1 text-start m-auto'>
-                      <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Follow the player?</label>
-                      </div>
-                    </div>
-                    <div className='col-6 pt-1'>
-                      <label for="initial_velocity" class="form-label">Initial Velocity</label>
-                      <input type="number" class="form-control" id="initial_velocity" placeholder="1" />
-                    </div>
-                    <div className='col-6'>
-                      <label for="mass" class="form-label">Mass</label>
-                      <input type="number" class="form-control" id="mass" placeholder="1" />
-                    </div>
-                    <div className='col-12 pt-2 mb-2'>
-                      <label for="colliders" class="form-label">Colliders</label>
-                      <select class="form-select" id="colliders">
-                        <option selected>Choose...</option>
-                        <option value="no">No</option>
-                        <option value="cuboid">Cuboid</option>
-                        <option value="hull">Hull</option>
-                        <option value="ball">Ball</option>
-                        <option value="trimesh">Trimesh</option>
-                      </select>
-                    </div>
-                    <div className='col-12 mb-2'>
-                      <label for="initialVelocity" class="form-label">Initial Velocity</label>
-                      <input type="text" class="form-control" id="initialVelocity" placeholder="" />
-                    </div>
-                    <div className='col-12'>
-                      <label for="OnClick" class="form-label">OnClick</label>
-                      <input type="text" class="form-control" id="OnClick" placeholder="" />
-                    </div>
-                    <div className='col-12'>
-                      <label for="OnHover" class="form-label">OnHover</label>
-                      <input type="text" class="form-control" id="OnHover" placeholder="" />
-                    </div>
-                    <div className='col-12'>
-                      <label for="OnCollision" class="form-label">OnCollision</label>
-                      <input type="text" class="form-control" id="OnCollision" placeholder="" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <EnvironmentControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
+            <PlayerControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
+            <ObjectControls stateEnv={stateEnv} setStateEnv={setStateEnv} currentObjectIdentifer={currentObjectIdentifer} />
             <div class="accordion-item">
               <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
