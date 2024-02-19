@@ -1,6 +1,11 @@
 import React from 'react';
+import { useContext, useState } from 'react';
+import { GlobalContext } from './GlobalContext.jsx'
 
-const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
+const ObjectControls = ({ stateEnv, setStateEnv }) => {
+    const { state, dispatch } = useContext(GlobalContext);
+    const { currentObjectIdentifier } = state;
+
     const handleObjectChange = (e) => {
         const { name, value } = e.target;
         setStateEnv((prevState) => ({
@@ -16,15 +21,16 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
         <div className="accordion-item">
             <h2 className="accordion-header">
                 <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                    Object {"(" + (currentObjectIdentifer ? currentObjectIdentifer : "None Selected") + ")"}
+                <span className="me-2 align-middle bi bi-box text-primary"></span>
+                    Object {"(" + (currentObjectIdentifier ? currentObjectIdentifier : "None Selected") + ")"}
                 </button>
             </h2>
             <div id="flush-collapseThree" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                 <div className="accordion-body">
-                    {/* Create for assetLink, fixed, mass, colliders, [col-12] OnClick, OnHover, OnCollision */}
+                    {/* Create htmlFor assetLink, fixed, mass, colliders, [col-12] OnClick, OnHover, OnCollision */}
                     <div className='row m-0 p-0'>
                         <div className='col-12'>
-                            <label for="assetLink" className="form-label">Asset Link</label>
+                            <label htmlFor="assetLink" className="form-label">Asset Link</label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -45,7 +51,7 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                                     defaultChecked={stateEnv.Object.fixed}
                                     onChange={(e) => handleObjectChange({ target: { name: "fixed", value: e.target.checked } })}
                                 />
-                                <label className="form-check-label" for="fixObject">Fix The Object</label>
+                                <label className="form-check-label" htmlFor="fixObject">Fix The Object</label>
                             </div>
                         </div>
                         <div className='col-12 pt-2 mb-1 text-start m-auto'>
@@ -58,11 +64,11 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                                     defaultChecked={stateEnv.Object.followPlayer}
                                     onChange={(e) => handleObjectChange({ target: { name: "followPlayer", value: e.target.checked } })}
                                 />
-                                <label className="form-check-label" for="followPlayer">Follow the player?</label>
+                                <label className="form-check-label" htmlFor="followPlayer">Follow the player?</label>
                             </div>
                         </div>
                         <div className='col-6 pt-1'>
-                            <label for="initialVelocity" className="form-label">Initial Velocity</label>
+                            <label htmlFor="initialVelocity" className="form-label">Initial Velocity</label>
                             <input
                                 type="number"
                                 className="form-control"
@@ -74,7 +80,7 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                             />
                         </div>
                         <div className='col-6'>
-                            <label for="mass" className="form-label">Mass</label>
+                            <label htmlFor="mass" className="form-label">Mass</label>
                             <input
                                 type="number"
                                 className="form-control"
@@ -86,7 +92,7 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                             />
                         </div>
                         <div className='col-12 pt-2 mb-2'>
-                            <label for="colliders" className="form-label">Colliders</label>
+                            <label htmlFor="colliders" className="form-label">Colliders</label>
                             <select
                                 className="form-select"
                                 id="colliders"
@@ -102,7 +108,7 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                             </select>
                         </div>
                         <div className='col-12 mb-2'>
-                            <label for="initialVelocity" className="form-label">Initial Velocity</label>
+                            <label htmlFor="initialVelocity" className="form-label">Initial Velocity</label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -114,7 +120,7 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                             />
                         </div>
                         <div className='col-12'>
-                            <label for="OnClick" className="form-label">OnClick</label>
+                            <label htmlFor="OnClick" className="form-label">OnClick</label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -126,7 +132,7 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                             />
                         </div>
                         <div className='col-12'>
-                            <label for="OnHover" className="form-label">OnHover</label>
+                            <label htmlFor="OnHover" className="form-label">OnHover</label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -138,7 +144,7 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                             />
                         </div>
                         <div className='col-12'>
-                            <label for="OnCollision" className="form-label">OnCollision</label>
+                            <label htmlFor="OnCollision" className="form-label">OnCollision</label>
                             <input
                                 type="text"
                                 className="form-control"

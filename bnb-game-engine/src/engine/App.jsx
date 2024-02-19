@@ -20,6 +20,9 @@ import EnvironmentControls from './EnvironmentControls.jsx'
 import PlayerControls from './PlayerControls.jsx'
 import ObjectControls from './ObjectControls.jsx'
 import Model from './Model.jsx'
+import LightControls from './LightControls.jsx'
+import TaskControls from './TaskControls.jsx'
+import LocationDisplay from './LocationDisplay.jsx'
 
 export default function App() {
   return (
@@ -400,85 +403,13 @@ function Scene() {
         {/* Panel */}
         <div className='col-3 text-light bg-danger vh-100 p-0 overflow-auto'>
           <div className="accordion accordion-flush" id="accordionFlushExample">
+            <Green />
             <EnvironmentControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
             <PlayerControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
-            <ObjectControls stateEnv={stateEnv} setStateEnv={setStateEnv} currentObjectIdentifer={currentObjectIdentifer} />
-            <div className="accordion-item">
-              <h2 className="accordion-header">
-                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
-                  Location & Orientation
-                </button>
-              </h2>
-              <div id="flush-collapseFour" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                <div className="accordion-body">
-                  <div className='row m-0 p-0'>
-                    <div className="col-12">
-                      <h6>Position</h6>
-                    </div>
-                    <div className="col-4">
-                      <label for="x" className="form-label">X</label>
-                      <input type="text" className="form-control" id="x" placeholder="0" disabled />
-                    </div>
-                    <div className="col-4">
-                      <label for="y" className="form-label">Y</label>
-                      <input type="text" className="form-control" id="y" placeholder="0" disabled />
-                    </div>
-                    <div className="col-4">
-                      <label for="z" className="form-label">Z</label>
-                      <input type="text" className="form-control" id="z" placeholder="0" disabled />
-                    </div>
-                  </div>
-                  <div className='row m-0 p-0 mt-3'>
-                    <div className="col-12">
-                      <h6>Quaternion</h6>
-                    </div>
-                    <div className="col-3">
-                      <label for="quaternion_x" className="form-label
-                      ">Q_X</label>
-                      <input type="text" className="form-control" id="quaternion_x" placeholder="0" disabled />
-                    </div>
-                    <div className="col-3">
-                      <label for="quaternion_y" className="form-label
-                      ">Q_Y</label>
-                      <input type="text" className="form-control" id="quaternion_y" placeholder="0" disabled />
-                    </div>
-                    <div className="col-3">
-                      <label for="quaternion_z" className="form-label
-                      ">Q_Z</label>
-                      <input type="text" className="form-control" id="quaternion_z" placeholder="0" disabled />
-                    </div>
-                    <div className="col-3">
-                      <label for="quaternion_w" className="form-label
-                      ">Q_W</label>
-                      <input type="text" className="form-control" id="quaternion_w" placeholder="0" disabled />
-                    </div>
-                  </div>
-                  <div className='row m-0 p-0 mt-3'>
-                    <div className="col-12">
-                      <h6>Scale</h6>
-                    </div>
-                    <div className="col-4">
-                      <label for="scale_x" className="form-label
-                      ">S_X</label>
-                      <input type="text" className="form-control" id="scale_x" placeholder="1" disabled />
-                    </div>
-                    <div className="col-4">
-                      <label for="scale_y" className="form-label
-                      ">S_Y</label>
-                      <input type="text" className="form-control" id="scale_y" placeholder="1" disabled />
-                    </div>
-                    <div className="col-4">
-                      <label for="scale_z" className="form-label
-                      ">S_Z</label>
-                      <input type="text" className="form-control" id="scale_z" placeholder="1" disabled />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-            </div>
-
+            <ObjectControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
+            <LocationDisplay />
+            <LightControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
+            <TaskControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
           </div>
         </div>
       </div>
