@@ -23,9 +23,11 @@ contract PlayerStatus{
     }
 
     // function to mark the task as completed
-    function completeTask(string memory _task) public {
+    function completeTask(string memory _task) public returns(bool){
         require(checkTaskExists(_task), "Task does not exist");
         tasks[_task] = true;
+
+        return gameStatus();
     }
 
     // function to check if the task is completed
@@ -48,4 +50,19 @@ contract PlayerStatus{
         }
         return (taskNames, status);
     }
+
+    function gameStatus() public view returns(bool){
+        for(uint i = 0; i < taskNames.length; i++){
+            if(!tasks[taskNames[i]]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function getTasks() public view returns(string[] memory){
+        return taskNames;
+    }
+
+    //[TODO]: game status win,running
 }
