@@ -7,6 +7,12 @@ import { useControls } from 'leva'
 import { useGLTF, GizmoHelper, GizmoViewport, OrbitControls, Center } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { PivotControls } from './pivotControls/index.tsx'
+import Swal from 'sweetalert2';
+
+import { ethers } from 'ethers';
+import GameFactory from '../contracts/GameFactory.json';
+import ContractAddress from '../contracts/contract-address.json';
+
 
 import objJSON from './objectMaster.json'
 import Green from '../Green.tsx'
@@ -31,7 +37,7 @@ function Scene() {
   const { state, dispatch } = useContext(GlobalContext)
   const { objectMaster, currentObjectIdentifer } = state
 
-  const [stateEnv,setStateEnv] = useState(
+  const [stateEnv, setStateEnv] = useState(
     {
       Environment: {
         gravity: 0,
@@ -192,7 +198,93 @@ function Scene() {
     })
   }
 
-  
+  const [account, setAccount] = useState('');
+  const [signer, setSigner] = useState(null);
+  const [factoryContract, setFactoryContract] = useState(null);
+  const [gameAddress, setGameAddress] = useState('');
+
+  const web3Handler = async (e) => {
+
+    try {
+
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      setAccount(accounts[0]);
+
+      await ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x15EB' }],
+      })
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      setSigner(signer);
+
+      // window.ethereum.on('chainChanged', async (chainId) => {
+      //   // window.location.reload();
+      // })
+
+      window.ethereum.on('accountsChanged', async function (accounts) {
+        setAccount(accounts[0])
+        await web3Handler()
+      })
+
+      const factoryContract_ = new ethers.Contract(ContractAddress.GameFactory, GameFactory.abi, signer)
+      setFactoryContract(factoryContract_);
+
+      const { value: gameName } = await Swal.fire({
+        title: 'Enter Game Name',
+        input: 'text',
+        inputLabel: 'Game Name',
+        inputPlaceholder: 'Enter your game name',
+        showCancelButton: true,
+        inputValidator: (value) => {
+          if (!value) {
+            return 'You need to enter a game name!'
+          }
+        }
+      })
+
+      if (gameName) {
+        const { value: gamePrice } = await Swal.fire({
+          title: 'Enter Game Price',
+          input: 'number',
+          inputLabel: 'Game Price',
+          inputPlaceholder: 'Enter the price of your game',
+          inputAttributes: {
+            min: 0
+          },
+          showCancelButton: true,
+          inputValidator: (value) => {
+            if (!value) {
+              return 'You need to enter a game price!'
+            }
+          }
+        })
+
+
+
+        if (gamePrice) {
+          const tx = await factoryContract_.createGame(gameName, "google.com", gamePrice, ["one", "two"]);
+          await tx.wait();
+
+          const gameContractAddress = await factoryContract_.getGameAddresses();
+          setGameAddress(gameContractAddress[gameContractAddress.length - 1]);
+
+          Swal.fire({
+            title: 'Game Published!',
+            text: `Game Address: ${gameContractAddress[gameContractAddress.length - 1]}`,
+            icon: 'success',
+            confirmButtonText: 'Open Game',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.open(gameContractAddress[gameContractAddress.length - 1], '_blank');
+            }
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error in web3Handler:', error);
+    }
+  };
 
   return (
     <div className='d-flex flex-column vh-100'>
@@ -229,7 +321,7 @@ function Scene() {
                   Test</button>
                 <button className='mx-1 px-2 p-1 my-0'
                   onClick={() => {
-                    LoadObjectMaster()
+                    web3Handler()
                   }
                   }>
                   <span className='me-1 bi bi-cloud-arrow-up align-text-top'></span>
@@ -255,7 +347,7 @@ function Scene() {
                         />
                       else
                         return <>
-                          
+
                         </>
                     })
                   }
@@ -307,33 +399,33 @@ function Scene() {
 
         {/* Panel */}
         <div className='col-3 text-light bg-danger vh-100 p-0 overflow-auto'>
-          <div class="accordion accordion-flush" id="accordionFlushExample">
+          <div className="accordion accordion-flush" id="accordionFlushExample">
             <EnvironmentControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
             <PlayerControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
             <ObjectControls stateEnv={stateEnv} setStateEnv={setStateEnv} currentObjectIdentifer={currentObjectIdentifer} />
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+            <div className="accordion-item">
+              <h2 className="accordion-header">
+                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
                   Location & Orientation
                 </button>
               </h2>
-              <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">
+              <div id="flush-collapseFour" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                <div className="accordion-body">
                   <div className='row m-0 p-0'>
                     <div className="col-12">
                       <h6>Position</h6>
                     </div>
                     <div className="col-4">
-                      <label for="x" class="form-label">X</label>
-                      <input type="text" class="form-control" id="x" placeholder="0" disabled />
+                      <label for="x" className="form-label">X</label>
+                      <input type="text" className="form-control" id="x" placeholder="0" disabled />
                     </div>
                     <div className="col-4">
-                      <label for="y" class="form-label">Y</label>
-                      <input type="text" class="form-control" id="y" placeholder="0" disabled />
+                      <label for="y" className="form-label">Y</label>
+                      <input type="text" className="form-control" id="y" placeholder="0" disabled />
                     </div>
                     <div className="col-4">
-                      <label for="z" class="form-label">Z</label>
-                      <input type="text" class="form-control" id="z" placeholder="0" disabled />
+                      <label for="z" className="form-label">Z</label>
+                      <input type="text" className="form-control" id="z" placeholder="0" disabled />
                     </div>
                   </div>
                   <div className='row m-0 p-0 mt-3'>
@@ -341,24 +433,24 @@ function Scene() {
                       <h6>Quaternion</h6>
                     </div>
                     <div className="col-3">
-                      <label for="quaternion_x" class="form-label
+                      <label for="quaternion_x" className="form-label
                       ">Q_X</label>
-                      <input type="text" class="form-control" id="quaternion_x" placeholder="0" disabled />
+                      <input type="text" className="form-control" id="quaternion_x" placeholder="0" disabled />
                     </div>
                     <div className="col-3">
-                      <label for="quaternion_y" class="form-label
+                      <label for="quaternion_y" className="form-label
                       ">Q_Y</label>
-                      <input type="text" class="form-control" id="quaternion_y" placeholder="0" disabled />
+                      <input type="text" className="form-control" id="quaternion_y" placeholder="0" disabled />
                     </div>
                     <div className="col-3">
-                      <label for="quaternion_z" class="form-label
+                      <label for="quaternion_z" className="form-label
                       ">Q_Z</label>
-                      <input type="text" class="form-control" id="quaternion_z" placeholder="0" disabled />
+                      <input type="text" className="form-control" id="quaternion_z" placeholder="0" disabled />
                     </div>
                     <div className="col-3">
-                      <label for="quaternion_w" class="form-label
+                      <label for="quaternion_w" className="form-label
                       ">Q_W</label>
-                      <input type="text" class="form-control" id="quaternion_w" placeholder="0" disabled />
+                      <input type="text" className="form-control" id="quaternion_w" placeholder="0" disabled />
                     </div>
                   </div>
                   <div className='row m-0 p-0 mt-3'>
@@ -366,19 +458,19 @@ function Scene() {
                       <h6>Scale</h6>
                     </div>
                     <div className="col-4">
-                      <label for="scale_x" class="form-label
+                      <label for="scale_x" className="form-label
                       ">S_X</label>
-                      <input type="text" class="form-control" id="scale_x" placeholder="1" disabled />
+                      <input type="text" className="form-control" id="scale_x" placeholder="1" disabled />
                     </div>
                     <div className="col-4">
-                      <label for="scale_y" class="form-label
+                      <label for="scale_y" className="form-label
                       ">S_Y</label>
-                      <input type="text" class="form-control" id="scale_y" placeholder="1" disabled />
+                      <input type="text" className="form-control" id="scale_y" placeholder="1" disabled />
                     </div>
                     <div className="col-4">
-                      <label for="scale_z" class="form-label
+                      <label for="scale_z" className="form-label
                       ">S_Z</label>
-                      <input type="text" class="form-control" id="scale_z" placeholder="1" disabled />
+                      <input type="text" className="form-control" id="scale_z" placeholder="1" disabled />
                     </div>
                   </div>
                 </div>
