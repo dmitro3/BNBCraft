@@ -7,6 +7,7 @@ import { Suspense, useEffect } from "react"
 import { useState } from "react"
 import { ethers } from "ethers"
 import PlayerStatus from './contracts/PlayerStatus.json';
+import GameAbi from './contracts/Game.json';
 import { useSharedState } from './sharedState';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { useLoader } from '@react-three/fiber'
@@ -14,6 +15,7 @@ import { BigNumber } from "ethers"
 import { useRef } from "react"
 import data from './test.json';
 import { Scene } from "three"
+import Swal from 'sweetalert2'
 
 
 // Controls: WASD + left click
@@ -30,13 +32,12 @@ const Model = ({ file , object }) => {
 
 export default function App() {
   const queryParams = new URLSearchParams(window.location.search)
-  const address = queryParams.get("market") || "loading..."
+  const gameAddress = queryParams.get("game") || "loading..."
 
   const [account, setAccount] = useState('');
-  const { user, setUser } = useSharedState();
-
+  const { user, setUser , setText } = useSharedState();
   const [playerContract, setPlayerContract] = useState();
-  
+  const [gameContract, setGameContract] = useState();
   let [objects] = useState([])
   const [world_settings, setWorldSettings] = useState({})
   const [light] = useState([])
@@ -73,18 +74,45 @@ export default function App() {
       setUser((account))
       await web3Handler()
     })
-    loadContracts(signer, accounts[0])
+     loadContracts(signer, accounts[0])
 
   };
 
+  const buy = async (game_contract, price) => {
+    await game_contract.name().then
+    ((name) => {
+      Swal.fire({
+        title: name,
+        text: "Please buy the game to continue",
+        icon: 'info',
+        confirmButtonText: price+" TBNB",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          game_contract.buyGame({value: price})
+          .then((tx) => {
+            console.log(tx)
+    }
+    )}}
+    )
+  })
+    
+    
+  }
+
   const loadContracts = async (signer, account) => {
     try {
-      const address = "0xF2a3b5A2C86cfF9D8De2056418773B6a71cE03A4"
-      console.log(address, " address")
-      const playerContract = await new ethers.Contract(address, PlayerStatus.abi, signer)
-      console.log(playerContract, "playerContract")
-      setPlayerContract(playerContract)
-
+      const Gamecontract = new ethers.Contract("0xD5402977f4FC6340164B4F49E82Fe484c9535B95", GameAbi.abi, signer)
+      await Gamecontract.getPlayerContract().then((address) => {
+        if(address === "0x0000000000000000000000000000000000000000"){
+          const price = Gamecontract.price().then((price) => {
+          buy(Gamecontract, price)})
+        }
+        else {
+          const playerContract = new ethers.Contract(address, PlayerStatus.abi, signer)
+          setPlayerContract(playerContract)
+        }
+      })     
+      
     } catch (error) {
       console.error('Error loading contracts:', error);
       // Handle the error (e.g., show a message to the user)
@@ -96,7 +124,10 @@ export default function App() {
   useEffect(() => {
     web3Handler()
     load()
+    // loadContracts()
   }, [])
+
+
 
   return (<>
     <KeyboardControls
@@ -131,6 +162,12 @@ export default function App() {
               if(object.colliders!="no") {
               return(
             <RigidBody 
+            onPointerEnter={() => {
+              setText(object.onHover)
+            }}
+            onPointerLeave={() => {
+              setText("")
+            }}
             onClick={() => {
               if(object.onClick!="none")
               playerContract.completeTask(object.onClick)
