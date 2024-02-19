@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client"
 import { useSharedState } from "./sharedState"
 import "./styles.css"
 import App from "./App"
-import Buy from "./Buy"
 import { SharedStateProvider } from "./sharedState"
 import { BrowserRouter, Routes, Route , Router } from "react-router-dom"
 

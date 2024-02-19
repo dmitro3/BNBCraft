@@ -78,6 +78,23 @@ export default function App() {
 
   };
 
+  const menu = async (isStart) => {
+    const message = !isStart ? "You Won" : "Welcome to the game"
+      Swal.fire({
+        title: "Menu",
+        text: message,
+        icon: 'success',
+        confirmButtonText: "New Game",
+      }).then(async(result) => {
+        if (result.isConfirmed) {
+          await playerContract.reset()
+          .then((tx) => {
+            console.log(tx)
+    }
+    )}}
+    )}
+
+
   const buy = async (game_contract, price) => {
     await game_contract.name().then
     ((name) => {
@@ -101,7 +118,7 @@ export default function App() {
 
   const loadContracts = async (signer, account) => {
     try {
-      const Gamecontract = new ethers.Contract("0xD5402977f4FC6340164B4F49E82Fe484c9535B95", GameAbi.abi, signer)
+      const Gamecontract = new ethers.Contract(gameAddress, GameAbi.abi, signer)
       await Gamecontract.getPlayerContract().then((address) => {
         if(address === "0x0000000000000000000000000000000000000000"){
           const price = Gamecontract.price().then((price) => {
@@ -110,6 +127,7 @@ export default function App() {
         else {
           const playerContract = new ethers.Contract(address, PlayerStatus.abi, signer)
           setPlayerContract(playerContract)
+          menu(true)
         }
       })     
       
@@ -168,9 +186,14 @@ export default function App() {
             onPointerLeave={() => {
               setText("")
             }}
-            onClick={() => {
+            onClick={async()=> {
               if(object.onClick!="none")
-              playerContract.completeTask(object.onClick)
+              await playerContract.completeTask(object.onClick).then((tx) => {
+                console.log(tx)
+                if(tx) {
+                  menu(false)
+                }
+              })
             }}
             onCollisionEnter={() => {
               if(object.onCollision!="none")
