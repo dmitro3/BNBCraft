@@ -1,10 +1,11 @@
 [
     {
+        "type": "environment",
         "assetIdentifier": "world_settings",
         "gravity": 0,
         "friction": 0.5,
-        "sky_color": "#000000",
-        "amvient_light": 0.5,
+        "sky_color": "black",
+        "ambient_light": 0.5,
         "player_speed": 10,
         "player_mass": 50,
         "player_size": 1,
@@ -12,63 +13,11 @@
         "stars": true
     },
     {
+        "type": "object",
         "assetIdentifier": "chest0",
-        "fixed": false,
-        "mass": 1,
-        "onCollision": "none",
-        "onClick": "none",
-        "onHover": "none",
-        "colliders": "ball",
         "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
         "position": {
-            "x": 10,
-            "y": 10,
-            "z": 100
-        },
-        "quaternion": {
-            "isQuaternion": true,
-            "_x": 0,
-            "_y": 0,
-            "_z": 0,
-            "_w": 1
-        },
-        "scale": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-        },
-        "worldMatrix": {
-            "elements": [
-                1,
-                0,
-                0,
-                0,
-                0,
-                1,
-                0,
-                0,
-                0,
-                0,
-                1,
-                0,
-                -4.170938189256237,
-                0,
-                -1.1383852401009265,
-                1
-            ]
-        }
-    },
-    {
-        "assetIdentifier": "chest1",
-        "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
-        "fixed": true,
-        "mass": 1,
-        "onCollision": "none",
-        "onClick": "none",
-        "onHover": "none",
-        "colliders": "",
-        "position": {
-            "x": 100,
+            "x": 0,
             "y": 0,
             "z": 0
         },
@@ -103,6 +52,12 @@
                 0,
                 1
             ]
-        }
+        },
+        "fixed": false,
+        "mass": 1,
+        "colliders": "no",
+        "OnClick": "",
+        "OnHover": "",
+        "OnCollision": ""
     }
 ]

@@ -46,11 +46,12 @@ export default function App() {
 
   const load = () => {
     data.map((object) => {
-      if(object.assetIdentifier === "world_settings"){
+      if(object.type === "environment"){
         setWorldSettings(object)
       }
       else if(objects.includes(object) === false){
         objects.push(object)
+        console.log(objects, "objects")
       }
     }
   )}
@@ -115,21 +116,27 @@ export default function App() {
       <Suspense>
         <Canvas camera={{ fov: 45 }} shadows>
           <ambientLight intensity={0.5} />
-          <color attach="background" args={["black"]} />
+          <color attach="background" args={[world_settings.sky_color]} />
 
           {world_settings.stars && <Stars depth={100} />}
           <Physics gravity={[0, -world_settings.gravity, 0]}>
             <Debug/>
             {objects && objects.map((object) => {
-               return(
-            <RigidBody 
+              if(object.colliders!="no") {
+              return(
+              <RigidBody 
             key={object.assetIdentifier} 
             type={object.fixed ? "fixed" : "dynamic"} 
             colliders={object.colliders}
-            mass={1} >
+            mass={1} > 
               <Model key={object.assetIdentifier} object={object} file={object.assetLink} />
                </RigidBody>
-               )
+               )}
+
+              else {
+                return(
+                  <Model key={object.assetIdentifier} object={object} file={object.assetLink} />
+            )}
             })}
             <Player 
             speed={world_settings.player_speed}
