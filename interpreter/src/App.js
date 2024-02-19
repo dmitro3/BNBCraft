@@ -4,11 +4,9 @@ import { Debug, Physics, RigidBody } from "@react-three/rapier"
 import { Player } from "./Player"
 // import { Model } from "./Show2"
 import { Suspense, useEffect } from "react"
-import { Billboard } from "@react-three/drei"
-import { Sky } from "@react-three/drei"
 import { useState } from "react"
 import { ethers } from "ethers"
-import Market from './contracts/MarketPlace.json';
+import PlayerStatus from './contracts/PlayerStatus.json';
 import { useSharedState } from './sharedState';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { useLoader } from '@react-three/fiber'
@@ -21,7 +19,6 @@ import { Scene } from "three"
 // Controls: WASD + left click
 
 const Model = ({ file , object }) => {
-  console.log(file, "file")
   const gltf = useLoader(GLTFLoader, file)
   return (<primitive 
     key={object.assetIdentifier}
@@ -36,11 +33,10 @@ export default function App() {
   const address = queryParams.get("market") || "loading..."
 
   const [account, setAccount] = useState('');
-  const [marketContract, setMarketContract] = useState(null);
   const { user, setUser } = useSharedState();
-  const [marketname, setMarketName] = useState("loading...")
-  const [products, setProducts] = useState([])
-  const [marketdesc, setMarketDesc] = useState("loading...")
+
+  const [playerContract, setPlayerContract] = useState();
+  
   let [objects] = useState([])
   const [world_settings, setWorldSettings] = useState({})
   const [light] = useState([])
@@ -75,22 +71,19 @@ export default function App() {
     window.ethereum.on('accountsChanged', async function (accounts) {
       setAccount(accounts[0])
       setUser((account))
-      // await web3Handler()
+      await web3Handler()
     })
-    // loadContracts(signer, accounts[0])
+    loadContracts(signer, accounts[0])
 
   };
 
   const loadContracts = async (signer, account) => {
     try {
+      const address = "0xF2a3b5A2C86cfF9D8De2056418773B6a71cE03A4"
       console.log(address, " address")
-      const marketContract_ = await new ethers.Contract(address, Market.abi, signer)
-      console.log(marketContract_)
-      // loadProducts(marketContract_)
-      setMarketContract(marketContract_)
-      setMarketName(await marketContract_.marketPlaceName())
-      setProducts(await marketContract_.getProducts())
-      setMarketDesc(await marketContract_.marketPlaceDescription())
+      const playerContract = await new ethers.Contract(address, PlayerStatus.abi, signer)
+      console.log(playerContract, "playerContract")
+      setPlayerContract(playerContract)
 
     } catch (error) {
       console.error('Error loading contracts:', error);
@@ -99,10 +92,10 @@ export default function App() {
   };
 
 
+
   useEffect(() => {
-    // web3Handler()
+    web3Handler()
     load()
-    console.log(objects, "objects")
   }, [])
 
   return (<>
@@ -137,7 +130,24 @@ export default function App() {
             {objects && objects.map((object) => {
               if(object.colliders!="no") {
               return(
-              <RigidBody 
+            <RigidBody 
+            onClick={() => {
+              if(object.onClick!="none")
+              playerContract.completeTask(object.onClick)
+            }}
+            onCollisionEnter={() => {
+              if(object.onCollision!="none")
+              playerContract.completeTask(object.onCollision)
+            }}
+            onIntersectionEnter={() => {
+              if(object.onSensorEnter!="none")
+              playerContract.completeTask(object.onSensorEnter)
+            }}
+            onIntersectionExit={() => {
+              if(object.onSensorExit!="none")
+              playerContract.completeTask(object.onSensorExit) 
+            }}
+            sensor={object.sensor}
             key={object.assetIdentifier} 
             type={object.fixed ? "fixed" : "dynamic"} 
             colliders={object.colliders}

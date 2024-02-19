@@ -2,10 +2,10 @@
     {
         "type": "environment",
         "assetIdentifier": "world_settings",
-        "gravity": 30,
+        "gravity": 0,
         "friction": 0.5,
         "sky_color": "black",
-        "ambient_light": 0,
+        "ambient_light": 0.5,
         "player_speed": 10,
         "player_mass": 50,
         "player_size": 1,
@@ -27,12 +27,14 @@
     {
         "type": "object",
         "assetIdentifier": "chest0",
-        "fixed": false,
+        "fixed": true,
         "mass": 1,
         "onCollision": "none",
-        "onClick": "none",
+        "onClick": "Hello",
+        "onSensorEnter": "none",
+        "onSensorExit": "none",
         "onHover": "none",
-        "colliders": "ball",
+        "colliders": "cuboid",
         "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
         "position": {
             "x": 0,
@@ -70,12 +72,6 @@
                 0,
                 1
             ]
-        },
-        "fixed": false,
-        "mass": 1,
-        "colliders": "no",
-        "OnClick": "",
-        "OnHover": "",
-        "OnCollision": ""
+        }
     }
 ]
