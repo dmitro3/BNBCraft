@@ -1,11 +1,17 @@
 [
     {
         "assetIdentifier": "chest0",
-        "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
+        "fixed": false,
+        "mass": 1,
+        "onCollision": "none",
+        "onClick": "none",
+        "onHover": "none",
+        "colliders": "ball",
+        "assetLink": "https://gnfd-testnet-sp2.nodereal.io/download/hackathon/NissanSkyline.glb",
         "position": {
-            "x": -1.8192894524992638,
-            "y": 0,
-            "z": -3.533682824227138
+            "x": 10,
+            "y": 10,
+            "z": 100
         },
         "quaternion": {
             "isQuaternion": true,
@@ -33,19 +39,27 @@
                 0,
                 1,
                 0,
-                -1.8192894524992638,
+                -4.170938189256237,
                 0,
-                -3.533682824227138,
+                -1.1383852401009265,
                 1
             ]
         },
-        "fixed": false
+        "initialVelocity" : "2",
+        "followPlayer" : true,
+        "scaleFactor": 0.1
     },
     {
         "assetIdentifier": "chest1",
         "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
+        "fixed": true,
+        "mass": 1,
+        "onCollision": "none",
+        "onClick": "none",
+        "onHover": "none",
+        "colliders": "",
         "position": {
-            "x": 0,
+            "x": 100,
             "y": 0,
             "z": 0
         },
@@ -81,6 +95,8 @@
                 1
             ]
         },
-        "fixed": false
+        "initialVelocity" : "2",
+        "followPlayer" : true,
+        "scaleFactor": 0.1
     }
 ]

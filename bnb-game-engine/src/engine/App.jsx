@@ -1,7 +1,6 @@
 import { useRef, useState, useContext } from 'react'
 import { useEffect } from 'react'
 import { GlobalContext, GlobalContextProvider } from './GlobalContext.jsx'
-
 import * as THREE from 'three'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { useControls } from 'leva'
@@ -14,6 +13,7 @@ import Green from '../Green.tsx'
 import EnvironmentControls from './EnvironmentControls.jsx'
 import PlayerControls from './PlayerControls.jsx'
 import ObjectControls from './ObjectControls.jsx'
+import Model from './Model.jsx'
 
 export default function App() {
   return (
@@ -58,72 +58,6 @@ function Scene() {
         OnCollision: ""
       }
     });
-
-  
-    const handleEnvChange = (e) => {
-      const { name, value } = e.target;
-      setStateEnv((prevState) => ({
-        ...prevState,
-        Environment: {
-          ...prevState.Environment,
-          [name]: value,
-        },
-      }));
-    };
-
-    const handlePlayerChange = (e) => {
-      const { name, value } = e.target;
-      setStateEnv((prevState) => ({
-        ...prevState,
-        Player: {
-          ...prevState.Player,
-          [name]: value,
-        },
-      }));
-    }
-
-    const handleObjectChange = (e) => {
-      const { name, value } = e.target;
-      setStateEnv((prevState) => ({
-        ...prevState,
-        Object: {
-          ...prevState.Object,
-          [name]: value,
-        },
-      }));
-    }
-
-  const Model = ({ assetLink, assetIdentifer, collision, fixed, worldMatrix }) => {
-    const gltf = useLoader(GLTFLoader, assetLink);
-    const [hovered, setHovered] = useState(false)
-
-    useEffect(() => {
-      document.body.style.cursor = hovered ? 'grab' : 'auto'
-    }, [hovered])
-
-    return (
-      <PivotControls assetIdentifier={assetIdentifer} collision={collision} fixedM={fixed} worldMatrix={worldMatrix}>
-        <Center top position={[2, 0, 2]}>
-          <primitive object={gltf.scene.clone()}
-            onClick={(e) => {
-              dispatch({
-                type: "SET_CURRENT_OBJECT",
-                payload: {
-                  assetIdentifier: assetIdentifer
-                }
-              })
-
-              setId(assetIdentifer)
-            }}
-            onPointerEnter={(e) => setHovered(true)}
-            onPointerOut={(e) => setHovered(false)} />
-        </Center>
-      </PivotControls>)
-  };
-
-  function setId(id) {
-    setAssetIdentifer(id)
-  }
 
   // Add Object
   const [assetIdentifer, setAssetIdentifer] = useState('chest0')
@@ -258,6 +192,8 @@ function Scene() {
     })
   }
 
+  
+
   return (
     <div className='d-flex flex-column vh-100'>
       <div className='row m-0 w-100 overflow-auto'>
@@ -315,9 +251,12 @@ function Scene() {
                           collision={object.collision}
                           fixed={object.fixed}
                           worldMatrix={object.worldMatrix}
+                          setAssetIdentifer={setAssetIdentifer}
                         />
                       else
-                        return <></>
+                        return <>
+                          
+                        </>
                     })
                   }
                 </>
