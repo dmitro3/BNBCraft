@@ -48,6 +48,9 @@ const reducer = (state, action) => {
             quaternion: action.payload.quaternion,
             scale: action.payload.scale,
             worldMatrix: action.payload.worldMatrix,
+            initialVelocity: action.payload.initialVelocity,
+            followPlayer: action.payload.followPlayer,
+            scaleFactor: action.payload.scaleFactor,
 
             // State
             fixed: action.payload.fixed,
@@ -97,6 +100,9 @@ const reducer = (state, action) => {
               quaternion: action.payload.quaternion || object.quaternion,
               scale: action.payload.scale || object.scale,
               worldMatrix: action.payload.worldMatrix || object.worldMatrix,
+              initialVelocity: action.payload.initialVelocity || object.initialVelocity,
+              followPlayer: action.payload.followPlayer || object.followPlayer,
+              scaleFactor: action.payload.scaleFactor || object.scaleFactor,
 
               // State
               fixed: action.payload.fixed || object.fixed,

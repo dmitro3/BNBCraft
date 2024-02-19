@@ -9,13 +9,22 @@ const hre = require("hardhat");
 async function main() {
 
 
-  const gameContract = await hre.ethers.deployContract("Game", ["test",1]);
-  await gameContract.waitForDeployment();
+  // const gameContract = await hre.ethers.deployContract("Game");
+  // await gameContract.waitForDeployment();
   
+  // console.log(
+  //   "Game Contract Address:",
+  //   gameContract.target
+  //   );
+
+  const factoryContract = await hre.ethers.deployContract("GameFactory");
+  await factoryContract.waitForDeployment();
+
   console.log(
-    "Game Contract Address:",
-    gameContract.target
+    "Game Factory Contract Address:",
+      factoryContract.target
     );
+
 
 
 }

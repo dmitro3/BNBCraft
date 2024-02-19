@@ -1,7 +1,6 @@
 import { useRef, useState, useContext } from 'react'
 import { useEffect } from 'react'
 import { GlobalContext, GlobalContextProvider } from './GlobalContext.jsx'
-
 import * as THREE from 'three'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { useControls } from 'leva'
@@ -11,6 +10,10 @@ import { PivotControls } from './pivotControls/index.tsx'
 
 import objJSON from './objectMaster.json'
 import Green from '../Green.tsx'
+import EnvironmentControls from './EnvironmentControls.jsx'
+import PlayerControls from './PlayerControls.jsx'
+import ObjectControls from './ObjectControls.jsx'
+import Model from './Model.jsx'
 
 export default function App() {
   return (
@@ -23,41 +26,38 @@ export default function App() {
 function Scene() {
   const [isGreenVisible, setIsGreenVisible] = useState(true);
 
+  const [height, setHeight] = useState("20%");
   const ref = useRef()
   const { state, dispatch } = useContext(GlobalContext)
   const { objectMaster, currentObjectIdentifer } = state
 
-  const Model = ({ assetLink, assetIdentifer, collision, fixed, worldMatrix }) => {
-    const gltf = useLoader(GLTFLoader, assetLink);
-    const [hovered, setHovered] = useState(false)
-
-    useEffect(() => {
-      document.body.style.cursor = hovered ? 'grab' : 'auto'
-    }, [hovered])
-
-    return (
-      <PivotControls assetIdentifier={assetIdentifer} collision={collision} fixedM={fixed} worldMatrix={worldMatrix}>
-        <Center top position={[2, 0, 2]}>
-          <primitive object={gltf.scene.clone()}
-            onClick={(e) => {
-              dispatch({
-                type: "SET_CURRENT_OBJECT",
-                payload: {
-                  assetIdentifier: assetIdentifer
-                }
-              })
-
-              setId(assetIdentifer)
-            }}
-            onPointerEnter={(e) => setHovered(true)}
-            onPointerOut={(e) => setHovered(false)} />
-        </Center>
-      </PivotControls>)
-  };
-
-  function setId(id) {
-    setAssetIdentifer(id)
-  }
+  const [stateEnv,setStateEnv] = useState(
+    {
+      Environment: {
+        gravity: 0,
+        friction: 0.5,
+        sky_color: '#000000',
+        ambient_light: 0.5,
+        stars: false
+      },
+      Player: {
+        speed: 10,
+        mass: 50,
+        size: 1,
+        jump: 0.5
+      },
+      Object: {
+        assetLink: 'https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr',
+        fixed: false,
+        followPlayer: false,
+        initialVelocity: 1,
+        mass: 1,
+        colliders: 'No',
+        OnClick: "",
+        OnHover: "",
+        OnCollision: ""
+      }
+    });
 
   // Add Object
   const [assetIdentifer, setAssetIdentifer] = useState('chest0')
@@ -76,6 +76,9 @@ function Scene() {
         quaternion: new THREE.Quaternion(0, 0, 0, 0),
         scale: new THREE.Vector3(1, 1, 1),
         worldMatrix: new THREE.Matrix4(),
+        initialVelocity: new THREE.Vector3(0, 0, 0),
+        followPlayer: false,
+        scaleFactor: 1,
 
         // State
         fixed: false,
@@ -169,6 +172,9 @@ function Scene() {
           quaternion: new THREE.Quaternion(object.quaternion.x, object.quaternion.y, object.quaternion.z, object.quaternion.w),
           scale: new THREE.Vector3(object.scale.x, object.scale.y, object.scale.z),
           worldMatrix: new THREE.Matrix4().fromArray(object.worldMatrix.elements),
+          initialVelocity: new THREE.Vector3(object.initialVelocity.x, object.initialVelocity.y, object.initialVelocity.z),
+          followPlayer: object.followPlayer,
+          scaleFactor: object.scaleFactor,
 
           // State
           fixed: object.fixed,
@@ -186,118 +192,201 @@ function Scene() {
     })
   }
 
+  
+
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      <div style={{ width: "70%" }}>
-        <Canvas shadows raycaster={{ params: { Line: { threshold: 0.15 } } }} camera={{ position: [-10, 10, 10], fov: 20 }} id='objectScene'>
-          {
-            <>
+    <div className='d-flex flex-column vh-100'>
+      <div className='row m-0 w-100 overflow-auto'>
+        <div className='col-9 d-flex flex-column p-0 m-0 vh-100'>
+          <div className='d-flex flex-row bg-success' style={{ height: "5%" }}>
+            {/* Create a horizontal list of items in the following order: <Title> <Load World> <Export World> <Test> <Publish> */}
+            <div className='col-3'>
+              <h3 className='text-light ms-2'>BnB Hackathon</h3>
+            </div>
+            <div className='col-3'></div>
+            <div className='col-6 text-end'>
+              <div className='m-0' style={{ padding: "1.5px" }}>
+                <button className='mx-1 px-2 p-1 my-0'
+                  onClick={() => {
+                    LoadObjectMaster()
+                  }
+                  }>
+                  <span className='me-1 bi bi-folder-symlink align-text-top'></span>
+                  Load World</button>
+                <button className='mx-1 px-2 p-1 my-0'
+                  onClick={() => {
+                    LoadObjectMaster()
+                  }
+                  }>
+                  <span className='me-1 bi bi-cloud-arrow-down align-text-top'></span>
+                  Export World</button>
+                <button className='mx-1 px-2 p-1 my-0'
+                  onClick={() => {
+                    LoadObjectMaster()
+                  }
+                  }>
+                  <span className='me-1 bi bi-play-circle align-text-top'></span>
+                  Test</button>
+                <button className='mx-1 px-2 p-1 my-0'
+                  onClick={() => {
+                    LoadObjectMaster()
+                  }
+                  }>
+                  <span className='me-1 bi bi-cloud-arrow-up align-text-top'></span>
+                  Publish</button>
+              </div>
+            </div>
+          </div>
+          <div style={{ height: (height === "20%" ? "80%" : "100%") }}>
+            <Canvas shadows raycaster={{ params: { Line: { threshold: 0.15 } } }} camera={{ position: [-10, 10, 10], fov: 20 }} id='objectScene'>
+              <color attach="background" args={[stateEnv.Environment.sky_color]} />
               {
-                objectMaster.map((object) => {
-                  if (object.type === "object")
-                    return <Model
-                      assetIdentifer={object.assetIdentifier}
-                      assetLink={object.assetLink}
-                      collision={object.collision}
-                      fixed={object.fixed}
-                      worldMatrix={object.worldMatrix}
-                    />
-                  else
-                    return <></>
-                })
+                <>
+                  {
+                    objectMaster.map((object) => {
+                      if (object.type === "object")
+                        return <Model
+                          assetIdentifer={object.assetIdentifier}
+                          assetLink={object.assetLink}
+                          collision={object.collision}
+                          fixed={object.fixed}
+                          worldMatrix={object.worldMatrix}
+                          setAssetIdentifer={setAssetIdentifer}
+                        />
+                      else
+                        return <>
+                          
+                        </>
+                    })
+                  }
+                </>
               }
-            </>
-          }
-          <ambientLight intensity={0.5} />
-          <directionalLight
-            castShadow
-            position={[2.5, 5, 5]}
-            intensity={1.5}
-            shadow-mapSize={[1024, 1024]}>
-            {/* <orthographicCamera attach="shadow-camera" args={[-5, 5, 5, -5, 1, 50]} /> */}
-          </directionalLight>
+              <ambientLight intensity={0.5} />
+              <directionalLight
+                castShadow
+                position={[2.5, 5, 5]}
+                intensity={1.5}
+                shadow-mapSize={[1024, 1024]}>
+                {/* <orthographicCamera attach="shadow-camera" args={[-5, 5, 5, -5, 1, 50]} /> */}
+              </directionalLight>
 
-          <mesh scale={20}
-            receiveShadow
-            rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry />
-            <shadowMaterial transparent opacity={0.2} />
-          </mesh>
+              <mesh scale={20}
+                receiveShadow
+                rotation={[-Math.PI / 2, 0, 0]}>
+                <planeGeometry />
+                <shadowMaterial transparent opacity={0.2} />
+              </mesh>
 
-          <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
-            <GizmoViewport labelColor="white" axisHeadScale={1} />
-          </GizmoHelper>
-          <OrbitControls makeDefault />
-        </Canvas>
-      </div>
+              <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
+                <GizmoViewport labelColor="white" axisHeadScale={1} />
+              </GizmoHelper>
+              <OrbitControls makeDefault />
+            </Canvas>
+          </div>
 
-      {/* Panel */}
-      <div style={{ width: "30%" }}>
-        <button onClick={() => setIsGreenVisible(!isGreenVisible)}>
-          Import from Greenfield
-        </button>
-        {isGreenVisible && <Green />}
-        <div className='panel' style={{ height: "10vh" }}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {/* Add Panel */}
-            <div style={{ border: '1px solid black', padding: '10px', marginBottom: "10px" }}>
-              <h2>Add Object</h2>
-              <input type='text' placeholder='Asset Identifier' onChange={(e) => setAssetIdentifer(e.target.value)} value={assetIdentifer} />
-              <input type='text' placeholder='Asset Link' onChange={(e) => setAssetLink(e.target.value)} value={assetLink} />
-              <button onClick={AddAction}>Add</button>
-            </div>
-
-            {/* Delete Panel */}
-            <div style={{ border: '1px solid black', padding: '10px', marginBottom: "10px" }}>
-              <h2>Delete Object</h2>
-              <input type='text' placeholder='Asset Identifier' onChange={(e) => setAssetIdentifer(e.target.value)} value={assetIdentifer} />
-              <button onClick={() => DeleteAction(assetIdentifer)}>Delete</button>
-            </div>
-
-            {/* Object Master */}
-            <div style={{ border: '1px solid black', padding: '10px', marginBottom: "10px" }}>
-              <h2>Object Master</h2>
-              <button onClick={LoadObjectMaster}>Load</button>
-              <button
+          <div className='bg-primary overflow-auto w-100' style={{ height: height }}>
+            <div className='row m-0 pb-1'>
+              <button className='m-0 p-0 border-0 text-light' style={{ borderRadius: "0px" }}
                 onClick={() => {
-                  const a = document.createElement("a");
-                  const file = new Blob([JSON.stringify(objectMaster)], { type: 'application/json' });
-                  a.href = URL.createObjectURL(file);
-                  a.download = 'objectMaster.json';
-                  a.click();
-                }}
-              >Download</button>
-              <h3>Object Count: {objectMaster.length}</h3>
-              <ul style={{ overflowY: "scroll", height: "40vh" }}>
+                  if (height === "20%")
+                    setHeight("3.4%")
+                  else
+                    setHeight("20%")
+                }}>
                 {
-                  objectMaster.map((object) => {
-                    if (object.type === "object")
-                      return <div style={{ padding: "4px", border: "2px solid white" }}>
-                        <li>Asset: <span style={{ color: "red" }}>{object.assetIdentifier}</span></li>
-                        <li>Position: <ul>
-                          <li>x: <span style={{ color: "blue" }}>{object.position.x}</span></li>
-                          <li>y: <span style={{ color: "blue" }}>{object.position.y}</span></li>
-                          <li>z: <span style={{ color: "blue" }}>{object.position.z}</span></li>
-                        </ul>
-                        </li>
-                        <li>Quaternion: <ul>
-                          <li>x: <span style={{ color: "blue" }}>{object.quaternion.x}</span></li>
-                          <li>y: <span style={{ color: "blue" }}>{object.quaternion.y}</span></li>
-                          <li>z: <span style={{ color: "blue" }}>{object.quaternion.z}</span></li>
-                          <li>w: <span style={{ color: "blue" }}>{object.quaternion.w}</span></li>
-                        </ul>
-                        </li>
-                        <li>Scale:  <ul>
-                          <li>x: <span style={{ color: "blue" }}>{object.scale.x}</span></li>
-                          <li>y: <span style={{ color: "blue" }}>{object.scale.y}</span></li>
-                          <li>z: <span style={{ color: "blue" }}>{object.scale.z}</span></li>
-                        </ul>
-                        </li>
-                      </div>
-                  })
+                  (height === "20%" ? <span className='bi bi-chevron-double-up'></span> : <span className='bi bi-chevron-double-down'></span>)
                 }
-              </ul>
+              </button>
             </div>
+            <div className='row m-0 p-0'>
+
+            </div>
+          </div>
+
+        </div>
+
+        {/* Panel */}
+        <div className='col-3 text-light bg-danger vh-100 p-0 overflow-auto'>
+          <div class="accordion accordion-flush" id="accordionFlushExample">
+            <EnvironmentControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
+            <PlayerControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
+            <ObjectControls stateEnv={stateEnv} setStateEnv={setStateEnv} currentObjectIdentifer={currentObjectIdentifer} />
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                  Location & Orientation
+                </button>
+              </h2>
+              <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">
+                  <div className='row m-0 p-0'>
+                    <div className="col-12">
+                      <h6>Position</h6>
+                    </div>
+                    <div className="col-4">
+                      <label for="x" class="form-label">X</label>
+                      <input type="text" class="form-control" id="x" placeholder="0" disabled />
+                    </div>
+                    <div className="col-4">
+                      <label for="y" class="form-label">Y</label>
+                      <input type="text" class="form-control" id="y" placeholder="0" disabled />
+                    </div>
+                    <div className="col-4">
+                      <label for="z" class="form-label">Z</label>
+                      <input type="text" class="form-control" id="z" placeholder="0" disabled />
+                    </div>
+                  </div>
+                  <div className='row m-0 p-0 mt-3'>
+                    <div className="col-12">
+                      <h6>Quaternion</h6>
+                    </div>
+                    <div className="col-3">
+                      <label for="quaternion_x" class="form-label
+                      ">Q_X</label>
+                      <input type="text" class="form-control" id="quaternion_x" placeholder="0" disabled />
+                    </div>
+                    <div className="col-3">
+                      <label for="quaternion_y" class="form-label
+                      ">Q_Y</label>
+                      <input type="text" class="form-control" id="quaternion_y" placeholder="0" disabled />
+                    </div>
+                    <div className="col-3">
+                      <label for="quaternion_z" class="form-label
+                      ">Q_Z</label>
+                      <input type="text" class="form-control" id="quaternion_z" placeholder="0" disabled />
+                    </div>
+                    <div className="col-3">
+                      <label for="quaternion_w" class="form-label
+                      ">Q_W</label>
+                      <input type="text" class="form-control" id="quaternion_w" placeholder="0" disabled />
+                    </div>
+                  </div>
+                  <div className='row m-0 p-0 mt-3'>
+                    <div className="col-12">
+                      <h6>Scale</h6>
+                    </div>
+                    <div className="col-4">
+                      <label for="scale_x" class="form-label
+                      ">S_X</label>
+                      <input type="text" class="form-control" id="scale_x" placeholder="1" disabled />
+                    </div>
+                    <div className="col-4">
+                      <label for="scale_y" class="form-label
+                      ">S_Y</label>
+                      <input type="text" class="form-control" id="scale_y" placeholder="1" disabled />
+                    </div>
+                    <div className="col-4">
+                      <label for="scale_z" class="form-label
+                      ">S_Z</label>
+                      <input type="text" class="form-control" id="scale_z" placeholder="1" disabled />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+
           </div>
         </div>
       </div>
