@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-[{"type":"environment","assetIdentifier":"world_settings","gravity":0,"friction":0.5,"sky_color":"black","ambient_light":0.5,"player_speed":10,"player_mass":50,"player_size":1,"player_jump":0.5,"stars":true},{"type":"object","assetIdentifier":"chest0","assetLink":"https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr","position":{"x":0,"y":0,"z":0},"quaternion":{"isQuaternion":true,"_x":0,"_y":0,"_z":0,"_w":0},"scale":{"x":1,"y":1,"z":1},"worldMatrix":{"elements":[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]},"fixed":false,"mass":1,"colliders":"no","OnClick":"","OnHover":"","OnCollision":""}]
-=======
 [
     {
         "assetIdentifier": "chest0",
@@ -103,4 +100,3 @@
         "scaleFactor": 0.1
     }
 ]
->>>>>>> fe7d89f0b69357066efe46680363e4c45ba0234e

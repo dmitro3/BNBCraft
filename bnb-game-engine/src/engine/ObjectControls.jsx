@@ -1,6 +1,11 @@
 import React from 'react';
+import { useContext, useState } from 'react';
+import { GlobalContext } from './GlobalContext.jsx'
 
-const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
+const ObjectControls = ({ stateEnv, setStateEnv }) => {
+    const { state, dispatch } = useContext(GlobalContext);
+    const { currentObjectIdentifier } = state;
+
     const handleObjectChange = (e) => {
         const { name, value } = e.target;
         setStateEnv((prevState) => ({
@@ -13,21 +18,22 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
     };
 
     return (
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                    Object {"(" + (currentObjectIdentifer ? currentObjectIdentifer : "None Selected") + ")"}
+        <div className="accordion-item">
+            <h2 className="accordion-header">
+                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                <span className="me-2 align-middle bi bi-box text-primary"></span>
+                    Object {"(" + (currentObjectIdentifier ? currentObjectIdentifier : "None Selected") + ")"}
                 </button>
             </h2>
-            <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">
-                    {/* Create for assetLink, fixed, mass, colliders, [col-12] OnClick, OnHover, OnCollision */}
+            <div id="flush-collapseThree" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                <div className="accordion-body">
+                    {/* Create htmlFor assetLink, fixed, mass, colliders, [col-12] OnClick, OnHover, OnCollision */}
                     <div className='row m-0 p-0'>
                         <div className='col-12'>
-                            <label for="assetLink" class="form-label">Asset Link</label>
+                            <label htmlFor="assetLink" className="form-label">Asset Link</label>
                             <input
                                 type="text"
-                                class="form-control"
+                                className="form-control"
                                 id="assetLink"
                                 placeholder={stateEnv.Object.assetLink}
                                 value={stateEnv.Object.assetLink}
@@ -36,36 +42,36 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                             />
                         </div>
                         <div className='col-12 pt-3 text-start m-auto'>
-                            <div class="form-check form-switch">
+                            <div className="form-check form-switch">
                                 <input
-                                    class="form-check-input"
+                                    className="form-check-input"
                                     type="checkbox"
                                     role="switch"
                                     id="fixed"
                                     defaultChecked={stateEnv.Object.fixed}
                                     onChange={(e) => handleObjectChange({ target: { name: "fixed", value: e.target.checked } })}
                                 />
-                                <label class="form-check-label" for="fixObject">Fix The Object</label>
+                                <label className="form-check-label" htmlFor="fixObject">Fix The Object</label>
                             </div>
                         </div>
                         <div className='col-12 pt-2 mb-1 text-start m-auto'>
-                            <div class="form-check form-switch">
+                            <div className="form-check form-switch">
                                 <input
-                                    class="form-check-input"
+                                    className="form-check-input"
                                     type="checkbox"
                                     role="switch"
                                     id="followPlayer"
                                     defaultChecked={stateEnv.Object.followPlayer}
                                     onChange={(e) => handleObjectChange({ target: { name: "followPlayer", value: e.target.checked } })}
                                 />
-                                <label class="form-check-label" for="followPlayer">Follow the player?</label>
+                                <label className="form-check-label" htmlFor="followPlayer">Follow the player?</label>
                             </div>
                         </div>
                         <div className='col-6 pt-1'>
-                            <label for="initialVelocity" class="form-label">Initial Velocity</label>
+                            <label htmlFor="initialVelocity" className="form-label">Initial Velocity</label>
                             <input
                                 type="number"
-                                class="form-control"
+                                className="form-control"
                                 id="initialVelocity"
                                 placeholder={stateEnv.Object.initialVelocity}
                                 value={stateEnv.Object.initialVelocity}
@@ -74,10 +80,10 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                             />
                         </div>
                         <div className='col-6'>
-                            <label for="mass" class="form-label">Mass</label>
+                            <label htmlFor="mass" className="form-label">Mass</label>
                             <input
                                 type="number"
-                                class="form-control"
+                                className="form-control"
                                 id="mass"
                                 placeholder={stateEnv.Object.mass}
                                 value={stateEnv.Object.mass}
@@ -86,9 +92,9 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                             />
                         </div>
                         <div className='col-12 pt-2 mb-2'>
-                            <label for="colliders" class="form-label">Colliders</label>
+                            <label htmlFor="colliders" className="form-label">Colliders</label>
                             <select
-                                class="form-select"
+                                className="form-select"
                                 id="colliders"
                                 value={stateEnv.Object.colliders}
                                 onChange={handleObjectChange}
@@ -102,10 +108,10 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                             </select>
                         </div>
                         <div className='col-12 mb-2'>
-                            <label for="initialVelocity" class="form-label">Initial Velocity</label>
+                            <label htmlFor="initialVelocity" className="form-label">Initial Velocity</label>
                             <input
                                 type="text"
-                                class="form-control"
+                                className="form-control"
                                 id="initialVelocity"
                                 placeholder=""
                                 value={stateEnv.Object.initialVelocity}
@@ -114,10 +120,10 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                             />
                         </div>
                         <div className='col-12'>
-                            <label for="OnClick" class="form-label">OnClick</label>
+                            <label htmlFor="OnClick" className="form-label">OnClick</label>
                             <input
                                 type="text"
-                                class="form-control"
+                                className="form-control"
                                 id="OnClick"
                                 placeholder=""
                                 value={stateEnv.Object.OnClick}
@@ -126,10 +132,10 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                             />
                         </div>
                         <div className='col-12'>
-                            <label for="OnHover" class="form-label">OnHover</label>
+                            <label htmlFor="OnHover" className="form-label">OnHover</label>
                             <input
                                 type="text"
-                                class="form-control"
+                                className="form-control"
                                 id="OnHover"
                                 placeholder=""
                                 value={stateEnv.Object.OnHover}
@@ -138,10 +144,10 @@ const ObjectControls = ({ stateEnv, setStateEnv, currentObjectIdentifer }) => {
                             />
                         </div>
                         <div className='col-12'>
-                            <label for="OnCollision" class="form-label">OnCollision</label>
+                            <label htmlFor="OnCollision" className="form-label">OnCollision</label>
                             <input
                                 type="text"
-                                class="form-control"
+                                className="form-control"
                                 id="OnCollision"
                                 placeholder=""
                                 value={stateEnv.Object.OnCollision}

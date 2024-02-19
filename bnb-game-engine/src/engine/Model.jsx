@@ -8,6 +8,8 @@ import { GlobalContext } from './GlobalContext.jsx'
 
 const Model = ({ assetLink, assetIdentifer, collision, fixed, worldMatrix,setAssetIdentifier }) => {
     const { state, dispatch } = useContext(GlobalContext)
+    const { currentObjectIdentifier } = state
+
     const gltf = useLoader(GLTFLoader, assetLink);
     const [hovered, setHovered] = useState(false)
 
@@ -27,7 +29,12 @@ const Model = ({ assetLink, assetIdentifer, collision, fixed, worldMatrix,setAss
                 }
               })
 
-                setAssetIdentifier(assetIdentifer)
+              dispatch({
+                type: "SET_CURRENT_OBJECT_IDENTIFIER",
+                payload: assetIdentifer
+              })
+
+              console.log(currentObjectIdentifier, "currentObjectIdentifier")
             }}
             onPointerEnter={() => setHovered(true)}
             onPointerOut={() => setHovered(false)} />

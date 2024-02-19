@@ -1,18 +1,19 @@
 import React, { createContext, useReducer } from "react";
+import * as THREE from "three";
 
 const GlobalContext = createContext();
 
 const initialEnvironment = {
   type: "environment",
   assetIdentifier: "world_settings",
-  gravity: 0,
-  friction: 0.5,
+  gravity: 1,
   sky_color: "black",
   ambient_light: 0.5,
   player_speed: 10,
   player_mass: 50,
   player_size: 1,
   player_jump: 0.5,
+  player_flycontrol: false,
   stars: true,
 };
 
@@ -56,11 +57,15 @@ const reducer = (state, action) => {
             fixed: action.payload.fixed,
             mass: action.payload.mass,
             colliders: action.payload.colliders,
+            sensor: action.payload.sensor,
 
             // Methods
             OnClick: action.payload.OnClick,
             OnHover: action.payload.OnHover,
             OnCollision: action.payload.OnCollision,
+
+            OnSensorEnter: action.payload.OnSensorEnter,
+            OnSensorExit: action.payload.OnSensorExit,
           },
         ],
       };
@@ -108,11 +113,15 @@ const reducer = (state, action) => {
               fixed: action.payload.fixed || object.fixed,
               mass: action.payload.mass || object.mass,
               colliders: action.payload.colliders || object.colliders,
+              sensor: action.payload.sensor || object.sensor,
 
               // Methods
               OnClick: action.payload.OnClick || object.OnClick,
               OnHover: action.payload.OnHover || object.OnHover,
               OnCollision: action.payload.OnCollision || object.OnCollision,
+
+              OnSensorEnter: action.payload.OnSensorEnter || object.OnSensorEnter,
+              OnSensorExit: action.payload.OnSensorExit || object.OnSensorExit,
             };
           }
 
@@ -129,13 +138,13 @@ const reducer = (state, action) => {
             return {
               ...object,
               gravity: action.payload.gravity || object.gravity,
-              friction: action.payload.friction || object.friction,
               sky_color: action.payload.sky_color || object.sky_color,
               ambient_light: action.payload.ambient_light || object.ambient_light,
               player_speed: action.payload.player_speed || object.player_speed,
               player_mass: action.payload.player_mass || object.player_mass,
               player_size: action.payload.player_size || object.player_size,
               player_jump: action.payload.player_jump || object.player_jump,
+              player_flycontrol: action.payload.player_flycontrol || object.player_flycontrol,
               stars: action.payload.stars || object.stars,
             };
           }
@@ -156,9 +165,6 @@ const reducer = (state, action) => {
             position: action.payload.position,
             color: action.payload.color,
             intensity: action.payload.intensity,
-            distance: action.payload.distance,
-            decay: action.payload.decay,
-            shadow: action.payload.shadow,
           },
         ],
       };
@@ -181,15 +187,49 @@ const reducer = (state, action) => {
               position: action.payload.position || object.position,
               color: action.payload.color || object.color,
               intensity: action.payload.intensity || object.intensity,
-              distance: action.payload.distance || object.distance,
-              decay: action.payload.decay || object.decay,
-              shadow: action.payload.shadow || object.shadow,
             };
           }
 
           return object;
         }),
       };
+
+    // CASE: TASK
+    case "ADD_TASK":
+      return {
+        ...state,
+        objectMaster: [
+          ...state.objectMaster,
+          {
+            type: "task",
+            assetIdentifier: action.payload.assetIdentifier,
+          },
+        ],
+      };
+
+    case "CHANGE_TASK":
+      return {
+        ...state,
+        objectMaster: state.objectMaster.map((object) => {
+          if (object.assetIdentifier === action.payload.oldIdentifier && object.type === "task") {
+            return {
+              ...object,
+              assetIdentifier: action.payload.assetIdentifier || object.assetIdentifier,
+            };
+          }
+
+          return object;
+        }),
+      };
+    
+    case "DELETE_TASK":
+      return {
+        ...state,
+        objectMaster: state.objectMaster.filter(
+          (object) => object.assetIdentifier !== action.payload.assetIdentifier
+        ),
+      };
+    
 
     case "SET_CURRENT_OBJECT":
       return {

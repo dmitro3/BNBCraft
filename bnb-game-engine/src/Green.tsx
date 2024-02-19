@@ -9,7 +9,9 @@ function Green() {
 
   return (
     <>
-      <Wallet />
+      <div className='w-100 text-center p-3'>
+        <Wallet />
+      </div>
       {isConnected && <Demo />}
     </>
   )
