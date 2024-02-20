@@ -181,7 +181,7 @@ function Scene() {
           quaternion: new THREE.Quaternion(object.quaternion.x, object.quaternion.y, object.quaternion.z, object.quaternion.w),
           scale: new THREE.Vector3(object.scale.x, object.scale.y, object.scale.z),
           worldMatrix: new THREE.Matrix4().fromArray(object.worldMatrix.elements),
-          initialVelocity: new THREE.Vector3(object.initialVelocity.x, object.initialVelocity.y, object.initialVelocity.z),
+          initialVelocity: object.initialVelocity,
           followPlayer: object.followPlayer,
           scaleFactor: object.scaleFactor,
 

@@ -76,7 +76,16 @@ const reducer = (state, action) => {
         alert("Object with the given identifier does not exist!");
         return state;
       }
-
+      // set currentObjectIdentifier to "" if the object being deleted is the currentObject
+      if (state.currentObjectIdentifier === action.payload.assetIdentifier) {
+        return {
+          ...state,
+          objectMaster: state.objectMaster.filter(
+            (object) => object.assetIdentifier !== action.payload.assetIdentifier
+          ),
+          currentObjectIdentifier: "",
+        };
+      }
       return {
         ...state,
         objectMaster: state.objectMaster.filter(

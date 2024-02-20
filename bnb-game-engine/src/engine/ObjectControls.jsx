@@ -1,23 +1,50 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useContext, useState } from 'react';
 import { GlobalContext } from './GlobalContext.jsx'
 
 const ObjectControls = ({ stateEnv, setStateEnv }) => {
     const { state, dispatch } = useContext(GlobalContext);
-    const { currentObjectIdentifier } = state;
+    const { objectMaster , currentObjectIdentifier} = state;
+    const [currentObjectState, setCurrentObjectState] = useState( objectMaster.find((object) => object.assetIdentifier === currentObjectIdentifier));
+
+    useEffect(() => {
+        if (currentObjectIdentifier){
+            let current = objectMaster.find((object) => object.assetIdentifier === currentObjectIdentifier);
+            setCurrentObjectState(current);
+        }
+        else{
+            setCurrentObjectState(null);
+        } 
+    }, [currentObjectIdentifier, objectMaster]);
 
     const handleObjectChange = (e) => {
         const { name, value } = e.target;
-        setStateEnv((prevState) => ({
-            ...prevState,
-            Object: {
-                ...prevState.Object,
-                [name]: value,
-            },
-        }));
+        setCurrentObjectState({
+            ...currentObjectState,
+            [name]: value,
+        });
     };
 
+    const handleDeleteObject = (value) => {
+        dispatch({
+            type: "DELETE_OBJECT",
+            payload: {
+                assetIdentifier: value,
+            }
+        });
+    };
+
+    const handleUpdateObject = (value) => {
+        dispatch({
+            type: "CHANGE_OBJECT",
+            payload: currentObjectState,
+        });
+    }
+
+
     return (
+
+
         <div className="accordion-item">
             <h2 className="accordion-header">
                 <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
@@ -27,6 +54,9 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
             </h2>
             <div id="flush-collapseThree" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                 <div className="accordion-body">
+                    {currentObjectState ? (
+
+                    <>
                     {/* Create htmlFor assetLink, fixed, mass, colliders, [col-12] OnClick, OnHover, OnCollision */}
                     <div className='row m-0 p-0'>
                         <div className='col-12'>
@@ -35,12 +65,13 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
                                 type="text"
                                 className="form-control"
                                 id="assetLink"
-                                placeholder={stateEnv.Object.assetLink}
-                                value={stateEnv.Object.assetLink}
+                                placeholder={currentObjectState.assetLink}
+                                value={currentObjectState.assetLink}
                                 onChange={handleObjectChange}
                                 name="assetLink"
                             />
                         </div>
+                        {/* [TODO: Global Context is not changing for switches] */}
                         <div className='col-12 pt-3 text-start m-auto'>
                             <div className="form-check form-switch">
                                 <input
@@ -48,7 +79,7 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
                                     type="checkbox"
                                     role="switch"
                                     id="fixed"
-                                    defaultChecked={stateEnv.Object.fixed}
+                                    checked={ currentObjectState.fixed }
                                     onChange={(e) => handleObjectChange({ target: { name: "fixed", value: e.target.checked } })}
                                 />
                                 <label className="form-check-label" htmlFor="fixObject">Fix The Object</label>
@@ -61,7 +92,7 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
                                     type="checkbox"
                                     role="switch"
                                     id="followPlayer"
-                                    defaultChecked={stateEnv.Object.followPlayer}
+                                    checked={currentObjectState.followPlayer}
                                     onChange={(e) => handleObjectChange({ target: { name: "followPlayer", value: e.target.checked } })}
                                 />
                                 <label className="form-check-label" htmlFor="followPlayer">Follow the player?</label>
@@ -70,11 +101,11 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
                         <div className='col-6 pt-1'>
                             <label htmlFor="initialVelocity" className="form-label">Initial Velocity</label>
                             <input
-                                type="number"
+                                type="text"
                                 className="form-control"
                                 id="initialVelocity"
-                                placeholder={stateEnv.Object.initialVelocity}
-                                value={stateEnv.Object.initialVelocity}
+                                placeholder={currentObjectState.initialVelocity}
+                                value={currentObjectState.initialVelocity}
                                 onChange={handleObjectChange}
                                 name="initialVelocity"
                             />
@@ -85,8 +116,8 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
                                 type="number"
                                 className="form-control"
                                 id="mass"
-                                placeholder={stateEnv.Object.mass}
-                                value={stateEnv.Object.mass}
+                                placeholder={currentObjectState.mass}
+                                value={currentObjectState.mass}
                                 onChange={handleObjectChange}
                                 name="mass"
                             />
@@ -96,7 +127,7 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
                             <select
                                 className="form-select"
                                 id="colliders"
-                                value={stateEnv.Object.colliders}
+                                value={currentObjectState.colliders}
                                 onChange={handleObjectChange}
                                 name="colliders"
                             >
@@ -107,18 +138,6 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
                                 <option value="trimesh">Trimesh</option>
                             </select>
                         </div>
-                        <div className='col-12 mb-2'>
-                            <label htmlFor="initialVelocity" className="form-label">Initial Velocity</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="initialVelocity"
-                                placeholder=""
-                                value={stateEnv.Object.initialVelocity}
-                                onChange={handleObjectChange}
-                                name="initialVelocity"
-                            />
-                        </div>
                         <div className='col-12'>
                             <label htmlFor="OnClick" className="form-label">OnClick</label>
                             <input
@@ -126,7 +145,7 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
                                 className="form-control"
                                 id="OnClick"
                                 placeholder=""
-                                value={stateEnv.Object.OnClick}
+                                value={currentObjectState.OnClick}
                                 onChange={handleObjectChange}
                                 name="OnClick"
                             />
@@ -138,7 +157,7 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
                                 className="form-control"
                                 id="OnHover"
                                 placeholder=""
-                                value={stateEnv.Object.OnHover}
+                                value={currentObjectState.OnHover}
                                 onChange={handleObjectChange}
                                 name="OnHover"
                             />
@@ -150,12 +169,40 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
                                 className="form-control"
                                 id="OnCollision"
                                 placeholder=""
-                                value={stateEnv.Object.OnCollision}
+                                value={currentObjectState.OnCollision}
                                 onChange={handleObjectChange}
                                 name="OnCollision"
                             />
                         </div>
+
+                        <div className="row m-0 p-0 mt-2 text-center">
+            <div className="col-6">
+              <button
+                type="button"
+                className="btn btn-danger"
+                onClick={() => handleDeleteObject(currentObjectIdentifier)}
+              >
+                Delete 
+              </button>
+            </div>
+
+            <div className="col-6">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => handleUpdateObject(currentObjectIdentifier)}
+              >
+                Update
+              </button>
+            </div>
+          </div>
                     </div>
+                    </>
+                    ) : (
+                        <div className="text-center">
+                            <p>No object selected!</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
