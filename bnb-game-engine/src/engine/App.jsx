@@ -35,10 +35,10 @@ export default function App() {
 function Scene() {
   const [isGreenVisible, setIsGreenVisible] = useState(true);
 
-  const [height, setHeight] = useState("20%");
+  const [height, setHeight] = useState("30%");
   const ref = useRef()
   const { state, dispatch } = useContext(GlobalContext)
-  const { objectMaster, currentObjectIdentifer } = state
+  const { objectMaster, currentObjectIdentifer, assetMaster } = state
 
   const [stateEnv, setStateEnv] = useState(
     {
@@ -293,7 +293,8 @@ function Scene() {
     <div className='d-flex flex-column vh-100'>
       <div className='row m-0 w-100 overflow-auto'>
         <div className='col-9 d-flex flex-column p-0 m-0 vh-100'>
-          <div className='d-flex flex-row bg-success' style={{ height: "5%" }}>
+          <div className='d-flex flex-row bg-success' 
+          style={{ height: "5%" }}>
             {/* Create a horizontal list of items in the following order: <Title> <Load World> <Export World> <Test> <Publish> */}
             <div className='col-3'>
               <h3 className='text-light ms-2'>BnB Hackathon</h3>
@@ -332,8 +333,8 @@ function Scene() {
               </div>
             </div>
           </div>
-          <div style={{ height: (height === "20%" ? "80%" : "100%") }}>
-            <Canvas shadows raycaster={{ params: { Line: { threshold: 0.15 } } }} camera={{ position: [-10, 10, 10], fov: 20 }} id='objectScene'>
+          <div style={{ height: (height === "30%" ? "70%" : "100%") }}>
+            <Canvas shadows raycaster={{ params: { Line: { threshold: 0.15 } } }} camera={{ position: [-10, 10, 10], fov: 30 }} id='objectScene'>
               <color attach="background" args={[stateEnv.Environment.sky_color]} />
               {
                 <>
@@ -365,7 +366,7 @@ function Scene() {
                 {/* <orthographicCamera attach="shadow-camera" args={[-5, 5, 5, -5, 1, 50]} /> */}
               </directionalLight>
 
-              <mesh scale={20}
+              <mesh scale={30}
                 receiveShadow
                 rotation={[-Math.PI / 2, 0, 0]}>
                 <planeGeometry />
@@ -383,18 +384,87 @@ function Scene() {
             <div className='row m-0 pb-1'>
               <button className='m-0 p-0 border-0 text-light' style={{ borderRadius: "0px" }}
                 onClick={() => {
-                  if (height === "20%")
+                  if (height === "30%")
                     setHeight("3.4%")
                   else
-                    setHeight("20%")
+                    setHeight("30%")
                 }}>
                 {
-                  (height === "20%" ? <span className='bi bi-chevron-double-up'></span> : <span className='bi bi-chevron-double-down'></span>)
+                  (height === "30%" ? <span className='bi bi-chevron-double-up'></span> : <span className='bi bi-chevron-double-down'></span>)
                 }
               </button>
             </div>
             <div className='row m-0 p-0'>
-
+              {
+                assetMaster.map((object, index) => {
+                  let bucketName = object["ObjectInfo"]["BucketName"];
+                  let objectName = object["ObjectInfo"]["ObjectName"];
+                  let objectNameWithTimeStamp = objectName.split('.')[0].concat('_').concat(Date.now().toString())
+                  let owner = object["ObjectInfo"]["Owner"];
+                  let url = `https://gnfd-testnet-sp2.nodereal.io/download/${bucketName}/${objectName}`;
+                  if (true)
+                    return (
+                      // <button key={index} onClick={
+                      //   (e) => {
+                      //     navigator.clipboard.writeText(url);
+                      //     dispatch({
+                      //       type: "ADD_OBJECT",
+                      //       payload: {
+                      //         link: url,
+                      //         assetIdentifier: objectNameWithTimeStamp,
+                      //         assetLink: url,
+                      //         position: new THREE.Vector3(0, 0, 0),
+                      //         quaternion: new THREE.Quaternion(0, 0, 0, 0),
+                      //         scale: new THREE.Vector3(1, 1, 1),
+                      //         worldMatrix: new THREE.Matrix4(),
+                      //         collision: 'no', // no, yes, box, hull, trimesh (yes=box)
+                      //         fixed: false // true, false
+                      //       }
+                      //     })
+                      //     console.log("dispatch objectName", objectNameWithTimeStamp);
+                      //   }
+                      // }
+                      // >
+                      //   {objectName}
+                      // </button>
+                      // Design clickable cards for each object, try to add preview of the object
+                      <div key={index} className='col-2 m-0 p-0 card text-light border-0 bg-transparent'>
+                        <div className="d-flex flex-column card-body bg-dark m-1 rounded-2 shadow-">
+                          <h6 className="card-title">{objectName}</h6>
+                          <div className='flex-fill'></div>
+                          <div className='d-flex justify-content-between'>
+                            <a href={url} className="btn btn-primary">
+                              <span className='bi bi-download'></span>
+                            </a>
+                            <button className='btn btn-primary' onClick={
+                              (e) => {
+                                navigator.clipboard.writeText(url);
+                                dispatch({
+                                  type: "ADD_OBJECT",
+                                  payload: {
+                                    link: url,
+                                    assetIdentifier: objectNameWithTimeStamp,
+                                    assetLink: url,
+                                    position: new THREE.Vector3(0, 0, 0),
+                                    quaternion: new THREE.Quaternion(0, 0, 0, 0),
+                                    scale: new THREE.Vector3(1, 1, 1),
+                                    worldMatrix: new THREE.Matrix4(),
+                                    collision: 'no', // no, yes, box, hull, trimesh (yes=box)
+                                    fixed: false // true, false
+                                  }
+                                })
+                                console.log("dispatch objectName", objectNameWithTimeStamp);
+                              }
+                            }
+                            >
+                              <span className='bi bi-plus'></span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                })
+              }
             </div>
           </div>
 

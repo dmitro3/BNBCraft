@@ -22,7 +22,7 @@ export const Demo = () => {
   });
   const [txnHash, setTxnHash] = useState('');
   const { state, dispatch } = useContext(GlobalContext);
-  const { objectMaster } = state
+  const { assetMaster } = state
 
   const fetchAssets = async () => {
     if (!address) return;
@@ -43,6 +43,14 @@ export const Demo = () => {
     console.log('listObjects all', res);
     if (res.body?.GfSpListObjectsByBucketNameResponse?.Objects) {
       setObjectList(res.body?.GfSpListObjectsByBucketNameResponse?.Objects);
+
+      dispatch({
+        type: "SET_ASSETS",
+        payload: {
+          assetMaster: res.body?.GfSpListObjectsByBucketNameResponse?.Objects
+        }
+      })
+
     }
   };
 
@@ -404,7 +412,7 @@ export const Demo = () => {
                     My Assets
                   </button>
                   {/* {objectList.length} */}
-                  <div
+                  {/* <div
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
@@ -418,7 +426,7 @@ export const Demo = () => {
                         let objectNameWithTimeStamp = objectName.split('.')[0].concat('_').concat(Date.now().toString())
                         let owner = object["ObjectInfo"]["Owner"];
                         let url = `https://gnfd-testnet-sp2.nodereal.io/download/${bucketName}/${objectName}`;
-                        if (owner === address)
+                        if (owner === address || true)
                           return (
                             <button key={index} onClick={
                               (e) => {
@@ -446,7 +454,7 @@ export const Demo = () => {
                           );
                       })
                     }
-                  </div>
+                  </div> */}
                 </div>
               </div >
             </div>

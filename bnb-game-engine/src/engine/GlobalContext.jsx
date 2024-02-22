@@ -22,6 +22,7 @@ const initialState = {
     initialEnvironment,
   ],
   currentObjectIdentifier: "",
+  assetMaster: [],
 };
 
 // asset is redundant :(, only worldMatrix, assetID, assetLink are enough
@@ -248,6 +249,15 @@ const reducer = (state, action) => {
 
     default:
       return state;
+
+    case "SET_ASSETS":
+      return {
+        ...state,
+        assetMaster: action.payload.assetMaster,
+      };
+
+    case "GET_ASSETS":
+      return state.assetMaster;
   }
 
 }
