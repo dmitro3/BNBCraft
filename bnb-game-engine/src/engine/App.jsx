@@ -300,7 +300,10 @@ function Scene() {
             style={{ height: "5%" }}>
             {/* Create a horizontal list of items in the following order: <Title> <Load World> <Export World> <Test> <Publish> */}
             <div className='col-3'>
-              <h3 className='text-light ms-2'>BnB Hackathon</h3>
+              <h3 className='text-light ms-2'>
+                <span className='text-success'>BnB</span>
+              Craft 
+              </h3>
             </div>
             <div className='col-3'></div>
             <div className='col-6 text-end'>
