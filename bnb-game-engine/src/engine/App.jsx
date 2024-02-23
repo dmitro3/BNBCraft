@@ -23,6 +23,7 @@ import Model from './Model.jsx'
 import LightControls from './LightControls.jsx'
 import TaskControls from './TaskControls.jsx'
 import LocationDisplay from './LocationDisplay.jsx'
+import './engine.css'
 
 export default function App() {
   return (
@@ -295,7 +296,7 @@ function Scene() {
     <div className='d-flex flex-column vh-100'>
       <div className='row m-0 w-100 overflow-auto'>
         <div className={'d-flex flex-column p-0 m-0 vh-100 ' + (panelClass == 'col-3' ? 'col-9' : 'col-12')}>
-          <div className='d-flex flex-row bg-success'
+          <div className='d-flex flex-row standard-background'
             style={{ height: "5%" }}>
             {/* Create a horizontal list of items in the following order: <Title> <Load World> <Export World> <Test> <Publish> */}
             <div className='col-3'>
@@ -304,14 +305,14 @@ function Scene() {
             <div className='col-3'></div>
             <div className='col-6 text-end'>
               <div className='m-0' style={{ padding: "1.5px" }}>
-                <button className='mx-1 px-2 p-1 my-0'
+                <button className='mx-1 px-2 p-1 my-0 standard-button'
                   onClick={() => {
                     LoadObjectMaster()
                   }
                   }>
                   <span className='me-1 bi bi-folder-symlink align-text-top'></span>
                   Load World</button>
-                <button className='mx-1 px-2 p-1 my-0'
+                <button className='mx-1 px-2 p-1 my-0 standard-button'
                   onClick={() => {
                     // Download the world(objectMaster) as a JSON file
                     const element = document.createElement("a");
@@ -325,7 +326,7 @@ function Scene() {
                   }>
                   <span className='me-1 bi bi-cloud-arrow-down align-text-top'></span>
                   Export World</button>
-                <button className='mx-1 px-2 p-1 my-0'
+                <button className='mx-1 px-2 p-1 my-0 standard-button'
                   onClick={() => {
                     // Download the world(objectMaster) as a JSON file
                     const element = document.createElement("a");
@@ -339,14 +340,14 @@ function Scene() {
                   }>
                   <span className='me-1 bi bi-play-circle align-text-top'></span>
                   Test</button>
-                <button className='mx-1 px-2 p-1 my-0'
+                <button className='mx-1 px-2 p-1 my-0 standard-button'
                   onClick={() => {
                     web3Handler()
                   }
                   }>
                   <span className='me-1 bi bi-cloud-arrow-up align-text-top'></span>
                   Publish</button>
-                <button className='mx-1 px-2 p-1 my-0'
+                <button className='mx-1 px-2 p-1 my-0 standard-button'
                   onClick={() => {
                     if (panelClass === "col-3")
                       setPanelClass("d-none")
@@ -407,7 +408,7 @@ function Scene() {
             </Canvas>
           </div>
 
-          <div className='bg-primary overflow-auto w-100' style={{ height: height }}>
+          <div className='standard-background overflow-auto w-100' style={{ height: height }}>
             <div className='row m-0 pb-1'>
               <button className='m-0 p-0 border-0 text-light' style={{ borderRadius: "0px" }}
                 onClick={() => {
@@ -498,15 +499,15 @@ function Scene() {
         </div>
 
         {/* Panel */}
-        <div className={'text-light bg-danger vh-100 p-0 overflow-auto ' + panelClass}>
+        <div className={'text-light border-start shadow standard-background vh-100 p-0 overflow-auto ' + panelClass}>
           <div className="accordion accordion-flush" id="accordionFlushExample">
-            <Green />
-            <EnvironmentControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
-            <PlayerControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
-            <ObjectControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
-            <LocationDisplay />
-            <LightControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
-            <TaskControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
+              <Green /> 
+              <EnvironmentControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
+              <PlayerControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
+              <ObjectControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
+              <LocationDisplay />
+              <LightControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
+              <TaskControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
           </div>
         </div>
       </div>

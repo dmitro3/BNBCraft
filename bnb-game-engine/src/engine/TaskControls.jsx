@@ -47,9 +47,9 @@ const TaskControls = ({ stateEnv, setStateEnv }) => {
   }
 
   return (
-    <div className="accordion-item">
+    <div className="aaccordion-item standard-fbutton">
       <h2 className="accordion-header">
-        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
+        <button className="accordion-button standard-background collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
         <span className="me-2 align-middle bi bi-check2-all text-success"></span>
           Tasks
         </button>

@@ -33,9 +33,9 @@ const PlayerControls = ({ stateEnv, setStateEnv }) => {
     };
 
     return (
-        <div className="accordion-item">
+        <div className="accordion-item standard-fbutton">
             <h2 className="accordion-header">
-                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                <button className="accordion-button standard-background collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
                     <span className="me-2 align-middle bi bi-person-fill text-primary"></span>
                     Player Controls
                 </button>

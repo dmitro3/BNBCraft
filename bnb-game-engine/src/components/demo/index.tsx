@@ -56,9 +56,9 @@ export const Demo = () => {
 
   return (
     <>
-      <div className="accordion-item">
+      <div className="accordion-item standard-fbutton">
         <h2 className="accordion-header">
-          <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
+          <button className="accordion-button standard-background collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
             <span className="me-2 align-middle bi bi-bucket-fill text-success"></span>
             
             BnB Greenfield Assets
