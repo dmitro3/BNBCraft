@@ -201,6 +201,15 @@ function Scene() {
     })
   }
 
+  const DownloadObjectMaster = () => {
+    const a = document.createElement("a");
+    const file = new Blob([JSON.stringify(objectMaster)], { type: 'application/json' });
+    a.href = URL.createObjectURL(file);
+    a.download = 'objectMaster.json';
+    a.click();
+  }
+
+
   const [account, setAccount] = useState('');
   const [signer, setSigner] = useState(null);
   const [factoryContract, setFactoryContract] = useState(null);
@@ -293,8 +302,8 @@ function Scene() {
     <div className='d-flex flex-column vh-100'>
       <div className='row m-0 w-100 overflow-auto'>
         <div className='col-9 d-flex flex-column p-0 m-0 vh-100'>
-          <div className='d-flex flex-row bg-success' 
-          style={{ height: "5%" }}>
+          <div className='d-flex flex-row bg-success'
+            style={{ height: "5%" }}>
             {/* Create a horizontal list of items in the following order: <Title> <Load World> <Export World> <Test> <Publish> */}
             <div className='col-3'>
               <h3 className='text-light ms-2'>BnB Hackathon</h3>
@@ -325,14 +334,7 @@ function Scene() {
                   Export World</button>
                 <button className='mx-1 px-2 p-1 my-0'
                   onClick={() => {
-                    // Download the world(objectMaster) as a JSON file
-                    const element = document.createElement("a");
-                    const file = new Blob([JSON.stringify(objectMaster)], { type: 'text/plain' });
-
-                    element.href = URL.createObjectURL(file);
-                    element.download = "objectMaster.json";
-                    document.body.appendChild(element); // Required for this to work in FireFox
-                    element.click();
+                    console.log("redirect to debug enabled testing page")
                   }
                   }>
                   <span className='me-1 bi bi-play-circle align-text-top'></span>
