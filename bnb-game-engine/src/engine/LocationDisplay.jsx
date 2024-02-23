@@ -11,9 +11,9 @@ const LocationDisplay = ({ stateEnv, setStateEnv }) => {
   let currentObject = objectMaster.find((object) => object.assetIdentifier === currentObjectIdentifier);
 
   return (
-    <div className="accordion-item">
+    <div className="accordion-item standard-fbutton">
       <h2 className="accordion-header">
-        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+        <button className="accordion-button standard-background collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
         <span className="me-2 align-middle bi bi-compass text-primary"></span>
           Location & Orientation {"(" + (currentObjectIdentifier ? currentObjectIdentifier : "None Selected") + ")"}
         </button>
