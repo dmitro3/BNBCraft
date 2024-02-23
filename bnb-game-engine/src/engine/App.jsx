@@ -36,6 +36,8 @@ function Scene() {
   const [isGreenVisible, setIsGreenVisible] = useState(true);
 
   const [height, setHeight] = useState("30%");
+  const [panelClass, setPanelClass] = useState("col-3");
+
   const ref = useRef()
   const { state, dispatch } = useContext(GlobalContext)
   const { objectMaster, currentObjectIdentifer, assetMaster } = state
@@ -292,9 +294,9 @@ function Scene() {
   return (
     <div className='d-flex flex-column vh-100'>
       <div className='row m-0 w-100 overflow-auto'>
-        <div className='col-9 d-flex flex-column p-0 m-0 vh-100'>
-          <div className='d-flex flex-row bg-success' 
-          style={{ height: "5%" }}>
+        <div className={'d-flex flex-column p-0 m-0 vh-100 ' + (panelClass == 'col-3' ? 'col-9' : 'col-12')}>
+          <div className='d-flex flex-row bg-success'
+            style={{ height: "5%" }}>
             {/* Create a horizontal list of items in the following order: <Title> <Load World> <Export World> <Test> <Publish> */}
             <div className='col-3'>
               <h3 className='text-light ms-2'>BnB Hackathon</h3>
@@ -344,6 +346,17 @@ function Scene() {
                   }>
                   <span className='me-1 bi bi-cloud-arrow-up align-text-top'></span>
                   Publish</button>
+                <button className='mx-1 px-2 p-1 my-0'
+                  onClick={() => {
+                    if (panelClass === "col-3")
+                      setPanelClass("d-none")
+                    else
+                      setPanelClass("col-3")
+                  }}>
+                  {
+                    (panelClass == "col-3" ? <span className='bi bi-chevron-double-right'></span> : <span className='bi bi-chevron-double-left'></span>)
+                  }
+                </button>
               </div>
             </div>
           </div>
@@ -485,7 +498,7 @@ function Scene() {
         </div>
 
         {/* Panel */}
-        <div className='col-3 text-light bg-danger vh-100 p-0 overflow-auto'>
+        <div className={'text-light bg-danger vh-100 p-0 overflow-auto ' + panelClass}>
           <div className="accordion accordion-flush" id="accordionFlushExample">
             <Green />
             <EnvironmentControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
