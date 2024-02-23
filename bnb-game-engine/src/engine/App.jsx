@@ -4,7 +4,7 @@ import { GlobalContext, GlobalContextProvider } from './GlobalContext.jsx'
 import * as THREE from 'three'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { useControls } from 'leva'
-import { useGLTF, GizmoHelper, GizmoViewport, OrbitControls, Center } from '@react-three/drei'
+import { Sphere, useGLTF, GizmoHelper, GizmoViewport, OrbitControls, Center } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { PivotControls } from './pivotControls/index.tsx'
 import Swal from 'sweetalert2';
@@ -351,6 +351,7 @@ function Scene() {
             <Canvas shadows raycaster={{ params: { Line: { threshold: 0.15 } } }} camera={{ position: [-10, 10, 10], fov: 30 }} id='objectScene'>
               <color attach="background" args={[objectMaster[0].sky_color]} />
                 <>
+                <ambientLight intensity={objectMaster[0].ambient_light} />
                   {
                     objectMaster.map((object) => {
                       if (object.type === "object")
@@ -374,11 +375,16 @@ function Scene() {
               {
                 objectMaster.map((object) => {
                   if (object.type === "light")
-                    return <pointLight key={object.assetIdentifier}
+                    return <>
+                    <Sphere scale={0.2} position={[object.position.x, object.position.y, object.position.z]}>
+                      <meshStandardMaterial color={object.color} />
+                    </Sphere>
+                    <pointLight key={object.assetIdentifier}
                       position={[object.position.x, object.position.y, object.position.z]}
                       intensity={object.intensity}
                       color={object.color}
                     />
+                    </>
                   else
                     return <>
 

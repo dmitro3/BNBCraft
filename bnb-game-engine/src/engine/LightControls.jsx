@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import * as THREE from 'three';
 
 import { GlobalContext, GlobalContextProvider } from './GlobalContext.jsx'
+import { useEffect } from 'react';
 
 
 const LightControls = ({ stateEnv, setStateEnv }) => {
@@ -18,6 +19,11 @@ const LightControls = ({ stateEnv, setStateEnv }) => {
     color: "#ffffff",
     intensity: 1,
   });
+
+  useEffect(() => {
+    setCurrentLightIdentifer(null);
+    setCurrentLight(null);
+  }, [objectMaster]);
 
   const handleObjectChange = (e) => {
     const { name, value } = e.target;
