@@ -311,14 +311,28 @@ function Scene() {
                   Load World</button>
                 <button className='mx-1 px-2 p-1 my-0'
                   onClick={() => {
-                    LoadObjectMaster()
+                    // Download the world(objectMaster) as a JSON file
+                    const element = document.createElement("a");
+                    const file = new Blob([JSON.stringify(objectMaster)], { type: 'text/plain' });
+
+                    element.href = URL.createObjectURL(file);
+                    element.download = "objectMaster.json";
+                    document.body.appendChild(element); // Required for this to work in FireFox
+                    element.click();
                   }
                   }>
                   <span className='me-1 bi bi-cloud-arrow-down align-text-top'></span>
                   Export World</button>
                 <button className='mx-1 px-2 p-1 my-0'
                   onClick={() => {
-                    LoadObjectMaster()
+                    // Download the world(objectMaster) as a JSON file
+                    const element = document.createElement("a");
+                    const file = new Blob([JSON.stringify(objectMaster)], { type: 'text/plain' });
+
+                    element.href = URL.createObjectURL(file);
+                    element.download = "objectMaster.json";
+                    document.body.appendChild(element); // Required for this to work in FireFox
+                    element.click();
                   }
                   }>
                   <span className='me-1 bi bi-play-circle align-text-top'></span>
@@ -390,7 +404,7 @@ function Scene() {
                     setHeight("30%")
                 }}>
                 {
-                  (height === "30%" ? <span className='bi bi-chevron-double-up'></span> : <span className='bi bi-chevron-double-down'></span>)
+                  (height === "30%" ? <span className='bi bi-chevron-double-down'></span> : <span className='bi bi-chevron-double-up'></span>)
                 }
               </button>
             </div>

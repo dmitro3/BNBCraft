@@ -116,11 +116,11 @@ const reducer = (state, action) => {
               scale: action.payload.scale || object.scale,
               worldMatrix: action.payload.worldMatrix || object.worldMatrix,
               initialVelocity: action.payload.initialVelocity || object.initialVelocity,
-              followPlayer: action.payload.followPlayer || object.followPlayer,
+              followPlayer: action.payload.followPlayer != undefined? action.payload.followPlayer : object.followPlayer,
               scaleFactor: action.payload.scaleFactor || object.scaleFactor,
 
               // State
-              fixed: action.payload.fixed || object.fixed,
+              fixed: action.payload.fixed != undefined? action.payload.fixed : object.fixed,
               mass: action.payload.mass || object.mass,
               colliders: action.payload.colliders || object.colliders,
               sensor: action.payload.sensor || object.sensor,
