@@ -26,6 +26,7 @@ const EnvironmentControls = ({ stateEnv, setStateEnv }) => {
                 sky_color: currentEnv.sky_color,
                 ambient_light: currentEnv.ambient_light,
                 stars: currentEnv.stars,
+                env_music: currentEnv.env_music,
             },
         });
     }
@@ -87,6 +88,18 @@ const EnvironmentControls = ({ stateEnv, setStateEnv }) => {
                                 />
                                 <label className="form-check-label" htmlFor="stars">Stars</label>
                             </div>
+                        </div>
+                        <div className='col-12 mt-2'>
+                            <label htmlFor="env_music" className="form-label">Environment Music</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="env_music"
+                                placeholder={currentEnv.env_music}
+                                value={currentEnv.env_music}
+                                onChange={(e) => handleEnvChange({ target: { name: 'env_music', value: e.target.value } })}
+                                name="env_music"
+                            />
                         </div>
                         <div className='col-12 text-end'>
                             <button type="button" className="btn btn-primary mt-2" onClick={handleSave}>Save</button>

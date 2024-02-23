@@ -27,6 +27,7 @@ const PlayerControls = ({ stateEnv, setStateEnv }) => {
                 player_size: currentEnv.size,
                 player_jump: currentEnv.jump,
                 player_flycontrol: currentEnv.flycontrol,
+                player_music: currentEnv.player_music,
             },
         });
     };
@@ -35,7 +36,7 @@ const PlayerControls = ({ stateEnv, setStateEnv }) => {
         <div className="accordion-item">
             <h2 className="accordion-header">
                 <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                <span className="me-2 align-middle bi bi-person-fill text-primary"></span>
+                    <span className="me-2 align-middle bi bi-person-fill text-primary"></span>
                     Player Controls
                 </button>
             </h2>
@@ -103,7 +104,18 @@ const PlayerControls = ({ stateEnv, setStateEnv }) => {
                                 <label className="form-check-label" htmlFor="player_flycontrol">Fly Control</label>
                             </div>
                         </div>
-
+                        <div className='col-12'>
+                            <label htmlFor="player_music" className="form-label">Player Music</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="player_music"
+                                placeholder={currentEnv.player_music}
+                                value={currentEnv.player_music}
+                                onChange={(e) => handlePlayerChange({ target: { name: 'player_music', value: e.target.value } })}
+                                name="player_music"
+                            />
+                        </div>
                         <div className='col-12 text-end'>
                             <button type="button" className="btn btn-primary mt-2" onClick={handleSave}>Save</button>
                         </div>
