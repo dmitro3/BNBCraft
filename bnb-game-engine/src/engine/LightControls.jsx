@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import * as THREE from 'three';
 
 import { GlobalContext, GlobalContextProvider } from './GlobalContext.jsx'
+import { useEffect } from 'react';
 
 
 const LightControls = ({ stateEnv, setStateEnv }) => {
@@ -18,6 +19,11 @@ const LightControls = ({ stateEnv, setStateEnv }) => {
     color: "#ffffff",
     intensity: 1,
   });
+
+  useEffect(() => {
+    setCurrentLightIdentifer(null);
+    setCurrentLight(null);
+  }, [objectMaster]);
 
   const handleObjectChange = (e) => {
     const { name, value } = e.target;
@@ -130,9 +136,9 @@ const LightControls = ({ stateEnv, setStateEnv }) => {
   }
 
   return (
-    <div className="accordion-item">
+    <div className="accordion-item standard-fbutton">
       <h2 className="accordion-header">
-        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+        <button className="accordion-button standard-background collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
         <span className="me-2 align-middle bi bi-lightbulb-fill text-warning"></span>
           Light {"(" + (currentLightIdentifer ? currentLightIdentifer : "None Selected") + ")"}
         </button>

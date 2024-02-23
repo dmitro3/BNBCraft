@@ -46,9 +46,9 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
     return (
 
 
-        <div className="accordion-item">
+        <div className="accordion-item standard-fbutton">
             <h2 className="accordion-header">
-                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                <button className="accordion-button standard-background collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
                     <span className="me-2 align-middle bi bi-box text-primary"></span>
                     Object {"(" + (currentObjectIdentifier ? currentObjectIdentifier : "None Selected") + ")"}
                 </button>

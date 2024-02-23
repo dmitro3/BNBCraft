@@ -26,11 +26,11 @@
     {
         "type": "object",
         "assetIdentifier": "chest0",
-        "fixed": true,
+        "fixed": false,
         "mass": 1,
         "onCollision": "none",
         "onClick": "Hello",
-        "sensor" : true,
+        "sensor" : false,
         "onSensorEnter": "none",
         "onSensorExit": "none",
         "onHover": "hi",

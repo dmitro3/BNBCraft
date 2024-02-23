@@ -3,7 +3,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 export const Wallet = () => {
 
   return (
-    <div>
+    <div className='standard-fbutton'>
       <ConnectButton accountStatus="address" />
     </div>
   );

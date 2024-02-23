@@ -4,7 +4,7 @@ import { GlobalContext, GlobalContextProvider } from './GlobalContext.jsx'
 import * as THREE from 'three'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { useControls } from 'leva'
-import { useGLTF, GizmoHelper, GizmoViewport, OrbitControls, Center } from '@react-three/drei'
+import { Sphere, useGLTF, GizmoHelper, GizmoViewport, OrbitControls, Center } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { PivotControls } from './pivotControls/index.tsx'
 import Swal from 'sweetalert2';
@@ -23,6 +23,7 @@ import Model from './Model.jsx'
 import LightControls from './LightControls.jsx'
 import TaskControls from './TaskControls.jsx'
 import LocationDisplay from './LocationDisplay.jsx'
+import './engine.css'
 
 export default function App() {
   return (
@@ -36,6 +37,8 @@ function Scene() {
   const [isGreenVisible, setIsGreenVisible] = useState(true);
 
   const [height, setHeight] = useState("30%");
+  const [panelClass, setPanelClass] = useState("col-3");
+
   const ref = useRef()
   const { state, dispatch } = useContext(GlobalContext)
   const { objectMaster, currentObjectIdentifer, assetMaster } = state
@@ -301,24 +304,27 @@ function Scene() {
   return (
     <div className='d-flex flex-column vh-100'>
       <div className='row m-0 w-100 overflow-auto'>
-        <div className='col-9 d-flex flex-column p-0 m-0 vh-100'>
-          <div className='d-flex flex-row bg-success'
+        <div className={'d-flex flex-column p-0 m-0 vh-100 ' + (panelClass == 'col-3' ? 'col-9' : 'col-12')}>
+          <div className='d-flex flex-row standard-background'
             style={{ height: "5%" }}>
             {/* Create a horizontal list of items in the following order: <Title> <Load World> <Export World> <Test> <Publish> */}
             <div className='col-3'>
-              <h3 className='text-light ms-2'>BnB Hackathon</h3>
+              <h3 className='text-light ms-2'>
+                <span className='text-success'>BnB</span>
+                Craft
+              </h3>
             </div>
             <div className='col-3'></div>
             <div className='col-6 text-end'>
               <div className='m-0' style={{ padding: "1.5px" }}>
-                <button className='mx-1 px-2 p-1 my-0'
+                <button className='mx-1 px-2 p-1 my-0 standard-button'
                   onClick={() => {
                     LoadObjectMaster()
                   }
                   }>
                   <span className='me-1 bi bi-folder-symlink align-text-top'></span>
                   Load World</button>
-                <button className='mx-1 px-2 p-1 my-0'
+                <button className='mx-1 px-2 p-1 my-0 standard-button'
                   onClick={() => {
                     // Download the world(objectMaster) as a JSON file
                     const element = document.createElement("a");
@@ -332,55 +338,78 @@ function Scene() {
                   }>
                   <span className='me-1 bi bi-cloud-arrow-down align-text-top'></span>
                   Export World</button>
-                <button className='mx-1 px-2 p-1 my-0'
+                <button className='mx-1 px-2 p-1 my-0 standard-button'
                   onClick={() => {
                     console.log("redirect to debug enabled testing page")
                   }
                   }>
                   <span className='me-1 bi bi-play-circle align-text-top'></span>
                   Test</button>
-                <button className='mx-1 px-2 p-1 my-0'
+                <button className='mx-1 px-2 p-1 my-0 standard-button'
                   onClick={() => {
                     web3Handler()
                   }
                   }>
                   <span className='me-1 bi bi-cloud-arrow-up align-text-top'></span>
                   Publish</button>
+                <button className='mx-1 px-2 p-1 my-0 standard-button'
+                  onClick={() => {
+                    if (panelClass === "col-3")
+                      setPanelClass("d-none")
+                    else
+                      setPanelClass("col-3")
+                  }}>
+                  {
+                    (panelClass == "col-3" ? <span className='bi bi-chevron-double-right'></span> : <span className='bi bi-chevron-double-left'></span>)
+                  }
+                </button>
               </div>
             </div>
           </div>
           <div style={{ height: (height === "30%" ? "70%" : "100%") }}>
             <Canvas shadows raycaster={{ params: { Line: { threshold: 0.15 } } }} camera={{ position: [-10, 10, 10], fov: 30 }} id='objectScene'>
-              <color attach="background" args={[stateEnv.Environment.sky_color]} />
-              {
-                <>
-                  {
-                    objectMaster.map((object) => {
-                      if (object.type === "object")
-                        return <Model
-                          assetIdentifer={object.assetIdentifier}
-                          assetLink={object.assetLink}
-                          collision={object.collision}
-                          fixed={object.fixed}
-                          worldMatrix={object.worldMatrix}
-                          setAssetIdentifer={setAssetIdentifer}
-                        />
-                      else
-                        return <>
+              <color attach="background" args={[objectMaster[0].sky_color]} />
+              <>
+                <ambientLight intensity={objectMaster[0].ambient_light} />
+                {
+                  objectMaster.map((object) => {
+                    if (object.type === "object")
+                      return <Model
+                        assetIdentifer={object.assetIdentifier}
+                        assetLink={object.assetLink}
+                        collision={object.collision}
+                        fixed={object.fixed}
+                        worldMatrix={object.worldMatrix}
+                        setAssetIdentifer={setAssetIdentifer}
+                      />
+                    else
+                      return <>
 
-                        </>
-                    })
-                  }
-                </>
+                      </>
+                  })
+                }
+              </>
+
+
+              {
+                objectMaster.map((object) => {
+                  if (object.type === "light")
+                    return <>
+                      <Sphere scale={0.2} position={[object.position.x, object.position.y, object.position.z]}>
+                        <meshStandardMaterial color={object.color} />
+                      </Sphere>
+                      <pointLight key={object.assetIdentifier}
+                        position={[object.position.x, object.position.y, object.position.z]}
+                        intensity={object.intensity}
+                        color={object.color}
+                      />
+                    </>
+                  else
+                    return <>
+
+                    </>
+                })
               }
-              <ambientLight intensity={0.5} />
-              <directionalLight
-                castShadow
-                position={[2.5, 5, 5]}
-                intensity={1.5}
-                shadow-mapSize={[1024, 1024]}>
-                {/* <orthographicCamera attach="shadow-camera" args={[-5, 5, 5, -5, 1, 50]} /> */}
-              </directionalLight>
 
               <mesh scale={30}
                 receiveShadow
@@ -396,7 +425,7 @@ function Scene() {
             </Canvas>
           </div>
 
-          <div className='bg-primary overflow-auto w-100' style={{ height: height }}>
+          <div className='standard-background overflow-auto w-100' style={{ height: height }}>
             <div className='row m-0 pb-1'>
               <button className='m-0 p-0 border-0 text-light' style={{ borderRadius: "0px" }}
                 onClick={() => {
@@ -487,7 +516,7 @@ function Scene() {
         </div>
 
         {/* Panel */}
-        <div className='col-3 text-light bg-danger vh-100 p-0 overflow-auto'>
+        <div className={'text-light border-start shadow standard-background vh-100 p-0 overflow-auto ' + panelClass}>
           <div className="accordion accordion-flush" id="accordionFlushExample">
             <Green />
             <EnvironmentControls stateEnv={stateEnv} setStateEnv={setStateEnv} />

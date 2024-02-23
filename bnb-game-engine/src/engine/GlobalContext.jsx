@@ -9,12 +9,16 @@ const initialEnvironment = {
   gravity: 1,
   sky_color: "black",
   ambient_light: 0.5,
+
   player_speed: 10,
   player_mass: 50,
   player_size: 1,
   player_jump: 0.5,
   player_flycontrol: false,
+
   stars: true,
+  env_music: "",
+  player_music: "",
 };
 
 const initialState = {
@@ -156,6 +160,8 @@ const reducer = (state, action) => {
               player_jump: action.payload.player_jump || object.player_jump,
               player_flycontrol: action.payload.player_flycontrol || object.player_flycontrol,
               stars: action.payload.stars || object.stars,
+              env_music: action.payload.env_music || object.env_music,
+              player_music: action.payload.player_music || object.player_music,
             };
           }
 
