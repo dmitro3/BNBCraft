@@ -335,8 +335,7 @@ function Scene() {
           </div>
           <div style={{ height: (height === "30%" ? "70%" : "100%") }}>
             <Canvas shadows raycaster={{ params: { Line: { threshold: 0.15 } } }} camera={{ position: [-10, 10, 10], fov: 30 }} id='objectScene'>
-              <color attach="background" args={[stateEnv.Environment.sky_color]} />
-              {
+              <color attach="background" args={[objectMaster[0].sky_color]} />
                 <>
                   {
                     objectMaster.map((object) => {
@@ -356,15 +355,22 @@ function Scene() {
                     })
                   }
                 </>
+              
+             
+              {
+                objectMaster.map((object) => {
+                  if (object.type === "light")
+                    return <pointLight key={object.assetIdentifier}
+                      position={[object.position.x, object.position.y, object.position.z]}
+                      intensity={object.intensity}
+                      color={object.color}
+                    />
+                  else
+                    return <>
+
+                    </>
+                })
               }
-              <ambientLight intensity={0.5} />
-              <directionalLight
-                castShadow
-                position={[2.5, 5, 5]}
-                intensity={1.5}
-                shadow-mapSize={[1024, 1024]}>
-                {/* <orthographicCamera attach="shadow-camera" args={[-5, 5, 5, -5, 1, 50]} /> */}
-              </directionalLight>
 
               <mesh scale={30}
                 receiveShadow
