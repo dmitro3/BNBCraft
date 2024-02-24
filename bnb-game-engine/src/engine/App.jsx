@@ -331,7 +331,9 @@ function Scene() {
             confirmButtonText: 'Open Game',
           }).then((result) => {
             if (result.isConfirmed) {
-              window.open(gameContractAddress[gameContractAddress.length - 1], '_blank');
+              let absoluteURL = new URL("http://localhost:3000/");
+              absoluteURL.searchParams.append('game', gameContractAddress[gameContractAddress.length - 1]);
+              window.open(absoluteURL.href, '_blank');
             }
           });
         }

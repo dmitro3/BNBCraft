@@ -4,7 +4,6 @@ import { useSharedState } from "./sharedState"
 import "./styles.css"
 import App from "./App"
 import { SharedStateProvider } from "./sharedState"
-import { BrowserRouter, Routes, Route , Router } from "react-router-dom"
 
 function Overlay() {
   const { text, desc, price, user } = useSharedState();
@@ -21,9 +20,9 @@ function Overlay() {
 
 
 createRoot(document.getElementById("root")).render(
-  
+
   <SharedStateProvider>
     <Overlay />
   </SharedStateProvider>
-  
+
 )
