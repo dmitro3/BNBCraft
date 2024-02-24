@@ -8,6 +8,7 @@ import { Sphere, useGLTF, GizmoHelper, GizmoViewport, OrbitControls, Center } fr
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { PivotControls } from './pivotControls/index.tsx'
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 import { ethers } from 'ethers';
 import GameFactory from '../contracts/GameFactory.json';
@@ -278,7 +279,46 @@ function Scene() {
 
 
         if (gamePrice) {
-          const tx = await factoryContract_.createGame(gameName, "google.com", gamePrice, ["one", "two"]);
+
+          const getLink = async (e) => {
+
+            try {
+              const file = new Blob([JSON.stringify(objectMaster)], { type: 'application/json' });
+              const formData = new FormData();
+              formData.append('file', file);
+
+              const pinataMetadata = JSON.stringify({
+                name: `final_json_${Date.now()}.json`,
+              });
+              formData.append('pinataMetadata', pinataMetadata);
+
+              const pinataOptions = JSON.stringify({
+                cidVersion: 0,
+              });
+              formData.append('pinataOptions', pinataOptions);
+
+              const JWT = import.meta.env.VITE_PINATA_JWT;
+
+              const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+                maxBodyLength: "Infinity",
+                headers: {
+                  'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                  'Authorization': `Bearer ${JWT}`
+                }
+              });
+
+              if (res.data && res.data.IpfsHash) {
+                console.log(`https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`);
+                return `https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`;
+              } else {
+                console.error('Failed to get IPFS link');
+              }
+            } catch (error) {
+              console.error('Error uploading json while publishing game:', error);
+            }
+          };
+
+          const tx = await factoryContract_.createGame(gameName, getLink(), gamePrice, ["one", "two"]);
           await tx.wait();
 
           const gameContractAddress = await factoryContract_.getGameAddresses();
@@ -307,7 +347,6 @@ function Scene() {
         <div className={'d-flex flex-column p-0 m-0 vh-100 ' + (panelClass == 'col-3' ? 'col-9' : 'col-12')}>
           <div className='d-flex flex-row standard-background'
             style={{ height: "5%" }}>
-            {/* Create a horizontal list of items in the following order: <Title> <Load World> <Export World> <Test> <Publish> */}
             <div className='col-3'>
               <h3 className='text-light ms-2'>
                 <span className='text-success'>BnB</span>
@@ -325,16 +364,8 @@ function Scene() {
                   <span className='me-1 bi bi-folder-symlink align-text-top'></span>
                   Load World</button>
                 <button className='mx-1 px-2 p-1 my-0 standard-button'
-                  onClick={() => {
-                    // Download the world(objectMaster) as a JSON file
-                    const element = document.createElement("a");
-                    const file = new Blob([JSON.stringify(objectMaster)], { type: 'text/plain' });
-
-                    element.href = URL.createObjectURL(file);
-                    element.download = "objectMaster.json";
-                    document.body.appendChild(element); // Required for this to work in FireFox
-                    element.click();
-                  }
+                  onClick={() =>
+                    DownloadObjectMaster()
                   }>
                   <span className='me-1 bi bi-cloud-arrow-down align-text-top'></span>
                   Export World</button>

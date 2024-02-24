@@ -25,16 +25,6 @@ export const Demo = () => {
   const { assetMaster } = state
 
   const fetchAssets = async () => {
-    if (!address) return;
-    const spInfo = await selectSp();
-    console.log('spInfo', spInfo);
-
-    const provider = await connector?.getProvider();
-    const offChainData = await getOffchainAuthKeys(address, provider);
-    if (!offChainData) {
-      alert('No offchain, please create offchain pairs first');
-      return;
-    }
 
     const res = await client.object.listObjects({
       bucketName: info.bucketName,
@@ -60,7 +50,7 @@ export const Demo = () => {
         <h2 className="accordion-header">
           <button className="accordion-button standard-background collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
             <span className="me-2 align-middle bi bi-bucket-fill text-success"></span>
-            
+
             BnB Greenfield Assets
           </button>
         </h2>
