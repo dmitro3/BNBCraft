@@ -22,9 +22,7 @@ const initialEnvironment = {
 };
 
 const initialState = {
-  objectMaster: [
-    initialEnvironment,
-  ],
+  objectMaster: [initialEnvironment],
   currentObjectIdentifier: "",
   assetMaster: [],
 };
@@ -34,7 +32,11 @@ const reducer = (state, action) => {
   switch (action.type) {
     // CASE: OBJECT
     case "ADD_OBJECT":
-      if (state.objectMaster.some((object) => object.assetIdentifier === action.payload.assetIdentifier)) {
+      if (
+        state.objectMaster.some(
+          (object) => object.assetIdentifier === action.payload.assetIdentifier
+        )
+      ) {
         alert("Object with the same identifier already exists!");
         return state;
       }
@@ -77,7 +79,11 @@ const reducer = (state, action) => {
 
     case "DELETE_OBJECT":
       // If the object does not exist, do nothing
-      if (!state.objectMaster.some((object) => object.assetIdentifier === action.payload.assetIdentifier)) {
+      if (
+        !state.objectMaster.some(
+          (object) => object.assetIdentifier === action.payload.assetIdentifier
+        )
+      ) {
         alert("Object with the given identifier does not exist!");
         return state;
       }
@@ -86,7 +92,8 @@ const reducer = (state, action) => {
         return {
           ...state,
           objectMaster: state.objectMaster.filter(
-            (object) => object.assetIdentifier !== action.payload.assetIdentifier
+            (object) =>
+              object.assetIdentifier !== action.payload.assetIdentifier
           ),
           currentObjectIdentifier: "",
         };
@@ -99,7 +106,11 @@ const reducer = (state, action) => {
       };
 
     case "CHANGE_OBJECT":
-      if (!state.objectMaster.some((object) => object.assetIdentifier === action.payload.assetIdentifier)) {
+      if (
+        !state.objectMaster.some(
+          (object) => object.assetIdentifier === action.payload.assetIdentifier
+        )
+      ) {
         alert("Object with the given identifier does not exist!");
         return state;
       }
@@ -107,11 +118,15 @@ const reducer = (state, action) => {
       return {
         ...state,
         objectMaster: state.objectMaster.map((object) => {
-          if (object.assetIdentifier === action.payload.assetIdentifier && object.type === "object") {
+          if (
+            object.assetIdentifier === action.payload.assetIdentifier &&
+            object.type === "object"
+          ) {
             return {
               ...object,
               // Asset Information
-              assetIdentifier: action.payload.assetIdentifier || object.assetIdentifier,
+              assetIdentifier:
+                action.payload.assetIdentifier || object.assetIdentifier,
               assetLink: action.payload.assetLink || object.assetLink,
 
               // Location and Orientation
@@ -119,12 +134,19 @@ const reducer = (state, action) => {
               quaternion: action.payload.quaternion || object.quaternion,
               scale: action.payload.scale || object.scale,
               worldMatrix: action.payload.worldMatrix || object.worldMatrix,
-              initialVelocity: action.payload.initialVelocity || object.initialVelocity,
-              followPlayer: action.payload.followPlayer != undefined? action.payload.followPlayer : object.followPlayer,
+              initialVelocity:
+                action.payload.initialVelocity || object.initialVelocity,
+              followPlayer:
+                action.payload.followPlayer != undefined
+                  ? action.payload.followPlayer
+                  : object.followPlayer,
               scaleFactor: action.payload.scaleFactor || object.scaleFactor,
 
               // State
-              fixed: action.payload.fixed != undefined? action.payload.fixed : object.fixed,
+              fixed:
+                action.payload.fixed != undefined
+                  ? action.payload.fixed
+                  : object.fixed,
               mass: action.payload.mass || object.mass,
               colliders: action.payload.colliders || object.colliders,
               sensor: action.payload.sensor || object.sensor,
@@ -134,7 +156,8 @@ const reducer = (state, action) => {
               OnHover: action.payload.OnHover || object.OnHover,
               OnCollision: action.payload.OnCollision || object.OnCollision,
 
-              OnSensorEnter: action.payload.OnSensorEnter || object.OnSensorEnter,
+              OnSensorEnter:
+                action.payload.OnSensorEnter || object.OnSensorEnter,
               OnSensorExit: action.payload.OnSensorExit || object.OnSensorExit,
             };
           }
@@ -148,17 +171,22 @@ const reducer = (state, action) => {
       return {
         ...state,
         objectMaster: state.objectMaster.map((object) => {
-          if (object.assetIdentifier === "world_settings" && object.type === "environment") {
+          if (
+            object.assetIdentifier === "world_settings" &&
+            object.type === "environment"
+          ) {
             return {
               ...object,
               gravity: action.payload.gravity || object.gravity,
               sky_color: action.payload.sky_color || object.sky_color,
-              ambient_light: action.payload.ambient_light || object.ambient_light,
+              ambient_light:
+                action.payload.ambient_light || object.ambient_light,
               player_speed: action.payload.player_speed || object.player_speed,
               player_mass: action.payload.player_mass || object.player_mass,
               player_size: action.payload.player_size || object.player_size,
               player_jump: action.payload.player_jump || object.player_jump,
-              player_flycontrol: action.payload.player_flycontrol || object.player_flycontrol,
+              player_flycontrol:
+                action.payload.player_flycontrol || object.player_flycontrol,
               stars: action.payload.stars || object.stars,
               env_music: action.payload.env_music || object.env_music,
               player_music: action.payload.player_music || object.player_music,
@@ -197,7 +225,10 @@ const reducer = (state, action) => {
       return {
         ...state,
         objectMaster: state.objectMaster.map((object) => {
-          if (object.assetIdentifier === action.payload.assetIdentifier && object.type === "light") {
+          if (
+            object.assetIdentifier === action.payload.assetIdentifier &&
+            object.type === "light"
+          ) {
             return {
               ...object,
               position: action.payload.position || object.position,
@@ -227,17 +258,21 @@ const reducer = (state, action) => {
       return {
         ...state,
         objectMaster: state.objectMaster.map((object) => {
-          if (object.assetIdentifier === action.payload.oldIdentifier && object.type === "task") {
+          if (
+            object.assetIdentifier === action.payload.oldIdentifier &&
+            object.type === "task"
+          ) {
             return {
               ...object,
-              assetIdentifier: action.payload.assetIdentifier || object.assetIdentifier,
+              assetIdentifier:
+                action.payload.assetIdentifier || object.assetIdentifier,
             };
           }
 
           return object;
         }),
       };
-    
+
     case "DELETE_TASK":
       return {
         ...state,
@@ -245,7 +280,6 @@ const reducer = (state, action) => {
           (object) => object.assetIdentifier !== action.payload.assetIdentifier
         ),
       };
-    
 
     case "SET_CURRENT_OBJECT":
       return {
@@ -265,8 +299,7 @@ const reducer = (state, action) => {
     case "GET_ASSETS":
       return state.assetMaster;
   }
-
-}
+};
 
 const GlobalContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -276,6 +309,5 @@ const GlobalContextProvider = ({ children }) => {
     </GlobalContext.Provider>
   );
 };
-
 
 export { GlobalContext, GlobalContextProvider };
