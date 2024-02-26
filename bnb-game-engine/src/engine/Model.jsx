@@ -5,7 +5,6 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { PivotControls } from './pivotControls/index.tsx'
 import { GlobalContext } from './GlobalContext.jsx'
 
-
 const Model = ({ assetLink, assetIdentifer, collision, fixed, worldMatrix,setAssetIdentifier }) => {
     const { state, dispatch } = useContext(GlobalContext)
     const { currentObjectIdentifier } = state
@@ -37,7 +36,8 @@ const Model = ({ assetLink, assetIdentifer, collision, fixed, worldMatrix,setAss
               console.log(currentObjectIdentifier, "currentObjectIdentifier")
             }}
             onPointerEnter={() => setHovered(true)}
-            onPointerOut={() => setHovered(false)} />
+            onPointerOut={() => setHovered(false)} >
+              </primitive>
         </Center>
       </PivotControls>)
   };

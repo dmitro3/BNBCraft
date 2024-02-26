@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from "@react-three/fiber"
-import { Loader, PointerLockControls, KeyboardControls, Text, PresentationControls, Stars } from "@react-three/drei"
-import { Debug, Physics, RigidBody } from "@react-three/rapier"
+import { Loader, PointerLockControls, KeyboardControls, Cylinder, Box, Stars } from "@react-three/drei"
+import { Debug, Physics, RigidBody , CapsuleCollider } from "@react-three/rapier"
 import { Player } from "./Player"
 // import { Model } from "./Show2"
 import { Suspense, useEffect } from "react"
@@ -181,6 +181,10 @@ export default function App() {
               )
             })
           }
+          {/* <Cylinder args={[0.75,0.5]} position={[0, 10, 10]} /> */}
+          
+       
+
           <Physics gravity={[0, -world_settings.gravity, 0]}>
             <Debug />
             {objects && objects.map((object) => {

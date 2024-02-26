@@ -4,7 +4,7 @@ import { GlobalContext, GlobalContextProvider } from './GlobalContext.jsx'
 import * as THREE from 'three'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { useControls } from 'leva'
-import { Sphere, useGLTF, GizmoHelper, GizmoViewport, OrbitControls, Center } from '@react-three/drei'
+import { Sphere, useGLTF, GizmoHelper, GizmoViewport, OrbitControls, Outlines, Cylinder } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { PivotControls } from './pivotControls/index.tsx'
 import Swal from 'sweetalert2';
@@ -25,6 +25,10 @@ import LightControls from './LightControls.jsx'
 import TaskControls from './TaskControls.jsx'
 import LocationDisplay from './LocationDisplay.jsx'
 import './engine.css'
+
+import { GradientTexture , GradientType } from '@react-three/drei'
+import { ScreenSizer } from '@react-three/drei'
+import { Grid } from '@react-three/drei' 
 
 export default function App() {
   return (
@@ -403,6 +407,13 @@ function Scene() {
             <Canvas shadows raycaster={{ params: { Line: { threshold: 0.15 } } }} camera={{ position: [-10, 10, 10], fov: 30 }} id='objectScene'>
               <color attach="background" args={[objectMaster[0].sky_color]} />
               <>
+                  <Grid args={[100, 100]} />
+                <mesh position={[0,1,0]}>
+                  <cylinderGeometry args={[0.5, 0.5, 1.5]} />
+                  <Outlines thickness={0.05} color="hotpink" />
+                  <meshNormalMaterial />
+                </mesh> 
+
                 <ambientLight intensity={objectMaster[0].ambient_light} />
                 {
                   objectMaster.map((object) => {
