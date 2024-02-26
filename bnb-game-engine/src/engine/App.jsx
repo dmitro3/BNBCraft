@@ -55,133 +55,6 @@ function Scene() {
   const { state, dispatch } = useContext(GlobalContext);
   const { objectMaster, currentObjectIdentifer, assetMaster } = state;
 
-  const [stateEnv, setStateEnv] = useState({
-    Environment: {
-      gravity: 0,
-      sky_color: "#000000",
-      ambient_light: 0.5,
-      stars: false,
-    },
-    Player: {
-      speed: 10,
-      mass: 50,
-      size: 1,
-      jump: 0.5,
-    },
-    Object: {
-      assetLink:
-        "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
-      fixed: false,
-      followPlayer: false,
-      initialVelocity: 1,
-      mass: 1,
-      colliders: "No",
-      OnClick: "",
-      OnHover: "",
-      OnCollision: "",
-    },
-  });
-
-  // Add Object
-  const [assetIdentifer, setAssetIdentifer] = useState("chest0");
-  const [assetLink, setAssetLink] = useState(
-    "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr"
-  );
-
-  const AddAction = () => {
-    const AddAction = {
-      type: "ADD_OBJECT",
-      payload: {
-        // Asset Information
-        assetIdentifier: assetIdentifer,
-        assetLink: assetLink,
-
-        // Location and Orientation
-        position: new THREE.Vector3(0, 0, 0),
-        quaternion: new THREE.Quaternion(0, 0, 0, 0),
-        scale: new THREE.Vector3(1, 1, 1),
-        worldMatrix: new THREE.Matrix4(),
-        initialVelocity: new THREE.Vector3(0, 0, 0),
-        followPlayer: false,
-        scaleFactor: 1,
-
-        // State
-        fixed: false,
-        mass: 1,
-        colliders: "no",
-
-        // Methods
-        OnClick: "",
-        OnHover: "",
-        OnCollision: "",
-      },
-    };
-
-    dispatch(AddAction);
-  };
-
-  // Delete Object
-  const DeleteAction = (assetIdentifier) => {
-    const DeleteAction = {
-      type: "DELETE_OBJECT",
-      payload: {
-        assetIdentifier: assetIdentifier,
-      },
-    };
-
-    dispatch(DeleteAction);
-  };
-
-  // Change Object
-  const ChangeAction = (data) => {
-    const ChangeAction = {
-      type: "CHANGE_OBJECT",
-      payload: data,
-    };
-
-    dispatch(ChangeAction);
-  };
-
-  // Change Environment
-  const ChangeEnvironment = (data) => {
-    const ChangeAction = {
-      type: "CHANGE_ENVIRONMENT",
-      payload: data,
-    };
-
-    dispatch(ChangeAction);
-  };
-
-  // Add Light
-  const AddLight = (data) => {
-    const AddAction = {
-      type: "ADD_LIGHT",
-      payload: data,
-    };
-
-    dispatch(AddAction);
-  };
-
-  // Delete Light
-  const DeleteLight = (data) => {
-    const DeleteAction = {
-      type: "DELETE_LIGHT",
-      payload: data,
-    };
-
-    dispatch(DeleteAction);
-  };
-
-  // Change Light
-  const ChangeLight = (data) => {
-    const ChangeAction = {
-      type: "CHANGE_LIGHT",
-      payload: data,
-    };
-
-    dispatch(ChangeAction);
-  };
-
   // Load Object Master
   const LoadObjectMaster = () => {
     objJSON.map((object) => {
@@ -306,10 +179,6 @@ function Scene() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       setSigner(signer);
-
-      // window.ethereum.on('chainChanged', async (chainId) => {
-      //   // window.location.reload();
-      // })
 
       window.ethereum.on("accountsChanged", async function (accounts) {
         setAccount(accounts[0]);
@@ -542,7 +411,6 @@ function Scene() {
                         collision={object.collision}
                         fixed={object.fixed}
                         worldMatrix={object.worldMatrix}
-                        setAssetIdentifer={setAssetIdentifer}
                       />
                     );
                   else return <></>;
@@ -622,30 +490,6 @@ function Scene() {
                 let url = `https://gnfd-testnet-sp2.nodereal.io/download/${bucketName}/${objectName}`;
                 if (true)
                   return (
-                    // <button key={index} onClick={
-                    //   (e) => {
-                    //     navigator.clipboard.writeText(url);
-                    //     dispatch({
-                    //       type: "ADD_OBJECT",
-                    //       payload: {
-                    //         link: url,
-                    //         assetIdentifier: objectNameWithTimeStamp,
-                    //         assetLink: url,
-                    //         position: new THREE.Vector3(0, 0, 0),
-                    //         quaternion: new THREE.Quaternion(0, 0, 0, 0),
-                    //         scale: new THREE.Vector3(1, 1, 1),
-                    //         worldMatrix: new THREE.Matrix4(),
-                    //         collision: 'no', // no, yes, box, hull, trimesh (yes=box)
-                    //         fixed: false // true, false
-                    //       }
-                    //     })
-                    //     console.log("dispatch objectName", objectNameWithTimeStamp);
-                    //   }
-                    // }
-                    // >
-                    //   {objectName}
-                    // </button>
-                    // Design clickable cards for each object, try to add preview of the object
                     <div
                       key={index}
                       className="col-2 m-0 p-0 card text-light border-0 bg-transparent"
@@ -704,15 +548,12 @@ function Scene() {
         >
           <div className="accordion accordion-flush" id="accordionFlushExample">
             <Green />
-            <EnvironmentControls
-              stateEnv={stateEnv}
-              setStateEnv={setStateEnv}
-            />
-            <PlayerControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
-            <ObjectControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
+            <EnvironmentControls />
+            <PlayerControls />
+            <ObjectControls />
             <LocationDisplay />
-            <LightControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
-            <TaskControls stateEnv={stateEnv} setStateEnv={setStateEnv} />
+            <LightControls />
+            <TaskControls />
           </div>
         </div>
       </div>
