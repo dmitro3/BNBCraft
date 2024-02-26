@@ -58,7 +58,6 @@ function Scene() {
   const [stateEnv, setStateEnv] = useState({
     Environment: {
       gravity: 0,
-      friction: 0.5,
       sky_color: "#000000",
       ambient_light: 0.5,
       stars: false,
@@ -255,8 +254,26 @@ function Scene() {
           },
         };
         dispatch(AddAction);
+      } else if (object.type === "environment") {
+        const ChangeAction = {
+          type: "CHANGE_ENVIRONMENT",
+          payload: {
+            assetIdentifier: object.assetIdentifier,
+            gravity: object.gravity,
+            sky_color: object.sky_color,
+            ambient_light: object.ambient_light,
+            player_speed: object.player_speed,
+            player_mass: object.player_mass,
+            player_size: object.player_size,
+            player_jump: object.player_jump,
+            player_flycontrol: object.player_flycontrol,
+            stars: object.stars,
+            env_music: object.env_music,
+            player_music: object.player_music,
+          },
+        };
+        dispatch(ChangeAction);
       }
-      // [TODO:] Environment
     });
   };
 

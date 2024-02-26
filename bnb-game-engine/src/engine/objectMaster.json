@@ -3,7 +3,7 @@
     "type": "environment",
     "assetIdentifier": "world_settings",
     "gravity": 1,
-    "sky_color": "black",
+    "sky_color": "#b0ec89",
     "ambient_light": 0.5,
     "player_speed": 10,
     "player_mass": 50,
@@ -28,10 +28,10 @@
       ]
     },
     "fixed": false,
-    "colliders": "no",
+    "colliders": "cuboid",
     "OnClick": "",
     "OnHover": "",
-    "OnCollision": ""
+    "OnCollision": "CheckPoint1"
   },
   {
     "type": "object",
