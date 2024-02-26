@@ -151,9 +151,15 @@ const reducer = (state, action) => {
               colliders: action.payload.colliders || object.colliders,
 
               // Methods
-              OnClick: action.payload.OnClick || object.OnClick,
+              OnClick:
+                action.payload.OnClick || action.payload.OnClick === ""
+                  ? action.payload.OnClick
+                  : object.OnClick,
               OnHover: action.payload.OnHover || object.OnHover,
-              OnCollision: action.payload.OnCollision || object.OnCollision,
+              OnCollision:
+                action.payload.OnCollision || action.payload.OnCollision === ""
+                  ? action.payload.OnCollision
+                  : object.OnCollision,
 
               sensor: action.payload.sensor || object.sensor,
               OnSensorEnter:

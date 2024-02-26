@@ -13,7 +13,6 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
   );
 
   let tasks = objectMaster.filter((object) => object.type === "task");
-  console.log(tasks);
   useEffect(() => {
     if (currentObjectIdentifier) {
       let current = objectMaster.find(

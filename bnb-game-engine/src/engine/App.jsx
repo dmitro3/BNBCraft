@@ -248,7 +248,6 @@ function Scene() {
 
         dispatch(AddAction);
       } else if (object.type === "task") {
-        console.log("Object is a task", object);
         const AddAction = {
           type: "ADD_TASK",
           payload: {
