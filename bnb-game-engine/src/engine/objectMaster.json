@@ -1,102 +1,56 @@
 [
-    {
-        "assetIdentifier": "chest0",
-        "fixed": false,
-        "mass": 1,
-        "onCollision": "none",
-        "onClick": "none",
-        "onHover": "none",
-        "colliders": "ball",
-        "assetLink": "https://gnfd-testnet-sp2.nodereal.io/download/hackathon/NissanSkyline.glb",
-        "position": {
-            "x": 10,
-            "y": 10,
-            "z": 100
-        },
-        "quaternion": {
-            "isQuaternion": true,
-            "_x": 0,
-            "_y": 0,
-            "_z": 0,
-            "_w": 1
-        },
-        "scale": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-        },
-        "worldMatrix": {
-            "elements": [
-                1,
-                0,
-                0,
-                0,
-                0,
-                1,
-                0,
-                0,
-                0,
-                0,
-                1,
-                0,
-                -4.170938189256237,
-                0,
-                -1.1383852401009265,
-                1
-            ]
-        },
-        "initialVelocity" : "2",
-        "followPlayer" : true,
-        "scaleFactor": 0.1
+  {
+    "type": "environment",
+    "assetIdentifier": "world_settings",
+    "gravity": 1,
+    "sky_color": "black",
+    "ambient_light": 0.5,
+    "player_speed": 10,
+    "player_mass": 50,
+    "player_size": 1,
+    "player_jump": 0.5,
+    "player_flycontrol": false,
+    "stars": true,
+    "env_music": "",
+    "player_music": ""
+  },
+  {
+    "type": "object",
+    "assetIdentifier": "Car",
+    "assetLink": "https://gnfd-testnet-sp2.nodereal.io/download/hackathon/NissanSkyline.glb",
+    "position": { "x": 5.741075568147, "y": 0, "z": 0.27074305453107705 },
+    "quaternion": { "isQuaternion": true, "_x": 0, "_y": 0, "_z": 0, "_w": 1 },
+    "scale": { "x": 1, "y": 1, "z": 1 },
+    "worldMatrix": {
+      "elements": [
+        1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5.741075568147, 0,
+        0.27074305453107705, 1
+      ]
     },
-    {
-        "assetIdentifier": "chest1",
-        "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
-        "fixed": true,
-        "mass": 1,
-        "onCollision": "none",
-        "onClick": "none",
-        "onHover": "none",
-        "colliders": "",
-        "position": {
-            "x": 100,
-            "y": 0,
-            "z": 0
-        },
-        "quaternion": {
-            "isQuaternion": true,
-            "_x": 0,
-            "_y": 0,
-            "_z": 0,
-            "_w": 0
-        },
-        "scale": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-        },
-        "worldMatrix": {
-            "elements": [
-                1,
-                0,
-                0,
-                0,
-                0,
-                1,
-                0,
-                0,
-                0,
-                0,
-                1,
-                0,
-                0,
-                0,
-                0,
-                1
-            ]
-        },
-        "initialVelocity" : "2",
-        "followPlayer" : true,
-        "scaleFactor": 0.1
-    }
+    "fixed": false,
+    "colliders": "no",
+    "OnClick": "",
+    "OnHover": "",
+    "OnCollision": ""
+  },
+  {
+    "type": "object",
+    "assetIdentifier": "Chest",
+    "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
+    "position": { "x": -5.5334808667668165, "y": 0, "z": 1.1514298440770232 },
+    "quaternion": { "isQuaternion": true, "_x": 0, "_y": 0, "_z": 0, "_w": 1 },
+    "scale": { "x": 1, "y": 1, "z": 1 },
+    "worldMatrix": {
+      "elements": [
+        1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -5.5334808667668165, 0,
+        1.1514298440770232, 1
+      ]
+    },
+    "fixed": false,
+    "colliders": "hull",
+    "OnClick": "CheckPoint1",
+    "OnHover": "",
+    "OnCollision": ""
+  },
+  { "type": "task", "assetIdentifier": "CheckPoint1" }
 ]

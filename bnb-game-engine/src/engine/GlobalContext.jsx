@@ -149,13 +149,13 @@ const reducer = (state, action) => {
                   : object.fixed,
               mass: action.payload.mass || object.mass,
               colliders: action.payload.colliders || object.colliders,
-              sensor: action.payload.sensor || object.sensor,
 
               // Methods
               OnClick: action.payload.OnClick || object.OnClick,
               OnHover: action.payload.OnHover || object.OnHover,
               OnCollision: action.payload.OnCollision || object.OnCollision,
 
+              sensor: action.payload.sensor || object.sensor,
               OnSensorEnter:
                 action.payload.OnSensorEnter || object.OnSensorEnter,
               OnSensorExit: action.payload.OnSensorExit || object.OnSensorExit,
@@ -243,6 +243,7 @@ const reducer = (state, action) => {
 
     // CASE: TASK
     case "ADD_TASK":
+      console.log("Adding task", action.payload.assetIdentifer);
       return {
         ...state,
         objectMaster: [
