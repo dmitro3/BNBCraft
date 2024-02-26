@@ -11,7 +11,8 @@ contract GameFactory {
         Game game = new Game(_name, _greenfield, _price, _tasks);  
         gameAddresses.push(address(game));
         game.transferOwnership(msg.sender);
-        return address(game);
+        address gameContract = address(game);
+        return gameContract;
     }
 
     // function to get the game addresses
