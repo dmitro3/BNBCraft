@@ -27,7 +27,7 @@ import LocationDisplay from './LocationDisplay.jsx'
 import './engine.css'
 
 import { GradientTexture , GradientType } from '@react-three/drei'
-import { ScreenSizer } from '@react-three/drei'
+import { AsciiRenderer } from '@react-three/drei'
 import { Grid } from '@react-three/drei' 
 
 export default function App() {
@@ -407,11 +407,14 @@ function Scene() {
             <Canvas shadows raycaster={{ params: { Line: { threshold: 0.15 } } }} camera={{ position: [-10, 10, 10], fov: 30 }} id='objectScene'>
               <color attach="background" args={[objectMaster[0].sky_color]} />
               <>
-                  <Grid args={[100, 100]} />
+                  <Grid args={[500,500]}
+                  cellSize={1} sectionSize={5} 
+                  cellColor={'yellow'} 
+                 sectionThickness={1} cellThickness={0.5}/>
                 <mesh position={[0,1,0]}>
                   <cylinderGeometry args={[0.5, 0.5, 1.5]} />
                   <Outlines thickness={0.05} color="hotpink" />
-                  <meshNormalMaterial />
+                  <meshNormalMaterial color={"green"} />
                 </mesh> 
 
                 <ambientLight intensity={objectMaster[0].ambient_light} />
