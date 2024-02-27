@@ -31,6 +31,8 @@ import Model from "./Model.jsx";
 import LightControls from "./LightControls.jsx";
 import TaskControls from "./TaskControls.jsx";
 import LocationDisplay from "./LocationDisplay.jsx";
+
+import logo from "./logo.png";
 import "./engine.css";
 
 import { GradientTexture, GradientType } from "@react-three/drei";
@@ -284,9 +286,8 @@ function Scene() {
 
           Swal.fire({
             title: "Game Published!",
-            text: `Game Address: ${
-              gameContractAddress[gameContractAddress.length - 1]
-            }`,
+            text: `Game Address: ${gameContractAddress[gameContractAddress.length - 1]
+              }`,
             icon: "success",
             confirmButtonText: "Open Game",
           }).then((result) => {
@@ -320,10 +321,12 @@ function Scene() {
             style={{ height: "5%" }}
           >
             <div className="col-3">
-              <h3 className="text-light ms-2">
-                <span className="text-success">BnB</span>
-                Craft
-              </h3>
+              <div className="d-flex align-items-center">
+                <img src={logo} alt="logo" width="40" className="me-1 align-middle" />
+                <h3 className="text-light">
+                  <span className="text-success">BnB</span>
+                  Craft</h3>
+              </div>
             </div>
             <div className="col-3"></div>
             <div className="col-6 text-end">
@@ -363,7 +366,7 @@ function Scene() {
                   Publish
                 </button>
                 <button
-                  className="mx-1 px-2 p-1 my-0 standard-button"
+                  className="ms-3 me-1 px-4 p-1 my-0 standard-fbutton"
                   onClick={() => {
                     if (panelClass === "col-3") setPanelClass("d-none");
                     else setPanelClass("col-3");
@@ -542,18 +545,24 @@ function Scene() {
         {/* Panel */}
         <div
           className={
-            "text-light border-start shadow standard-background vh-100 p-0 overflow-auto " +
+            "text-light shadow standard-background vh-100 p-0 overflow-auto " +
             panelClass
           }
         >
           <div className="accordion accordion-flush" id="accordionFlushExample">
-            <Green />
-            <EnvironmentControls />
-            <PlayerControls />
-            <ObjectControls />
-            <LocationDisplay />
-            <LightControls />
-            <TaskControls />
+            <div className="p-1 shadow-sm pb-2 rounded-2">
+              <h4 className="text-start standard-fbutton rounded-2 px-2 p-1 px-2 py-2">Wallet Controls</h4>
+              <Green />
+            </div>
+            <div className="m-1 shadow-sm pb-2 rounded-2 mt-3">
+              <h4 className="text-start standard-fbutton rounded-2 px-2 py-2">Engine Controls</h4>
+              <EnvironmentControls />
+              <PlayerControls />
+              <ObjectControls />
+              <LocationDisplay />
+              <LightControls />
+              <TaskControls />
+            </div>
           </div>
         </div>
       </div>
