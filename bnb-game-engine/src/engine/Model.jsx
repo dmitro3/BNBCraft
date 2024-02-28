@@ -37,7 +37,8 @@ const Model = ({
       >
         <primitive
           object={gltf.scene.clone()}
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation()
             dispatch({
               type: "SET_CURRENT_OBJECT",
               payload: {
