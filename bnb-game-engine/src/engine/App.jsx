@@ -46,18 +46,17 @@ export default function App() {
 }
 
 function Scene() {
-  const [isGreenVisible, setIsGreenVisible] = useState(true);
-
   const [height, setHeight] = useState("30%");
   const [panelClass, setPanelClass] = useState("col-3");
 
   const ref = useRef();
+  const fileInputRef = useRef(null);
   const { state, dispatch } = useContext(GlobalContext);
   const { objectMaster, currentObjectIdentifer, assetMaster } = state;
 
   // Load Object Master
-  const LoadObjectMaster = () => {
-    objJSON.map((object) => {
+  const LoadObjectMaster = (file) => {
+    file.map((object) => {
       if (object.type === "object") {
         const AddAction = {
           type: "ADD_OBJECT",
@@ -158,6 +157,25 @@ function Scene() {
     a.href = URL.createObjectURL(file);
     a.download = "objectMaster.json";
     a.click();
+  };
+
+  // Function to handle file upload
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const fileContent = e.target.result;
+      try {
+        const worldData = JSON.parse(fileContent);
+        LoadObjectMaster(worldData)
+        console.log("World data loaded:", worldData);
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+      }
+    };
+
+    reader.readAsText(file);
   };
 
   const [account, setAccount] = useState("");
@@ -284,9 +302,8 @@ function Scene() {
 
           Swal.fire({
             title: "Game Published!",
-            text: `Game Address: ${
-              gameContractAddress[gameContractAddress.length - 1]
-            }`,
+            text: `Game Address: ${gameContractAddress[gameContractAddress.length - 1]
+              }`,
             icon: "success",
             confirmButtonText: "Open Game",
           }).then((result) => {
@@ -321,28 +338,41 @@ function Scene() {
           >
             <div className="col-3">
               <h3 className="text-light ms-2">
-                <span className="text-success">BnB</span>
+                <span className="text-success">BNB</span>
                 Craft
               </h3>
             </div>
             <div className="col-3"></div>
             <div className="col-6 text-end">
               <div className="m-0" style={{ padding: "1.5px" }}>
+                <input
+                  type="file"
+                  accept=".json"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={handleFileUpload}
+                /><button
+                  className="mx-1 px-2 p-1 my-0 standard-button"
+                  onClick={() => fileInputRef.current.click()}
+                >
+                  <span className="me-1 bi bi-upload align-text-top"></span>
+                  Upload
+                </button>
                 <button
                   className="mx-1 px-2 p-1 my-0 standard-button"
                   onClick={() => {
-                    LoadObjectMaster();
+                    LoadObjectMaster(objJSON);
                   }}
                 >
                   <span className="me-1 bi bi-folder-symlink align-text-top"></span>
-                  Load World
+                  Load
                 </button>
                 <button
                   className="mx-1 px-2 p-1 my-0 standard-button"
                   onClick={() => DownloadObjectMaster()}
                 >
                   <span className="me-1 bi bi-cloud-arrow-down align-text-top"></span>
-                  Export World
+                  Export
                 </button>
                 <button
                   className="mx-1 px-2 p-1 my-0 standard-button"
@@ -411,6 +441,7 @@ function Scene() {
                         collision={object.collision}
                         fixed={object.fixed}
                         worldMatrix={object.worldMatrix}
+                        scaleFactor={object.scaleFactor}
                       />
                     );
                   else return <></>;

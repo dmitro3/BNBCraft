@@ -51,7 +51,7 @@ export const Demo = () => {
           <button className="accordion-button standard-background collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
             <span className="me-2 align-middle bi bi-bucket-fill text-success"></span>
 
-            BnB Greenfield Assets
+            BNB Greenfield Assets
           </button>
         </h2>
         <div id="flush-collapseSeven" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">

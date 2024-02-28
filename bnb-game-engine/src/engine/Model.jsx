@@ -11,6 +11,7 @@ const Model = ({
   collision,
   fixed,
   worldMatrix,
+  scaleFactor,
 }) => {
   const { state, dispatch } = useContext(GlobalContext);
   const { currentObjectIdentifier } = state;
@@ -28,8 +29,11 @@ const Model = ({
       collision={collision}
       fixedM={fixed}
       worldMatrix={worldMatrix}
+      scale={scaleFactor} // disable if not creating issues
     >
-      <Center top position={[2, 0, 2]}>
+      <Center top position={[2, 0, 2]}
+        scale={scaleFactor}
+      >
         <primitive
           object={gltf.scene.clone()}
           onClick={() => {

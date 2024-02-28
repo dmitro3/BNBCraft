@@ -37,7 +37,7 @@ const reducer = (state, action) => {
           (object) => object.assetIdentifier === action.payload.assetIdentifier
         )
       ) {
-        alert("Object with the same identifier already exists!");
+        console.log("Object with the same identifier already exists!");
         return state;
       }
 
@@ -84,7 +84,7 @@ const reducer = (state, action) => {
           (object) => object.assetIdentifier === action.payload.assetIdentifier
         )
       ) {
-        alert("Object with the given identifier does not exist!");
+        console.log("Object with the given identifier does not exist!");
         return state;
       }
       // set currentObjectIdentifier to "" if the object being deleted is the currentObject
@@ -111,7 +111,7 @@ const reducer = (state, action) => {
           (object) => object.assetIdentifier === action.payload.assetIdentifier
         )
       ) {
-        alert("Object with the given identifier does not exist!");
+        console.log("Object with the given identifier does not exist!");
         return state;
       }
 

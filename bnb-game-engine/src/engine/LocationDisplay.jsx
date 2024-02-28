@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import * as THREE from "three";
 
 import { GlobalContext, GlobalContextProvider } from "./GlobalContext.jsx";
@@ -6,10 +6,29 @@ import { GlobalContext, GlobalContextProvider } from "./GlobalContext.jsx";
 const LocationDisplay = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const { objectMaster, currentObjectIdentifier } = state;
+  const [scaleFactor, setScaleFactor] = useState(1);
 
   let currentObject = objectMaster.find(
     (object) => object.assetIdentifier === currentObjectIdentifier
   );
+
+  useEffect(() => {
+    if (currentObject) {
+      setScaleFactor(currentObject.scaleFactor);
+    }
+  }, [currentObject]);
+
+  const handleScaleFactorChange = (event) => {
+    const value = parseFloat(event.target.value);
+    setScaleFactor(value);
+  };
+
+  const applyScale = () => {
+    if (currentObject) {
+      currentObject.scaleFactor = scaleFactor;
+      dispatch({ type: "CHANGE_OBJECT", payload: currentObject });
+    }
+  };
 
   return (
     <div className="accordion-item standard-fbutton">
@@ -38,6 +57,27 @@ const LocationDisplay = () => {
       >
         <div className="accordion-body">
           <div className="row m-0 p-0">
+            <div className="col-12">
+              <h6>Scale Factor</h6>
+            </div>
+            <div className="col-8">
+              <input
+                type="number"
+                step="0.1"
+                className="form-control"
+                id="scaleFactor"
+                placeholder={currentObject ? currentObject.scaleFactor : 1}
+                value={scaleFactor}
+                onChange={handleScaleFactorChange}
+              />
+            </div>
+            <div className="col-4">
+              <button className="btn btn-primary" onClick={applyScale}>
+                Save
+              </button>
+            </div>
+          </div>
+          <div className="row m-0 p-0  mt-3">
             <div className="col-12">
               <h6>Position</h6>
             </div>
@@ -154,62 +194,8 @@ const LocationDisplay = () => {
               />
             </div>
           </div>
-          <div className="row m-0 p-0 mt-3">
-            <div className="col-12">
-              <h6>Scale</h6>
-            </div>
-            <div className="col-4">
-              <label
-                htmlFor="scale_x"
-                className="form-label
-            "
-              >
-                S_X
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="scale_x"
-                placeholder="1"
-                disabled
-                value={currentObject ? currentObject.scale.x : 1}
-              />
-            </div>
-            <div className="col-4">
-              <label
-                htmlFor="scale_y"
-                className="form-label
-            "
-              >
-                S_Y
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="scale_y"
-                placeholder="1"
-                disabled
-                value={currentObject ? currentObject.scale.y : 1}
-              />
-            </div>
-            <div className="col-4">
-              <label
-                htmlFor="scale_z"
-                className="form-label
-            "
-              >
-                S_Z
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="scale_z"
-                placeholder="1"
-                disabled
-                value={currentObject ? currentObject.scale.z : 1}
-              />
-            </div>
-          </div>
+
+
         </div>
       </div>
     </div>
