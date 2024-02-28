@@ -50,7 +50,7 @@ export default function App() {
         setWorldSettings(object)
       } else if (object.type === "light") {
         light.push(object)
-      } else if (objects.includes(object) === false) {
+      } else if (object.type==="object" && objects.includes(object) === false) {
         objects.push(object)
       }
     })

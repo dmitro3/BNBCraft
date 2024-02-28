@@ -2,51 +2,86 @@
     {
         "type": "environment",
         "assetIdentifier": "world_settings",
-        "gravity": 0,
-        "sky_color": "green",
-        "ambient_light": 0.5,
+        "gravity": 1,
+        "sky_color": "#bde9ff",
+        "ambient_light": "2.5",
         "player_speed": 10,
         "player_mass": 50,
         "player_size": 1,
-        "player_jump": 20,
+        "player_jump": 0.5,
+        "player_flycontrol": false,
         "stars": true,
-        "flycontrol": true
+        "env_music": "",
+        "player_music": ""
     },
     {
-        "type": "light",
-        "assetIdentifier": "sun",
-        "position": {
-            "x": 10,
-            "y": 100,
-            "z": 100
-        },
-        "intensity": 1,
-        "color": "red"
+        "type": "task",
+        "assetIdentifier": "CheckPoint1"
     },
     {
         "type": "object",
-        "assetIdentifier": "chest0",
-        "fixed": false,
-        "mass": 1,
-        "onCollision": "none",
-        "onClick": "Hello",
-        "sensor" : false,
-        "onSensorEnter": "none",
-        "onSensorExit": "none",
-        "onHover": "hi",
-        "colliders": "cuboid",
-        "assetLink": "https://gateway.pinata.cloud/ipfs/Qmdq16KoUGqckw3dX8c9VzX4WAvkxfXasCQV8k7Zzc1rTr",
+        "assetIdentifier": "grannys_house_1_1709104456333",
+        "assetLink": "https://gnfd-testnet-sp2.nodereal.io/download/hackathon/grannys_house_1.8_low.glb",
         "position": {
-            "x": 0,
-            "y": 0,
-            "z": 0
+            "x": -21.311941681398444,
+            "y": -20.944368583044103,
+            "z": -16.31953817323617
         },
         "quaternion": {
             "isQuaternion": true,
             "_x": 0,
             "_y": 0,
             "_z": 0,
-            "_w": 0
+            "_w": 1
+        },
+        "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 0.9252601681311791
+        },
+        "worldMatrix": {
+            "elements": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0.9252601681311791,
+                0,
+                -21.311941681398444,
+                -20.944368583044103,
+                -16.31953817323617,
+                1
+            ]
+        },
+        "scaleFactor": 100.1,
+        "scaleFactorPivot": 10.1,
+        "fixed": false,
+        "colliders": "no",
+        "OnClick": "",
+        "OnHover": "",
+        "OnCollision": ""
+    },
+    {
+        "type": "object",
+        "assetIdentifier": "Fireball_1709104672507",
+        "assetLink": "https://gnfd-testnet-sp2.nodereal.io/download/hackathon/Fireball.glb",
+        "position": {
+            "x": -5.454611826714617,
+            "y": 1.1130773725750152,
+            "z": -5.536106115171667
+        },
+        "quaternion": {
+            "isQuaternion": true,
+            "_x": 0,
+            "_y": 0,
+            "_z": 0,
+            "_w": 1
         },
         "scale": {
             "x": 1,
@@ -67,11 +102,63 @@
                 0,
                 1,
                 0,
+                -5.454611826714617,
+                1.1130773725750152,
+                -5.536106115171667,
+                1
+            ]
+        },
+        "fixed": false,
+        "colliders": "no",
+        "OnClick": "",
+        "OnHover": "",
+        "OnCollision": ""
+    },
+    {
+        "type": "object",
+        "assetIdentifier": "Chest_1709140507390",
+        "assetLink": "https://gnfd-testnet-sp2.nodereal.io/download/hackathon/Chest.glb",
+        "position": {
+            "x": -0.025222716041189114,
+            "y": -0.07315795756304294,
+            "z": 0
+        },
+        "quaternion": {
+            "isQuaternion": true,
+            "_x": 0,
+            "_y": 0,
+            "_z": 0,
+            "_w": 1
+        },
+        "scale": {
+            "x": 1,
+            "y": 0.895374842181663,
+            "z": 1
+        },
+        "worldMatrix": {
+            "elements": [
+                1,
                 0,
                 0,
+                0,
+                0,
+                0.895374842181663,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                -0.025222716041189114,
+                -0.07315795756304294,
                 0,
                 1
             ]
-        }
+        },
+        "fixed": false,
+        "colliders": "no",
+        "OnClick": "",
+        "OnHover": "",
+        "OnCollision": ""
     }
 ]
