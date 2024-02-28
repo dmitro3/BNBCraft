@@ -3,7 +3,7 @@
         "type": "environment",
         "assetIdentifier": "world_settings",
         "gravity": 0,
-        "sky_color": "black",
+        "sky_color": "green",
         "ambient_light": 0.5,
         "player_speed": 10,
         "player_mass": 50,

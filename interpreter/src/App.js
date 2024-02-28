@@ -35,6 +35,7 @@ const Model = ({ file, object }) => {
 export default function App() {
   const queryParams = new URLSearchParams(window.location.search)
   const gameAddress = queryParams.get("game") || "loading..."
+  const testmode = queryParams.get("testmode") || false
 
   const [account, setAccount] = useState("")
   const { user, setUser, setText } = useSharedState()
@@ -130,13 +131,29 @@ export default function App() {
     }
   }
 
+  const test = async () => {
+   const {value : text} = await  Swal.fire({
+      title: "Test Mode",
+      input: "textarea",
+      inputLabel: "Import JSON",
+      inputPlaceholder: "Paste the JSON here",
+    })
+    if (text) {
+      data = JSON.parse(text)
+      load()
+    }
+  }
+
+
   useEffect(() => {
     web3Handler()
     load()
-    // loadContracts()
+    if(testmode){
+      test()
+    }
   }, [])
 
-  return gameAddress === "loading..." ? (
+  return gameAddress === "loading..." && testmode===false ? (
     <MarketPlace />
   ) : (
     <>
