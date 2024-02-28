@@ -37,7 +37,7 @@ const reducer = (state, action) => {
           (object) => object.assetIdentifier === action.payload.assetIdentifier
         )
       ) {
-        alert("Object with the same identifier already exists!");
+        console.log("Object with the same identifier already exists!");
         return state;
       }
 
@@ -59,6 +59,7 @@ const reducer = (state, action) => {
             initialVelocity: action.payload.initialVelocity,
             followPlayer: action.payload.followPlayer,
             scaleFactor: action.payload.scaleFactor,
+            scaleFactorPivot: action.payload.scaleFactorPivot,
 
             // State
             fixed: action.payload.fixed,
@@ -84,7 +85,7 @@ const reducer = (state, action) => {
           (object) => object.assetIdentifier === action.payload.assetIdentifier
         )
       ) {
-        alert("Object with the given identifier does not exist!");
+        console.log("Object with the given identifier does not exist!");
         return state;
       }
       // set currentObjectIdentifier to "" if the object being deleted is the currentObject
@@ -111,7 +112,7 @@ const reducer = (state, action) => {
           (object) => object.assetIdentifier === action.payload.assetIdentifier
         )
       ) {
-        alert("Object with the given identifier does not exist!");
+        console.log("Object with the given identifier does not exist!");
         return state;
       }
 
@@ -141,6 +142,8 @@ const reducer = (state, action) => {
                   ? action.payload.followPlayer
                   : object.followPlayer,
               scaleFactor: action.payload.scaleFactor || object.scaleFactor,
+              scaleFactorPivot:
+                action.payload.scaleFactorPivot || object.scaleFactorPivot,
 
               // State
               fixed:
@@ -149,13 +152,19 @@ const reducer = (state, action) => {
                   : object.fixed,
               mass: action.payload.mass || object.mass,
               colliders: action.payload.colliders || object.colliders,
-              sensor: action.payload.sensor || object.sensor,
 
               // Methods
-              OnClick: action.payload.OnClick || object.OnClick,
+              OnClick:
+                action.payload.OnClick || action.payload.OnClick === ""
+                  ? action.payload.OnClick
+                  : object.OnClick,
               OnHover: action.payload.OnHover || object.OnHover,
-              OnCollision: action.payload.OnCollision || object.OnCollision,
+              OnCollision:
+                action.payload.OnCollision || action.payload.OnCollision === ""
+                  ? action.payload.OnCollision
+                  : object.OnCollision,
 
+              sensor: action.payload.sensor || object.sensor,
               OnSensorEnter:
                 action.payload.OnSensorEnter || object.OnSensorEnter,
               OnSensorExit: action.payload.OnSensorExit || object.OnSensorExit,
@@ -243,6 +252,7 @@ const reducer = (state, action) => {
 
     // CASE: TASK
     case "ADD_TASK":
+      console.log("Adding task", action.payload.assetIdentifer);
       return {
         ...state,
         objectMaster: [
