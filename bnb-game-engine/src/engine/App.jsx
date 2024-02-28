@@ -411,7 +411,7 @@ function Scene() {
                   cellSize={1} sectionSize={5} 
                   cellColor={'yellow'} 
                  sectionThickness={1} cellThickness={0.5}/>
-                <mesh position={[0,1,0]}>
+                <mesh position={[0,1,0]} >
                   <cylinderGeometry args={[0.5, 0.5, 1.5]} />
                   <Outlines thickness={0.05} color="hotpink" />
                   <meshNormalMaterial color={"green"} />

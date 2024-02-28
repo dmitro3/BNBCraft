@@ -20,7 +20,7 @@ const Model = ({ assetLink, assetIdentifer, collision, fixed, worldMatrix,setAss
       <PivotControls assetIdentifier={assetIdentifer} collision={collision} fixedM={fixed} worldMatrix={worldMatrix}>
         <Center top position={[2, 0, 2]}>
           <primitive object={gltf.scene.clone()}
-            onClick={() => {
+            onClick={(e) => {
               dispatch({
                 type: "SET_CURRENT_OBJECT",
                 payload: {
@@ -34,6 +34,7 @@ const Model = ({ assetLink, assetIdentifer, collision, fixed, worldMatrix,setAss
               })
 
               console.log(currentObjectIdentifier, "currentObjectIdentifier")
+              e.stopPropagation()
             }}
             onPointerEnter={() => setHovered(true)}
             onPointerOut={() => setHovered(false)} >
