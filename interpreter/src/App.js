@@ -146,11 +146,14 @@ export default function App() {
 
 
   useEffect(() => {
-    web3Handler()
-    load()
-    if(testmode){
+     if(testmode){
       test()
     }
+    else 
+    {
+      load()
+    }
+    web3Handler()
   }, [])
 
   return gameAddress === "loading..." && testmode===false ? (
