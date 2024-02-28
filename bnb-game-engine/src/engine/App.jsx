@@ -88,6 +88,7 @@ function Scene() {
             initialVelocity: object.initialVelocity,
             followPlayer: object.followPlayer,
             scaleFactor: object.scaleFactor,
+            scaleFactorPivot: object.scaleFactorPivot,
 
             // State
             fixed: object.fixed,
@@ -442,6 +443,7 @@ function Scene() {
                         fixed={object.fixed}
                         worldMatrix={object.worldMatrix}
                         scaleFactor={object.scaleFactor}
+                        scaleFactorPivot={object.scaleFactorPivot}
                       />
                     );
                   else return <></>;

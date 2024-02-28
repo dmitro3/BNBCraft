@@ -12,6 +12,7 @@ const Model = ({
   fixed,
   worldMatrix,
   scaleFactor,
+  scaleFactorPivot,
 }) => {
   const { state, dispatch } = useContext(GlobalContext);
   const { currentObjectIdentifier } = state;
@@ -29,7 +30,7 @@ const Model = ({
       collision={collision}
       fixedM={fixed}
       worldMatrix={worldMatrix}
-      scale={scaleFactor} // disable if not creating issues
+      scale={scaleFactorPivot}
     >
       <Center top position={[2, 0, 2]}
         scale={scaleFactor}

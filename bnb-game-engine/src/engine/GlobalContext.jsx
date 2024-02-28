@@ -59,6 +59,7 @@ const reducer = (state, action) => {
             initialVelocity: action.payload.initialVelocity,
             followPlayer: action.payload.followPlayer,
             scaleFactor: action.payload.scaleFactor,
+            scaleFactorPivot: action.payload.scaleFactorPivot,
 
             // State
             fixed: action.payload.fixed,
@@ -141,6 +142,8 @@ const reducer = (state, action) => {
                   ? action.payload.followPlayer
                   : object.followPlayer,
               scaleFactor: action.payload.scaleFactor || object.scaleFactor,
+              scaleFactorPivot:
+                action.payload.scaleFactorPivot || object.scaleFactorPivot,
 
               // State
               fixed:
