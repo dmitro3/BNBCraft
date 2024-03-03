@@ -63,6 +63,4 @@ contract PlayerStatus{
     function getTasks() public view returns(string[] memory){
         return taskNames;
     }
-
-    //[TODO]: game status win,running
 }

@@ -8,16 +8,18 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Game is Ownable {
     string public greenfield;
     string public name;
+    string public thumbnail;
     uint public price;
     string[] private tasks;
 
     // purchased players metamask address to player contract address
     mapping(address => address) private players;
 
-    constructor(string memory _name,string memory _greenfield, uint _price,string[] memory _tasks) Ownable(msg.sender) {
+    constructor(string memory _name,string memory _greenfield, uint _price,string memory _thumbnail,string[] memory _tasks) Ownable(msg.sender) {
         name = _name;
         greenfield = _greenfield;
         price = _price;
+        thumbnail = _thumbnail;
         tasks = _tasks;
     }
 
@@ -36,11 +38,4 @@ contract Game is Ownable {
     function getPlayerContract() public view returns(address){
         return players[msg.sender];
     }
-
-    // function to get the map of players
-    // [TODO] This function is not working as expected. Fix it
-    // Types containing (nested) mappings can only be parameters or return variables of internal or library functions.
-    // function getPlayers() public view returns(mapping(address => address) memory){
-    //     return players;
-    // }
 }
