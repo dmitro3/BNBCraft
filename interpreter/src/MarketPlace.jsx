@@ -77,12 +77,14 @@ const MarketPlace = () => {
 
         const name = await gameContract.name()
         const price = await gameContract.price()
+        const thumbnail = await gameContract.thumbnail()
         //const totalBuyers = await gameContract.getTotalBuyers()
 
         setGame({
           name,
           price: ethers.utils.formatEther(price),
           address: gameAddress,
+          thumbnail: thumbnail,
           //totalBuyers: totalBuyers.toNumber(),
         })
         setLoading(false)
@@ -94,7 +96,7 @@ const MarketPlace = () => {
 
     return (
       <Card sx={{ maxWidth: 300, margin: 2 }}>
-        <CardMedia component="img" height="140" image={randomImageURL} alt="Random Image" />
+        <CardMedia component="img" height="140" image={game.thumbnail} alt="Random Image" />
         <CardContent>
           {loading ? (
             <Typography variant="body1">Loading...</Typography>
