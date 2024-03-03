@@ -27,7 +27,6 @@ const Model = ({ file, object }) => {
   //once the model is loaded, console that it is loaded
   const gltf = useLoader(GLTFLoader, file, (loader) => {
     console.log("loaded model", object.assetIdentifier)
-    console.log(loader)
   })
 
   return (
@@ -45,19 +44,22 @@ export default function App() {
   const gameAddress = queryParams.get("game") || "loading..."
   const testmode = queryParams.get("testmode") || false
 
-  const [account, setAccount] = useState("")
+  const [account, setAccount] = useState(null)
   const { user, setUser, setText } = useSharedState()
-  const [playerContract, setPlayerContract] = useState()
-  const [gameContract, setGameContract] = useState()
+  const [playerContract, setPlayerContract] = useState(null)
+  const [gameContract, setGameContract] = useState(null)
   let [objects, setObjects] = useState([])
   const [world_settings, setWorldSettings] = useState({})
-  const [light] = useState([])
+  const [light , setLight] = useState([])
 
   const [data, setData] = useState()
 
+  // takes whole JSON data and classifies it into world settings, light, and objects
   const load = (data) => {
     console.log("loading data", data)
-
+    setWorldSettings({})
+    setObjects([])
+    setLight([])
     data.map((object) => {
       if (object.type === "environment") {
         console.log("setting world settings")
@@ -72,8 +74,8 @@ export default function App() {
     })
   }
 
+  // gets the user's account and sets the account and user 
   const web3Handler = async () => {
-    // Use Mist/MetaMask's provider
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" })
     setAccount(accounts[0])
     const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -91,10 +93,13 @@ export default function App() {
       setUser(accounts[0])
       await web3Handler()
     })
-    loadContracts(signer, accounts[0])
+
+    return signer
+   
   }
 
-  const menu = async (isStart, playerContract) => {
+  // to display "You Won" or "Welcome to the game" when the game starts or ends
+  const menu = async (isStart, playerContract, data) => {
     const message = !isStart ? "You Won" : "Welcome to the game"
     Swal.fire({
       title: "Menu",
@@ -105,7 +110,8 @@ export default function App() {
       if (result.isConfirmed) {
         if (playerContract) {
           await playerContract.reset().then((tx) => {
-            console.log(tx)
+            console.log("Reseting PlayerContract data ",tx)
+            load(data)
           })
         } else {
           console.log(playerContract)
@@ -115,6 +121,7 @@ export default function App() {
     })
   }
 
+  // to buy the game
   const buy = async (game_contract, price) => {
     await game_contract.name().then((name) => {
       Swal.fire({
@@ -125,44 +132,54 @@ export default function App() {
       }).then((result) => {
         if (result.isConfirmed) {
           game_contract.buyGame({ value: price }).then((tx) => {
-            console.log(tx)
+            console.log("Bought game " ,tx)
           })
         }
       })
     })
   }
 
-  const loadContracts = async (signer, account) => {
+  // load the GameContract
+  const loadContracts = async (signer) => {
     try {
       const Gamecontract = new ethers.Contract(gameAddress, GameAbi.abi, signer)
 
       const greenfield = await Gamecontract.greenfield()
-      console.log(greenfield)
+      console.log("greenfield json file : " , greenfield)
 
       // download the json file from the greenfield
+      // data is the local variable that stores the json data
+      // therefore data is not accessible outside this function unless passed as a parameter
       const response = await fetch(greenfield)
-      const data = await response.json()
-      console.log(data)
-      load(data)
-      setData(data)
+      const cur_data = await response.json()
+      console.log(cur_data)
 
-      // await Gamecontract.getPlayerContract().then((address) => {
-      //   if (address === "0x0000000000000000000000000000000000000000") {
-      //     const price = Gamecontract.price().then((price) => {
-      //       buy(Gamecontract, price)
-      //     })
-      //   } else {
-      //     const playerContract = new ethers.Contract(address, PlayerStatus.abi, signer)
-      //     setPlayerContract(playerContract)
-      //     menu(true, playerContract)
-      //   }
-      // })
+      // populates the environment, light, and objects array with the data from the json file
+
+      // setting [data] state to the json data , can be used after this cycle
+      setData(cur_data)
+
+      // check if player owns the game or not
+      await Gamecontract.getPlayerContract().then((address) => {
+        if (address === "0x0000000000000000000000000000000000000000") {
+          Gamecontract.price().then((price) => {
+            // display the buy screen
+            buy(Gamecontract, price)
+          })
+        } else {
+          // player owns the game : load the player contract
+          const cur_playerContract = new ethers.Contract(address, PlayerStatus.abi, signer)
+          console.log("Player Contract : ", cur_playerContract)
+          setPlayerContract(cur_playerContract) // changed playerContract state
+          menu(true, cur_playerContract, cur_data)
+        }
+      })
     } catch (error) {
       console.error("Error loading contracts:", error)
-      // Handle the error (e.g., show a message to the user)
     }
   }
 
+  // test screen shown if testmode is true
   const test = async () => {
     const { value: text } = await Swal.fire({
       title: "Test Mode",
@@ -177,17 +194,17 @@ export default function App() {
   }
 
   useEffect(() => {
-    if (testmode) {
-      test()
-    } else {
-      // load()
-    }
-    web3Handler()
+    web3Handler().then((signer) => {
+      loadContracts(signer)
+    })
   }, [])
 
-  return gameAddress === "loading..." && testmode === false ? (
-    <MarketPlace />
-  ) : (
+
+
+
+
+  return ( 
+    objects && playerContract &&
     <>
       <KeyboardControls
         map={[
@@ -217,10 +234,10 @@ export default function App() {
             {/* <Cylinder args={[0.75,0.5]} position={[0, 10, 10]} /> */}
 
             <Physics gravity={[0, -world_settings.gravity, 0]}>
-              {/* <Debug /> */}
+              <Debug />
               {objects &&
                 objects.map((object) => {
-                  if (object.colliders != "no") {
+                  if (object.colliders !== "no") {
                     return (
                       <RigidBody
                         onPointerEnter={() => {
@@ -230,22 +247,22 @@ export default function App() {
                           setText("")
                         }}
                         onClick={async () => {
-                          if (object.onClick != "none")
-                            await playerContract.completeTask(object.onClick).then((tx) => {
+                          if (object.onClick !== "none")
+                            await playerContract.completeTask((object.onClick)).then((tx) => {
                               console.log(tx)
                               if (tx) {
                                 menu(false, playerContract)
                               }
                             })
                         }}
-                        onCollisionEnter={() => {
-                          if (object.onCollision != "none") playerContract.completeTask(object.onCollision)
+                        onCollisionEnter={async () => {
+                          if (object.onCollision !== "none") await playerContract.completeTask((object.onCollision))
                         }}
-                        onIntersectionEnter={() => {
-                          if (object.onSensorEnter != "none") playerContract.completeTask(object.onSensorEnter)
+                        onIntersectionEnter={async () => {
+                          if (object.onSensorEnter !== "none") await playerContract.completeTask((object.onSensorEnter))
                         }}
-                        onIntersectionExit={() => {
-                          if (object.onSensorExit != "none") playerContract.completeTask(object.onSensorExit)
+                        onIntersectionExit={async () => {
+                          if (object.onSensorExit !== "none") await playerContract.completeTask((object.onSensorExit))
                         }}
                         sensor={object.sensor}
                         key={object.assetIdentifier}
@@ -271,8 +288,9 @@ export default function App() {
             <PointerLockControls />
           </Canvas>
         </>
-        <Loader />
+       
       </KeyboardControls>
+      <Loader/>
     </>
   )
 }
