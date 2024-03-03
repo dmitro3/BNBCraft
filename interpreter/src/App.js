@@ -171,8 +171,8 @@ export default function App() {
       inputPlaceholder: "Paste the JSON here",
     })
     if (text) {
-      data = JSON.parse(text)
-      load()
+      setData(JSON.parse(text))
+      load(JSON.parse(text))
     }
   }
 
@@ -197,7 +197,7 @@ export default function App() {
           { name: "right", keys: ["ArrowRight", "d", "D"] },
           { name: "jump", keys: ["Space"] },
         ]}>
-        <Suspense>
+        <>
           <Canvas camera={{ fov: 45 }} shadows>
             <ambientLight intensity={world_settings.ambient_light} />
             <color attach="background" args={[world_settings.sky_color]} />
@@ -217,7 +217,7 @@ export default function App() {
             {/* <Cylinder args={[0.75,0.5]} position={[0, 10, 10]} /> */}
 
             <Physics gravity={[0, -world_settings.gravity, 0]}>
-              <Debug />
+              {/* <Debug /> */}
               {objects &&
                 objects.map((object) => {
                   if (object.colliders != "no") {
@@ -270,7 +270,7 @@ export default function App() {
 
             <PointerLockControls />
           </Canvas>
-        </Suspense>
+        </>
         <Loader />
       </KeyboardControls>
     </>
