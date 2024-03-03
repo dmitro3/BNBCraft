@@ -171,7 +171,7 @@ function Scene() {
       const fileContent = e.target.result;
       try {
         const worldData = JSON.parse(fileContent);
-        LoadObjectMaster(worldData)
+        LoadObjectMaster(worldData);
         console.log("World data loaded:", worldData);
       } catch (error) {
         console.error("Error parsing JSON:", error);
@@ -244,6 +244,19 @@ function Scene() {
         });
 
         if (gamePrice) {
+          const { value: gameThumbnail } = await Swal.fire({
+            title: "Enter Game Thumbnail",
+            input: "text",
+            inputLabel: "Game Thumbnail",
+            inputPlaceholder: "Enter the thumbnail link of your game",
+            showCancelButton: true,
+            inputValidator: (value) => {
+              if (!value) {
+                return "You need to enter a game thumbnail!";
+              }
+            },
+          });
+
           const getLink = async (e) => {
             try {
               const file = new Blob([JSON.stringify(objectMaster)], {
@@ -296,6 +309,7 @@ function Scene() {
             gameName,
             getLink(),
             gamePrice,
+            gameThumbnail,
             ["one", "two"]
           );
           await tx.wait();
@@ -305,8 +319,9 @@ function Scene() {
 
           Swal.fire({
             title: "Game Published!",
-            text: `Game Address: ${gameContractAddress[gameContractAddress.length - 1]
-              }`,
+            text: `Game Address: ${
+              gameContractAddress[gameContractAddress.length - 1]
+            }`,
             icon: "success",
             confirmButtonText: "Open Game",
           }).then((result) => {
@@ -341,10 +356,16 @@ function Scene() {
           >
             <div className="col-3">
               <div className="d-flex align-items-center">
-                <img src={logo} alt="logo" width="40" className="me-1 align-middle" />
+                <img
+                  src={logo}
+                  alt="logo"
+                  width="40"
+                  className="me-1 align-middle"
+                />
                 <h3 className="text-light">
                   <span className="text-success">BNB</span>
-                  Craft</h3>
+                  Craft
+                </h3>
               </div>
             </div>
             <div className="col-3"></div>
@@ -356,7 +377,8 @@ function Scene() {
                   ref={fileInputRef}
                   style={{ display: "none" }}
                   onChange={handleFileUpload}
-                /><button
+                />
+                <button
                   className="mx-1 px-2 p-1 my-0 standard-button"
                   onClick={() => fileInputRef.current.click()}
                 >
@@ -585,11 +607,15 @@ function Scene() {
         >
           <div className="accordion accordion-flush" id="accordionFlushExample">
             <div className="p-1 shadow-sm pb-2 rounded-2">
-              <h4 className="text-start standard-fbutton rounded-2 px-2 p-1 px-2 py-2">Wallet Controls</h4>
+              <h4 className="text-start standard-fbutton rounded-2 px-2 p-1 px-2 py-2">
+                Wallet Controls
+              </h4>
               <Green />
             </div>
             <div className="m-1 shadow-sm pb-2 rounded-2 mt-3">
-              <h4 className="text-start standard-fbutton rounded-2 px-2 py-2">Engine Controls</h4>
+              <h4 className="text-start standard-fbutton rounded-2 px-2 py-2">
+                Engine Controls
+              </h4>
               <EnvironmentControls />
               <PlayerControls />
               <ObjectControls />
