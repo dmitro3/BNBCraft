@@ -197,7 +197,7 @@ export default function App() {
           { name: "right", keys: ["ArrowRight", "d", "D"] },
           { name: "jump", keys: ["Space"] },
         ]}>
-        <Suspense>
+        <>
           <Canvas camera={{ fov: 45 }} shadows>
             <ambientLight intensity={world_settings.ambient_light} />
             <color attach="background" args={[world_settings.sky_color]} />
@@ -270,7 +270,7 @@ export default function App() {
 
             <PointerLockControls />
           </Canvas>
-        </Suspense>
+        </>
         <Loader />
       </KeyboardControls>
     </>
