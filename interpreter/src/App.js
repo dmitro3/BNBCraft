@@ -171,8 +171,8 @@ export default function App() {
       inputPlaceholder: "Paste the JSON here",
     })
     if (text) {
-      data = JSON.parse(text)
-      load()
+      setData(JSON.parse(text))
+      load(JSON.parse(text))
     }
   }
 
@@ -217,7 +217,7 @@ export default function App() {
             {/* <Cylinder args={[0.75,0.5]} position={[0, 10, 10]} /> */}
 
             <Physics gravity={[0, -world_settings.gravity, 0]}>
-              <Debug />
+              {/* <Debug /> */}
               {objects &&
                 objects.map((object) => {
                   if (object.colliders != "no") {
