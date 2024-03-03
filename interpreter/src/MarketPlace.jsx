@@ -60,6 +60,11 @@ const MarketPlace = () => {
     )
   }
 
+  const playGame = async (gameAddress) => {
+    // route to localhost:3000/?game=gameAddress
+    window.location.href = `/?game=${gameAddress}`
+  }
+
   const GameCard = ({ gameAddress }) => {
     const [game, setGame] = useState({ name: "", price: 0 })
     const [loading, setLoading] = useState(true)
@@ -77,6 +82,7 @@ const MarketPlace = () => {
         setGame({
           name,
           price: ethers.utils.formatEther(price),
+          address: gameAddress,
           //totalBuyers: totalBuyers.toNumber(),
         })
         setLoading(false)
@@ -96,9 +102,10 @@ const MarketPlace = () => {
             <>
               <Typography variant="h6">{game.name}</Typography>
               <Typography variant="body1">{game.price} TBNB</Typography>
+              <Typography variant="body2">Address: {game.address}</Typography>
               <Typography variant="body2">Buyers: {game.totalBuyers}</Typography>
-              <Button variant="contained" color="primary">
-                Buy
+              <Button variant="contained" color="primary" onClick={() => playGame(game.address)}>
+                Play
               </Button>
             </>
           )}

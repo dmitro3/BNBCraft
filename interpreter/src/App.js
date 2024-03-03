@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from "@react-three/fiber"
 import { Loader, PointerLockControls, KeyboardControls, Cylinder, Box, Stars } from "@react-three/drei"
-import { Debug, Physics, RigidBody , CapsuleCollider } from "@react-three/rapier"
+import { Debug, Physics, RigidBody, CapsuleCollider } from "@react-three/rapier"
 import { Player } from "./Player"
 // import { Model } from "./Show2"
 import { Suspense, useEffect } from "react"
@@ -21,7 +21,15 @@ import MarketPlace from "./MarketPlace"
 // Controls: WASD + left click
 
 const Model = ({ file, object }) => {
-  const gltf = useLoader(GLTFLoader, file)
+  console.log("loading model", object.assetIdentifier)
+  console.log(object)
+
+  //once the model is loaded, console that it is loaded
+  const gltf = useLoader(GLTFLoader, file, (loader) => {
+    console.log("loaded model", object.assetIdentifier)
+    console.log(loader)
+  })
+
   return (
     <primitive
       key={object.assetIdentifier}
@@ -41,17 +49,25 @@ export default function App() {
   const { user, setUser, setText } = useSharedState()
   const [playerContract, setPlayerContract] = useState()
   const [gameContract, setGameContract] = useState()
-  let [objects] = useState([])
+  let [objects, setObjects] = useState([])
   const [world_settings, setWorldSettings] = useState({})
   const [light] = useState([])
-  const load = () => {
+
+  const [data, setData] = useState()
+
+  const load = (data) => {
+    console.log("loading data", data)
+
     data.map((object) => {
       if (object.type === "environment") {
+        console.log("setting world settings")
         setWorldSettings(object)
       } else if (object.type === "light") {
+        console.log("setting light")
         light.push(object)
-      } else if (object.type==="object" && objects.includes(object) === false) {
-        objects.push(object)
+      } else if (object.type === "object" && objects.includes(object) === false) {
+        console.log("setting object", object)
+        setObjects((objects) => [...objects, object])
       }
     })
   }
@@ -78,7 +94,7 @@ export default function App() {
     loadContracts(signer, accounts[0])
   }
 
-  const menu = async (isStart) => {
+  const menu = async (isStart, playerContract) => {
     const message = !isStart ? "You Won" : "Welcome to the game"
     Swal.fire({
       title: "Menu",
@@ -87,9 +103,14 @@ export default function App() {
       confirmButtonText: "New Game",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await playerContract.reset().then((tx) => {
-          console.log(tx)
-        })
+        if (playerContract) {
+          await playerContract.reset().then((tx) => {
+            console.log(tx)
+          })
+        } else {
+          console.log(playerContract)
+          console.log("no contract")
+        }
       }
     })
   }
@@ -114,17 +135,28 @@ export default function App() {
   const loadContracts = async (signer, account) => {
     try {
       const Gamecontract = new ethers.Contract(gameAddress, GameAbi.abi, signer)
-      await Gamecontract.getPlayerContract().then((address) => {
-        if (address === "0x0000000000000000000000000000000000000000") {
-          const price = Gamecontract.price().then((price) => {
-            buy(Gamecontract, price)
-          })
-        } else {
-          const playerContract = new ethers.Contract(address, PlayerStatus.abi, signer)
-          setPlayerContract(playerContract)
-          menu(true)
-        }
-      })
+
+      const greenfield = await Gamecontract.greenfield()
+      console.log(greenfield)
+
+      // download the json file from the greenfield
+      const response = await fetch(greenfield)
+      const data = await response.json()
+      console.log(data)
+      load(data)
+      setData(data)
+
+      // await Gamecontract.getPlayerContract().then((address) => {
+      //   if (address === "0x0000000000000000000000000000000000000000") {
+      //     const price = Gamecontract.price().then((price) => {
+      //       buy(Gamecontract, price)
+      //     })
+      //   } else {
+      //     const playerContract = new ethers.Contract(address, PlayerStatus.abi, signer)
+      //     setPlayerContract(playerContract)
+      //     menu(true, playerContract)
+      //   }
+      // })
     } catch (error) {
       console.error("Error loading contracts:", error)
       // Handle the error (e.g., show a message to the user)
@@ -132,7 +164,7 @@ export default function App() {
   }
 
   const test = async () => {
-   const {value : text} = await  Swal.fire({
+    const { value: text } = await Swal.fire({
       title: "Test Mode",
       input: "textarea",
       inputLabel: "Import JSON",
@@ -144,19 +176,16 @@ export default function App() {
     }
   }
 
-
   useEffect(() => {
-     if(testmode){
+    if (testmode) {
       test()
-    }
-    else 
-    {
-      load()
+    } else {
+      // load()
     }
     web3Handler()
   }, [])
 
-  return gameAddress === "loading..." && testmode===false ? (
+  return gameAddress === "loading..." && testmode === false ? (
     <MarketPlace />
   ) : (
     <>
@@ -168,7 +197,7 @@ export default function App() {
           { name: "right", keys: ["ArrowRight", "d", "D"] },
           { name: "jump", keys: ["Space"] },
         ]}>
-        <Suspense>
+        <>
           <Canvas camera={{ fov: 45 }} shadows>
             <ambientLight intensity={world_settings.ambient_light} />
             <color attach="background" args={[world_settings.sky_color]} />
@@ -186,10 +215,8 @@ export default function App() {
                 )
               })}
             {/* <Cylinder args={[0.75,0.5]} position={[0, 10, 10]} /> */}
-          
-       
 
-          <Physics gravity={[0, -world_settings.gravity, 0]}>
+            <Physics gravity={[0, -world_settings.gravity, 0]}>
               <Debug />
               {objects &&
                 objects.map((object) => {
@@ -207,7 +234,7 @@ export default function App() {
                             await playerContract.completeTask(object.onClick).then((tx) => {
                               console.log(tx)
                               if (tx) {
-                                menu(false)
+                                menu(false, playerContract)
                               }
                             })
                         }}
@@ -243,7 +270,7 @@ export default function App() {
 
             <PointerLockControls />
           </Canvas>
-        </Suspense>
+        </>
         <Loader />
       </KeyboardControls>
     </>
