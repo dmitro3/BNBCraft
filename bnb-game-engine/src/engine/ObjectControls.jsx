@@ -191,6 +191,7 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
                     name="OnClick"
                   >
                     <option value="">Select a task</option>
+                    <option value="death">Death</option>
                     {tasks.map((task) => (
                       <option
                         key={task.assetIdentifier}
@@ -227,6 +228,7 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
                     name="OnCollision"
                   >
                     <option value="">Select a task</option>
+                    <option value="death">Death</option>
                     {tasks.map((task) => (
                       <option
                         key={task.assetIdentifier}
