@@ -204,7 +204,7 @@ export default function App() {
 
 
   return ( 
-    objects && playerContract &&
+   
     <>
       <KeyboardControls
         map={[
@@ -232,8 +232,9 @@ export default function App() {
                 )
               })}
             {/* <Cylinder args={[0.75,0.5]} position={[0, 10, 10]} /> */}
-
+            <Stars />
             <Physics gravity={[0, -world_settings.gravity, 0]}>
+              
               <Debug />
               {objects &&
                 objects.map((object) => {
@@ -249,7 +250,7 @@ export default function App() {
                         onClick={async () => {
                           if (object.onClick !== "none")
                             await playerContract.completeTask((object.onClick)).then((tx) => {
-                              console.log(tx)
+                              console.log("1 task completed " , tx)
                               if (tx) {
                                 menu(false, playerContract)
                               }
