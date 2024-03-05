@@ -33,7 +33,7 @@ const Model = ({ file, object }) => {
     <primitive
       key={object.assetIdentifier}
       object={gltf.scene.clone()}
-      scale={[object.scale.x, object.scale.y, object.scale.z]}
+      scale={[object.scale.x*object.scaleFactor, object.scale.y*object.scaleFactor, object.scale.z*object.scaleFactor]}
       position={[object.position.x, object.position.y, object.position.z]}
     />
   )
@@ -60,7 +60,8 @@ export default function App() {
     setWorldSettings({})
     setObjects([])
     setLight([])
-    Audio(world_settings.env_music).play()
+    const song = new Audio(world_settings.env_music)
+    song.play()
     data.map((object) => {
       if (object.type === "environment") {
         // console.log("setting world settings")
