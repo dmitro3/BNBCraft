@@ -60,6 +60,7 @@ export default function App() {
     setWorldSettings({})
     setObjects([])
     setLight([])
+    Audio(world_settings.env_music).play()
     data.map((object) => {
       if (object.type === "environment") {
         // console.log("setting world settings")
@@ -71,7 +72,8 @@ export default function App() {
         // console.log("setting object", object)
         setObjects((objects) => [...objects, object])
       }
-    })
+    }
+    )
   }
 
   // gets the user's account and sets the account and user
@@ -293,6 +295,7 @@ export default function App() {
                     jump={world_settings.player_jump}
                     size={world_settings.player_size}
                     flycontrol={world_settings.flycontrol}
+                    music={world_settings.player_music}
                   />
                 </Physics>
 
