@@ -4,6 +4,7 @@ import { useSharedState } from "./sharedState"
 import "./styles.css"
 import App from "./App"
 import { SharedStateProvider } from "./sharedState"
+import { Route } from "react-router-dom"
 
 function Overlay() {
   const { text, desc, price, user } = useSharedState();
