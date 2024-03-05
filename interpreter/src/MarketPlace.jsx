@@ -1,6 +1,4 @@
-// get all the games from GameFactory contract
 import { Input, Grid, Card, CardContent, CardMedia, Typography, Button, ThemeProvider, createTheme } from "@mui/material"
-
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
 import ContractAddress from "./contracts/contract-address.json"
@@ -11,6 +9,7 @@ import { Center } from "@react-three/drei"
 const MarketPlace = () => {
   const [account, setAccount] = useState("")
   const [gameAddress, setGameAddress] = useState([])
+  const [searchInput, setSearchInput] = useState("") // State for the search input
 
   const darkTheme = createTheme({
     palette: {
@@ -19,12 +18,10 @@ const MarketPlace = () => {
   });
 
   useEffect(() => {
-    // get all the games from GameFactory contract
     web3Handler()
   }, [])
 
   const web3Handler = async () => {
-    // Use Mist/MetaMask's provider
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" })
     setAccount(accounts[0])
     const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -46,31 +43,30 @@ const MarketPlace = () => {
   const loadContracts = async (signer, account) => {
     try {
       const gameFactory = new ethers.Contract(ContractAddress.GameFactory, GameFactory.abi, signer)
-
-      const gameAdresses = await gameFactory.getGameAddresses()
-
-      setGameAddress(gameAdresses)
-      console.log(gameAdresses)
+      const gameAddresses = await gameFactory.getGameAddresses()
+      setGameAddress(gameAddresses)
     } catch (error) {
       console.error("Error loading contracts:", error)
     }
   }
 
   const DisplayGames = () => {
+    const filteredGames = gameAddress.filter(game =>
+      game.toLowerCase().includes(searchInput.toLowerCase())
+    );
+
     return (
-      <Grid container spacing={2} sx={{ justifyContent: "center" , height: "100vh", overflowY: "auto" , backgroundColor: "#1e1e1e"}}>
-        {gameAddress.map((game, index) => (
-          <Grid item key={index} >
+      <Grid container spacing={2} sx={{ justifyContent: "center", height: "100vh", overflowY: "auto", backgroundColor: "#1e1e1e" }}>
+        {filteredGames.map((game, index) => (
+          <Grid item key={index}>
             <GameCard gameAddress={game} />
           </Grid>
         ))}
       </Grid>
-
     )
   }
 
   const playGame = async (gameAddress) => {
-    // route to localhost:3000/?game=gameAddress
     window.location.href = `?game=${gameAddress}`
   }
 
@@ -87,39 +83,31 @@ const MarketPlace = () => {
         const name = await gameContract.name()
         const price = await gameContract.price()
         const thumbnail = await gameContract.thumbnail()
-        //const totalBuyers = await gameContract.getTotalBuyers()
 
         setGame({
           name,
           price: ethers.utils.formatEther(price),
           address: gameAddress,
           thumbnail: thumbnail,
-          //totalBuyers: totalBuyers.toNumber(),
         })
         setLoading(false)
       }
       loadGame()
     }, [gameAddress])
 
-    const randomImageURL = "https://images.wondershare.com/virtulook/articles/random-background-generator-2.jpg"
-
     return (
-      
-      <Card sx={{ width: 300, margin: 2 , background: "#2d2d30" , color: 'white' , borderRadius: 5,
+      <Card sx={{ width: 300, margin: 2, background: "#2d2d30", color: 'white', borderRadius: 5,
        '&:hover': {background: "black" , color: "white" ,  scale: "1.05"}
-    }}
-       >
+    }}>
         <CardMedia component="img" height="140" image={game.thumbnail} alt="Random Image" />
         <CardContent>
           {loading ? (
             <Typography variant="body1">Loading...</Typography>
           ) : (
-            <div >
-              <Typography variant="h6" inline><b>{game.name}</b></Typography>
-              <Typography variant="body2" inline sx={{fontSize: "12px", color:"gray"}}>{(game.address).slice(0,6) + "..." + (game.address).slice(-7,-1)}</Typography>
-
+            <div>
+              <Typography variant="h6" ><b>{game.name}</b></Typography>
+              <Typography variant="body2"  sx={{fontSize: "12px", color:"gray"}}>{(game.address).slice(0,6) + "..." + (game.address).slice(-7,-1)}</Typography>
               <Typography variant="body1" sx={{color: "lightgreen",fontSize: "14px", marginTop:"5px"}}>{game.price*10**18} TBNB</Typography>
-              <Typography variant="body2" >Played by {game.totalBuyers ? game.totalBuyers : 0} users</Typography>
               <Button sx={{ bgcolor: "primary" , borderRadius: 3, width: "100%", marginTop: "12px",
             '&:hover': {bgcolor: "green" , color: "white" ,  scale: "1.05"}
             }} variant="contained" color="primary" onClick={() => playGame(game.address)}>
@@ -134,12 +122,29 @@ const MarketPlace = () => {
 
   return (
     <Card sx={{ borderRadius: 0 }}>
-      <Card sx={{ borderRadius: 0, background: "black" , color: "white" , height:80, padding: 2 , fontSize: 20}}>
-      <b>BNBCraft <b style={{color: "lightgreen"}}>Store</b>  </b> 
-      <Input disableUnderline={true} sx={{ marginLeft:"250px" ,color:"white", disableUnderline: true , height: 40, width:"600px" ,padding:2, background:"#2d2d30", borderRadius:"20px"}} type="text" placeholder="Search"></Input>
+      <Card sx={{ borderRadius: 0, background: "black", color: "white", height: 80, padding: 2, fontSize: 20 }}>
+        <b>BNBCraft <b style={{ color: "lightgreen" }}>Store</b>  </b>
+        <Input
+          disableUnderline={true}
+          sx={{
+            marginLeft: "250px",
+            color: "white",
+            disableUnderline: true,
+            height: 40,
+            width: "600px",
+            padding: 2,
+            background: "#2d2d30",
+            borderRadius: "20px"
+          }}
+          type="text"
+          placeholder="🔎 Search Address"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
       </Card>
       <DisplayGames />
     </Card>
   )
 }
+
 export default MarketPlace
