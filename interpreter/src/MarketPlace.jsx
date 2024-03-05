@@ -1,5 +1,6 @@
 // get all the games from GameFactory contract
-import { Grid, Card, CardContent, CardMedia, Typography, Button } from "@mui/material"
+import { Grid, Card, CardContent, CardMedia, Typography, Button, ThemeProvider, createTheme } from "@mui/material"
+
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
 import ContractAddress from "./contracts/contract-address.json"
@@ -9,6 +10,12 @@ import Game from "./contracts/Game.json"
 const MarketPlace = () => {
   const [account, setAccount] = useState("")
   const [gameAddress, setGameAddress] = useState([])
+
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+    },
+  });
 
   useEffect(() => {
     // get all the games from GameFactory contract
@@ -50,19 +57,20 @@ const MarketPlace = () => {
 
   const DisplayGames = () => {
     return (
-      <Grid container spacing={2} sx={{ maxHeight: "80vh", overflowY: "auto" }}>
+      <Grid container spacing={2} sx={{ height: "100vh", overflowY: "auto" , backgroundColor: "#1e1e1e"}}>
         {gameAddress.map((game, index) => (
-          <Grid item key={index} xs={12} sm={6} md={4}>
+          <Grid item key={index} >
             <GameCard gameAddress={game} />
           </Grid>
         ))}
       </Grid>
+
     )
   }
 
   const playGame = async (gameAddress) => {
     // route to localhost:3000/?game=gameAddress
-    window.location.href = `/?game=${gameAddress}`
+    window.location.href = `?game=${gameAddress}`
   }
 
   const GameCard = ({ gameAddress }) => {
@@ -95,21 +103,26 @@ const MarketPlace = () => {
     const randomImageURL = "https://images.wondershare.com/virtulook/articles/random-background-generator-2.jpg"
 
     return (
-      <Card sx={{ maxWidth: 300, margin: 2 }}>
+      
+      <Card sx={{ width: 300, margin: 2 , background: "#2d2d30" , color: 'white' , borderRadius: 5,
+       '&:hover': {background: "black" , color: "white" , boxShadow: "0 0 10px 2px white", scale: "1.05"}
+    }}
+       >
         <CardMedia component="img" height="140" image={game.thumbnail} alt="Random Image" />
         <CardContent>
           {loading ? (
             <Typography variant="body1">Loading...</Typography>
           ) : (
-            <>
-              <Typography variant="h6">{game.name}</Typography>
-              <Typography variant="body1">{game.price} TBNB</Typography>
-              <Typography variant="body2">Address: {game.address}</Typography>
-              <Typography variant="body2">Buyers: {game.totalBuyers}</Typography>
-              <Button variant="contained" color="primary" onClick={() => playGame(game.address)}>
-                Play
+            <div >
+              <Typography variant="h6" inline><b>{game.name}</b></Typography>
+              <Typography variant="body2" inline sx={{fontSize: "12px", color:"gray"}}>{(game.address).slice(0,6) + "..." + (game.address).slice(-7,-1)}</Typography>
+
+              <Typography variant="body1" sx={{color: "lightgreen",fontSize: "14px", marginTop:"5px"}}>{game.price*10**18} TBNB</Typography>
+              <Typography variant="body2" >Played by {game.totalBuyers ? game.totalBuyers : 0} users</Typography>
+              <Button sx={{ bgcolor: "green" , borderRadius: 3, width: "100%", marginTop: "12px"}} variant="contained" color="primary" onClick={() => playGame(game.address)}>
+                <b>Play</b>
               </Button>
-            </>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -117,12 +130,10 @@ const MarketPlace = () => {
   }
 
   return (
-    <div>
-      <h1>Market Place</h1>
-      <p>Buy and sell your games here</p>
-
+    <Card >
+      <Card sx={{ background: "black" , color: "white" , height:80, padding: 2 , fontSize: 30}}><b>BNBCraft Store</b></Card>
       <DisplayGames />
-    </div>
+    </Card>
   )
 }
 export default MarketPlace
