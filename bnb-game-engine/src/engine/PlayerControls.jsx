@@ -20,7 +20,7 @@ const PlayerControls = () => {
   };
 
   const handleSave = () => {
-    console.log(currentEnv);
+    // console.log(currentEnv);
     dispatch({
       type: "CHANGE_ENVIRONMENT",
       payload: {

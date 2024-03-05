@@ -21,12 +21,12 @@ import MarketPlace from "./MarketPlace"
 // Controls: WASD + left click
 
 const Model = ({ file, object }) => {
-  console.log("loading model", object.assetIdentifier)
-  console.log(object)
+  // console.log("loading model", object.assetIdentifier)
+  // console.log(object)
 
   //once the model is loaded, console that it is loaded
   const gltf = useLoader(GLTFLoader, file, (loader) => {
-    console.log("loaded model", object.assetIdentifier)
+    // console.log("loaded model", object.assetIdentifier)
   })
 
   return (
@@ -56,19 +56,19 @@ export default function App() {
 
   // takes whole JSON data and classifies it into world settings, light, and objects
   const load = (data) => {
-    console.log("loading data", data)
+    // console.log("loading data", data)
     setWorldSettings({})
     setObjects([])
     setLight([])
     data.map((object) => {
       if (object.type === "environment") {
-        console.log("setting world settings")
+        // console.log("setting world settings")
         setWorldSettings(object)
       } else if (object.type === "light") {
-        console.log("setting light")
+        // console.log("setting light")
         light.push(object)
       } else if (object.type === "object" && objects.includes(object) === false) {
-        console.log("setting object", object)
+        // console.log("setting object", object)
         setObjects((objects) => [...objects, object])
       }
     })
@@ -110,7 +110,7 @@ export default function App() {
       if (result.isConfirmed) {
         if (playerContract) {
           await playerContract.reset().then((tx) => {
-            console.log("Reseting PlayerContract data ", tx)
+            // console.log("Reseting PlayerContract data ", tx)
             load(data)
           })
         } else {
@@ -145,14 +145,14 @@ export default function App() {
       const Gamecontract = new ethers.Contract(gameAddress, GameAbi.abi, signer)
 
       const greenfield = await Gamecontract.greenfield()
-      console.log("greenfield json file : ", greenfield)
+      // console.log("greenfield json file : ", greenfield)
 
       // download the json file from the greenfield
       // data is the local variable that stores the json data
       // therefore data is not accessible outside this function unless passed as a parameter
       const response = await fetch(greenfield)
       const cur_data = await response.json()
-      console.log(cur_data)
+      // console.log(cur_data)
 
       // populates the environment, light, and objects array with the data from the json file
 
@@ -211,98 +211,98 @@ export default function App() {
     }
   }, [data])
 
-  if(gameAddress === "loading...") return <MarketPlace/>
+  if (gameAddress === "loading...") return <MarketPlace />
 
   else
-  return (
+    return (
 
-    <>
-      {gameReady ? (<KeyboardControls
-        map={[
-          { name: "forward", keys: ["ArrowUp", "w", "W"] },
-          { name: "backward", keys: ["ArrowDown", "s", "S"] },
-          { name: "left", keys: ["ArrowLeft", "a", "A"] },
-          { name: "right", keys: ["ArrowRight", "d", "D"] },
-          { name: "jump", keys: ["Space"] },
-        ]}>
-        <Suspense>
-          <Canvas camera={{ fov: 45 }} shadows>
-            <Stars />
-            <ambientLight intensity={world_settings.ambient_light} />
-            <color attach="background" args={[world_settings.sky_color]} />
-            {world_settings.stars && <Stars depth={100} />}
-            {light &&
-              light.map((light) => {
-                return (
-                  <pointLight
-                    key={light.assetIdentifier}
-                    position={[light.position.x, light.position.y, light.position.z]}
-                    intensity={light.intensity}
-                    color={light.color}
-                  />
-                )
-              })}
-            <Physics gravity={[0, -world_settings.gravity, 0]}>
-
-              {/* <Debug /> */}
-              {objects &&
-                objects.map((object) => {
-                  if (object.colliders !== "no") {
-                    return (
-                      <RigidBody
-                        onPointerEnter={() => {
-                          setText(object.onHover)
-                        }}
-                        onPointerLeave={() => {
-                          setText("")
-                        }}
-                        onClick={async () => {
-                          if (object.OnClick != "")
-                            await playerContract.completeTask((object.OnClick)).then((tx) => {
-                              console.log("1 task completed ", tx)
-                              if (tx) {
-                                menu(false, playerContract)
-                              }
-                            })
-                        }}
-                        // onCollisionEnter={async () => {
-                        //   if (object.OnCollision != "") await playerContract.completeTask((object.onCollision))
-                        // }}
-                        // onIntersectionEnter={async () => {
-                        //   if (object.onSensorEnter != "") await playerContract.completeTask((object.onSensorEnter))
-                        // }}
-                        // onIntersectionExit={async () => {
-                        //   if (object.onSensorExit != "") await playerContract.completeTask((object.onSensorExit))
-                        // }}
-                        sensor={object.sensor}
-                        key={object.assetIdentifier}
-                        type={object.fixed ? "fixed" : "dynamic"}
-                        colliders={object.colliders}
-                        mass={1}>
-                        <Model key={object.assetIdentifier} object={object} file={object.assetLink} />
-                      </RigidBody>
-                    )
-                  } else {
-                    return <Model key={object.assetIdentifier} object={object} file={object.assetLink} />
-                  }
+      <>
+        {gameReady ? (<KeyboardControls
+          map={[
+            { name: "forward", keys: ["ArrowUp", "w", "W"] },
+            { name: "backward", keys: ["ArrowDown", "s", "S"] },
+            { name: "left", keys: ["ArrowLeft", "a", "A"] },
+            { name: "right", keys: ["ArrowRight", "d", "D"] },
+            { name: "jump", keys: ["Space"] },
+          ]}>
+          <Suspense>
+            <Canvas camera={{ fov: 45 }} shadows>
+              <Stars />
+              <ambientLight intensity={world_settings.ambient_light} />
+              <color attach="background" args={[world_settings.sky_color]} />
+              {world_settings.stars && <Stars depth={100} />}
+              {light &&
+                light.map((light) => {
+                  return (
+                    <pointLight
+                      key={light.assetIdentifier}
+                      position={[light.position.x, light.position.y, light.position.z]}
+                      intensity={light.intensity}
+                      color={light.color}
+                    />
+                  )
                 })}
-              <Player
-                speed={world_settings.player_speed}
-                mass={world_settings.player_mass}
-                jump={world_settings.player_jump}
-                size={world_settings.player_size}
-                flycontrol={world_settings.flycontrol}
-              />
-            </Physics>
+              <Physics gravity={[0, -world_settings.gravity, 0]}>
 
-            <PointerLockControls />
-          </Canvas>
-        </Suspense>
+                {/* <Debug /> */}
+                {objects &&
+                  objects.map((object) => {
+                    if (object.colliders !== "no") {
+                      return (
+                        <RigidBody
+                          onPointerEnter={() => {
+                            setText(object.onHover)
+                          }}
+                          onPointerLeave={() => {
+                            setText("")
+                          }}
+                          onClick={async () => {
+                            if (object.OnClick != "")
+                              await playerContract.completeTask((object.OnClick)).then((tx) => {
+                                console.log("1 task completed ", tx)
+                                if (tx) {
+                                  menu(false, playerContract)
+                                }
+                              })
+                          }}
+                          // onCollisionEnter={async () => {
+                          //   if (object.OnCollision != "") await playerContract.completeTask((object.onCollision))
+                          // }}
+                          // onIntersectionEnter={async () => {
+                          //   if (object.onSensorEnter != "") await playerContract.completeTask((object.onSensorEnter))
+                          // }}
+                          // onIntersectionExit={async () => {
+                          //   if (object.onSensorExit != "") await playerContract.completeTask((object.onSensorExit))
+                          // }}
+                          sensor={object.sensor}
+                          key={object.assetIdentifier}
+                          type={object.fixed ? "fixed" : "dynamic"}
+                          colliders={object.colliders}
+                          mass={1}>
+                          <Model key={object.assetIdentifier} object={object} file={object.assetLink} />
+                        </RigidBody>
+                      )
+                    } else {
+                      return <Model key={object.assetIdentifier} object={object} file={object.assetLink} />
+                    }
+                  })}
+                <Player
+                  speed={world_settings.player_speed}
+                  mass={world_settings.player_mass}
+                  jump={world_settings.player_jump}
+                  size={world_settings.player_size}
+                  flycontrol={world_settings.flycontrol}
+                />
+              </Physics>
 
-      </KeyboardControls>
-      ) : (
-        <Loader />
-      )}
-    </>
-  )
+              <PointerLockControls />
+            </Canvas>
+          </Suspense>
+
+        </KeyboardControls>
+        ) : (
+          <Loader />
+        )}
+      </>
+    )
 }

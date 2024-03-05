@@ -51,13 +51,13 @@ const Model = ({
               payload: assetIdentifer,
             });
 
-              console.log(currentObjectIdentifier, "currentObjectIdentifier")
-            }}
-            onPointerEnter={() => setHovered(true)}
-            onPointerOut={() => setHovered(false)} >
-              </primitive>
-        </Center>
-      </PivotControls>)
-  };
+            // console.log(currentObjectIdentifier, "currentObjectIdentifier")
+          }}
+          onPointerEnter={() => setHovered(true)}
+          onPointerOut={() => setHovered(false)} >
+        </primitive>
+      </Center>
+    </PivotControls>)
+};
 
 export default Model;

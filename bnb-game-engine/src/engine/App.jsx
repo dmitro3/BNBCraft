@@ -290,9 +290,9 @@ function Scene() {
               );
 
               if (res.data && res.data.IpfsHash) {
-                console.log(
-                  `https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`
-                );
+                // console.log(
+                //   `https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`
+                // );
                 return `https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`;
               } else {
                 console.error("Failed to get IPFS link");
@@ -319,9 +319,8 @@ function Scene() {
 
           Swal.fire({
             title: "Game Published!",
-            text: `Game Address: ${
-              gameContractAddress[gameContractAddress.length - 1]
-            }`,
+            text: `Game Address: ${gameContractAddress[gameContractAddress.length - 1]
+              }`,
             icon: "success",
             confirmButtonText: "Open Game",
           }).then((result) => {
@@ -581,10 +580,10 @@ function Scene() {
                                   OnCollision: "",
                                 },
                               });
-                              console.log(
-                                "dispatch objectName",
-                                objectNameWithTimeStamp
-                              );
+                              // console.log(
+                              //   "dispatch objectName",
+                              //   objectNameWithTimeStamp
+                              // );
                             }}
                           >
                             <span className="bi bi-plus"></span>
