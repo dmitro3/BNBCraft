@@ -72,6 +72,7 @@ export default function App() {
         setObjects((objects) => [...objects, object])
       }
     })
+    Audio(world_settings.env_music).play()
   }
 
   // gets the user's account and sets the account and user 
@@ -292,6 +293,7 @@ export default function App() {
                 jump={world_settings.player_jump}
                 size={world_settings.player_size}
                 flycontrol={world_settings.flycontrol}
+                music={world_settings.player_music}
               />
             </Physics>
 
