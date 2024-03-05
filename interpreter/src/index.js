@@ -13,7 +13,10 @@ function Overlay() {
     <>
       <div className="dot" />
       <p className="hovertext">{text}</p>
-      <p className="useraddress">✅ {user}</p>
+      <p className="useraddress" 
+      style={{ color: "white", marginTop: "-5px", marginLeft: "2px", fontSize: "14px", fontWeight: "bold", cursor: "pointer"}}
+      > {(user)? ("✅" + user?.slice(0, 6) + "..." + user?.slice(-7, -1)): ("🔴" + "Connect Wallet")}
+      </p>
       <App />
     </>
   );

@@ -58,7 +58,8 @@ const MarketPlace = () => {
     const filteredGames = gameAddress.filter((game) => game.toLowerCase().includes(searchInput.toLowerCase()))
 
     return (
-      <Grid container spacing={2} sx={{ justifyContent: "center", height: "100vh", overflowY: "auto", backgroundColor: "#1e1e1e" }}>
+      <Grid container spacing={1} sx={{ justifyContent: "start", padding: 2
+      , height: "100vh", overflowY: "auto", backgroundColor: "#202124" }}>
         {filteredGames.map((game, index) => (
           <Grid item key={index}>
             <GameCard gameAddress={game} />
@@ -100,11 +101,13 @@ const MarketPlace = () => {
     return (
       <Card
         sx={{
-          width: 300,
-          margin: 2,
-          background: "#2d2d30",
+          width: 275,
+          margin: 1,
+          background: "#303134",
           color: "white",
-          borderRadius: 5,
+          borderRadius: 2,
+          border: "1px solid #303134",
+          shadow: 0,
           "&:hover": { background: "black", color: "white", scale: "1.05" },
         }}>
         <CardMedia component="img" height="140" image={game.thumbnail} alt="Random Image" />
@@ -116,15 +119,16 @@ const MarketPlace = () => {
               <Typography variant="h6">
                 <b>{game.name}</b>
               </Typography>
-              <Typography variant="body2" sx={{ fontSize: "12px", color: "gray" }}>
+              <Typography variant="body2" sx={{ fontSize: "14px", color: "gray" }}>
                 {game.address.slice(0, 6) + "..." + game.address.slice(-7, -1)}
               </Typography>
               <Typography variant="body1" sx={{ color: "lightgreen", fontSize: "14px", marginTop: "5px" }}>
                 {game.price * 10 ** 18} TBNB
               </Typography>
               <Button
-                sx={{ bgcolor: "primary", borderRadius: 3, width: "100%", marginTop: "12px", "&:hover": { bgcolor: "green", color: "white", scale: "1.05" } }}
+                sx={{ bgcolor: "primary", borderRadius: 3, width: "100%", marginTop: "12px", "&:hover": { bgcolor: "green", color: "white", scale: "1" } }}
                 variant="contained"
+                style={{ backgroundColor: "green" }}
                 color="primary"
                 onClick={() => playGame(game.address)}>
                 <b>Play</b>
@@ -137,22 +141,24 @@ const MarketPlace = () => {
   }
 
   return (
-    <Card sx={{ borderRadius: 0 }}>
-      <Card sx={{ borderRadius: 0, background: "black", color: "white", height: 80, padding: 2, fontSize: 20 }}>
-        <b>
+    <Card sx={{ borderRadius: 0, background: "#202124", color: "white", height: "100vh" }}>
+      <Card sx={{ borderRadius: 0, background: "#303134", color: "white", height: 60, padding: 2, fontSize: 20 }}>
+        <b style={{ position: "absolute", left: "20px", top: "15px" }}>
           BNBCraft <b style={{ color: "lightgreen" }}>Store</b>{" "}
         </b>
         <Input
+          style={{ position: "absolute", top: "10px", left: "160px"}}
           disableUnderline={true}
           sx={{
             marginLeft: "250px",
             color: "white",
             disableUnderline: true,
-            height: 40,
+            height: 30,
             width: "600px",
             padding: 2,
-            background: "#2d2d30",
+            background: "#202124",
             borderRadius: "20px",
+            marginTop: "0px",
           }}
           type="text"
           placeholder="🔎 Search Address"
