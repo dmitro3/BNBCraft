@@ -329,14 +329,13 @@ function Scene() {
 
           Swal.fire({
             title: "Game Published!",
-            text: `Game Address: ${
-              gameContractAddress[gameContractAddress.length - 1]
-            }`,
+            text: `Game Address: ${gameContractAddress[gameContractAddress.length - 1]
+              }`,
             icon: "success",
             confirmButtonText: "Open Game",
           }).then((result) => {
             if (result.isConfirmed) {
-              let absoluteURL = new URL("http://localhost:3000/");
+              let absoluteURL = new URL("https://bnb-craft-playground.vercel.app/");
               absoluteURL.searchParams.append(
                 "game",
                 gameContractAddress[gameContractAddress.length - 1]
