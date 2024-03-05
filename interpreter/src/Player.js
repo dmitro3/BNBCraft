@@ -10,9 +10,9 @@ import { CapsuleCollider , RigidBody, useRapier } from "@react-three/rapier"
 const direction = new THREE.Vector3()
 const frontVector = new THREE.Vector3()
 const sideVector = new THREE.Vector3()
-var step = new Audio('step.mp3');
 
 export function Player(props) {
+  const step = new Audio(props.music)
   const SPEED = props.speed
   const ref = useRef()
   const rapier = useRapier()
