@@ -244,7 +244,7 @@ export default function App() {
               })}
             <Physics gravity={[0, -world_settings.gravity, 0]}>
 
-              <Debug />
+              {/* <Debug /> */}
               {objects &&
                 objects.map((object) => {
                   if (object.colliders !== "no") {
