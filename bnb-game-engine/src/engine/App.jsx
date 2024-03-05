@@ -307,12 +307,20 @@ function Scene() {
 
           const tasks = objectMaster.filter((object) => object.type === "task");
 
+          let taskNames = [];
+
+          tasks.map((task) => {
+            taskNames.push(task.assetIdentifier);
+          });
+
+          console.log("taskNames:", taskNames);
+
           const tx = await factoryContract_.createGame(
             gameName,
             getLink(),
             gamePrice,
             gameThumbnail,
-            tasks
+            taskNames
           );
           await tx.wait();
 
