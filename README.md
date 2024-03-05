@@ -26,9 +26,9 @@ Developers have granular control over the actions in the game and corresponding 
 
 ### 🏪 Use BNBCraft  
 
-Create your own Game on opBNB : https://
+Create your own Game on opBNB : [BNBCraft Engine](https://bnb-craft-engine.vercel.app/)
 
-Demo Game made using BNBCraft : https://
+Demo Game made using BNBCraft : [BNBCraft Playground](https://bnb-craft-playground.vercel.app/)
 
 **Note:** In case the above links are not working, you might have to disable any ad-blocker. If you use Brave Browser, disable the Brave Shields (located on the right end of the search bar).
 
@@ -84,7 +84,7 @@ PRIVATE_KEY=<your_wallet_private_key>
 ### 📷 Screenshots
 
 <br>
-BNBCraft Game Engine:
+<h5>BNBCraft Game Engine</h5>
 
 <div style="display: flex; flex-wrap: wrap;">
   <div style="flex: 50%;">
@@ -101,8 +101,8 @@ BNBCraft Game Engine:
   </div>
 </div>
 
-<br>
-Game Play:
+<be>
+<h4>Game Play:</h4>
 
 <div style="display: flex;">
   <img src="https://github.com/S1ddh4rthaG/BNBCraft/blob/main/images/superman.png?raw=true"style="border: 2px solid white;"/>
@@ -117,7 +117,7 @@ Game Play:
 </div>
 
 <br>
-Game Store:
+<h4>Game Store:</h4>
 <p float="left">
   <img src="https://github.com/S1ddh4rthaG/BNBCraft/blob/main/images/gamestore.png?raw=true" style="border: 2px solid white;">
 </p>
