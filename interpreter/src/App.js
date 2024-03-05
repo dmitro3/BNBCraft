@@ -50,8 +50,8 @@ export default function App() {
   const [gameContract, setGameContract] = useState(null)
   let [objects, setObjects] = useState([])
   const [world_settings, setWorldSettings] = useState({})
-  const [light , setLight] = useState([])
-
+  const [light, setLight] = useState([])
+  const [gameReady, setGameReady] = useState(false);
   const [data, setData] = useState()
 
   // takes whole JSON data and classifies it into world settings, light, and objects
@@ -95,7 +95,7 @@ export default function App() {
     })
 
     return signer
-   
+
   }
 
   // to display "You Won" or "Welcome to the game" when the game starts or ends
@@ -110,7 +110,7 @@ export default function App() {
       if (result.isConfirmed) {
         if (playerContract) {
           await playerContract.reset().then((tx) => {
-            console.log("Reseting PlayerContract data ",tx)
+            console.log("Reseting PlayerContract data ", tx)
             load(data)
           })
         } else {
@@ -132,7 +132,7 @@ export default function App() {
       }).then((result) => {
         if (result.isConfirmed) {
           game_contract.buyGame({ value: price }).then((tx) => {
-            console.log("Bought game " ,tx)
+            console.log("Bought game ", tx)
           })
         }
       })
@@ -145,7 +145,7 @@ export default function App() {
       const Gamecontract = new ethers.Contract(gameAddress, GameAbi.abi, signer)
 
       const greenfield = await Gamecontract.greenfield()
-      console.log("greenfield json file : " , greenfield)
+      console.log("greenfield json file : ", greenfield)
 
       // download the json file from the greenfield
       // data is the local variable that stores the json data
@@ -195,10 +195,13 @@ export default function App() {
 
   useEffect(() => {
     web3Handler().then((signer) => {
-      if(testmode) test()
-      
+      if (testmode) test()
+
       else
-      loadContracts(signer)
+        loadContracts(signer).then(() => {
+          setGameReady(true)
+        })
+
     })
   }, [])
 
@@ -208,14 +211,14 @@ export default function App() {
     }
   }, [data])
 
-  useEffect(() => {
-    console.log("objects", objects)
-  }, [Canvas, objects])
+  // useEffect(() => {
+  //   console.log("objects", objects)
+  // }, [Canvas, objects])
 
-  return ( 
-   
+  return (
+
     <>
-      <KeyboardControls
+      {gameReady ? (<KeyboardControls
         map={[
           { name: "forward", keys: ["ArrowUp", "w", "W"] },
           { name: "backward", keys: ["ArrowDown", "s", "S"] },
@@ -225,7 +228,7 @@ export default function App() {
         ]}>
         <Suspense>
           <Canvas camera={{ fov: 45 }} shadows>
-            <Stars/>
+            <Stars />
             <ambientLight intensity={world_settings.ambient_light} />
             <color attach="background" args={[world_settings.sky_color]} />
             {world_settings.stars && <Stars depth={100} />}
@@ -241,7 +244,7 @@ export default function App() {
                 )
               })}
             <Physics gravity={[0, -world_settings.gravity, 0]}>
-              
+
               <Debug />
               {objects &&
                 objects.map((object) => {
@@ -257,7 +260,7 @@ export default function App() {
                         onClick={async () => {
                           if (object.OnClick != "")
                             await playerContract.completeTask((object.OnClick)).then((tx) => {
-                              console.log("1 task completed " , tx)
+                              console.log("1 task completed ", tx)
                               if (tx) {
                                 menu(false, playerContract)
                               }
@@ -296,9 +299,11 @@ export default function App() {
             <PointerLockControls />
           </Canvas>
         </Suspense>
-       
+
       </KeyboardControls>
-      <Loader/>
+      ) : (
+        <Loader />
+      )}
     </>
   )
 }
