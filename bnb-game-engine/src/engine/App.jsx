@@ -305,12 +305,14 @@ function Scene() {
             }
           };
 
+          const tasks = objectMaster.filter((object) => object.type === "task");
+
           const tx = await factoryContract_.createGame(
             gameName,
             getLink(),
             gamePrice,
             gameThumbnail,
-            ["one", "two"]
+            tasks
           );
           await tx.wait();
 
@@ -319,8 +321,9 @@ function Scene() {
 
           Swal.fire({
             title: "Game Published!",
-            text: `Game Address: ${gameContractAddress[gameContractAddress.length - 1]
-              }`,
+            text: `Game Address: ${
+              gameContractAddress[gameContractAddress.length - 1]
+            }`,
             icon: "success",
             confirmButtonText: "Open Game",
           }).then((result) => {
