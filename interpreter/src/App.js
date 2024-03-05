@@ -210,7 +210,7 @@ export default function App() {
 
   useEffect(() => {
     console.log("objects", objects)
-  }, [Model, objects])
+  }, [Canvas, objects])
 
   return ( 
    
@@ -223,11 +223,11 @@ export default function App() {
           { name: "right", keys: ["ArrowRight", "d", "D"] },
           { name: "jump", keys: ["Space"] },
         ]}>
-        <>
+        <Suspense>
           <Canvas camera={{ fov: 45 }} shadows>
+            <Stars/>
             <ambientLight intensity={world_settings.ambient_light} />
             <color attach="background" args={[world_settings.sky_color]} />
-            <Stars/>
             {world_settings.stars && <Stars depth={100} />}
             {light &&
               light.map((light) => {
@@ -240,7 +240,6 @@ export default function App() {
                   />
                 )
               })}
-            {/* <Cylinder args={[0.75,0.5]} position={[0, 10, 10]} /> */}
             <Physics gravity={[0, -world_settings.gravity, 0]}>
               
               <Debug />
@@ -256,23 +255,23 @@ export default function App() {
                           setText("")
                         }}
                         onClick={async () => {
-                          if (object.onClick != "")
-                            await playerContract.completeTask((object.onClick)).then((tx) => {
+                          if (object.OnClick != "")
+                            await playerContract.completeTask((object.OnClick)).then((tx) => {
                               console.log("1 task completed " , tx)
                               if (tx) {
                                 menu(false, playerContract)
                               }
                             })
                         }}
-                        onCollisionEnter={async () => {
-                          if (object.onCollision != "") await playerContract.completeTask((object.onCollision))
-                        }}
-                        onIntersectionEnter={async () => {
-                          if (object.onSensorEnter != "") await playerContract.completeTask((object.onSensorEnter))
-                        }}
-                        onIntersectionExit={async () => {
-                          if (object.onSensorExit != "") await playerContract.completeTask((object.onSensorExit))
-                        }}
+                        // onCollisionEnter={async () => {
+                        //   if (object.OnCollision != "") await playerContract.completeTask((object.onCollision))
+                        // }}
+                        // onIntersectionEnter={async () => {
+                        //   if (object.onSensorEnter != "") await playerContract.completeTask((object.onSensorEnter))
+                        // }}
+                        // onIntersectionExit={async () => {
+                        //   if (object.onSensorExit != "") await playerContract.completeTask((object.onSensorExit))
+                        // }}
                         sensor={object.sensor}
                         key={object.assetIdentifier}
                         type={object.fixed ? "fixed" : "dynamic"}
@@ -296,7 +295,7 @@ export default function App() {
 
             <PointerLockControls />
           </Canvas>
-        </>
+        </Suspense>
        
       </KeyboardControls>
       <Loader/>
