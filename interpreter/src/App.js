@@ -211,10 +211,9 @@ export default function App() {
     }
   }, [data])
 
-  // useEffect(() => {
-  //   console.log("objects", objects)
-  // }, [Canvas, objects])
+  if(gameAddress === "loading...") return <MarketPlace/>
 
+  else
   return (
 
     <>
