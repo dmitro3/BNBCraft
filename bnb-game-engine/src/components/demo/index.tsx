@@ -30,7 +30,7 @@ export const Demo = () => {
       bucketName: info.bucketName,
       endpoint: 'https://gnfd-testnet-sp1.nodereal.io',
     });
-    console.log('listObjects all', res);
+    // console.log('listObjects all', res);
     if (res.body?.GfSpListObjectsByBucketNameResponse?.Objects) {
       setObjectList(res.body?.GfSpListObjectsByBucketNameResponse?.Objects);
 
@@ -86,7 +86,7 @@ export const Demo = () => {
                       if (!address) return;
 
                       const spInfo = await selectSp();
-                      console.log('spInfo', spInfo);
+                      // console.log('spInfo', spInfo);
 
                       const provider = await connector?.getProvider();
                       const offChainData = await getOffchainAuthKeys(address, provider);
@@ -119,7 +119,7 @@ export const Demo = () => {
                           denom: 'BNB',
                         });
 
-                        console.log('simulateInfo', simulateInfo);
+                        // console.log('simulateInfo', simulateInfo);
 
                         const res = await createBucketTx.broadcast({
                           denom: 'BNB',
@@ -154,8 +154,8 @@ export const Demo = () => {
                     <label className="file-label">
                       <input className="file-input w-100" type="file" name="resume" onChange={(e) => {
                         if (e.target.files) {
-                          console.log("e.target.files[0]", e.target.files[0]);
-                          console.log("e.target.files[0].name", e.target.files[0].name);
+                          // console.log("e.target.files[0]", e.target.files[0]);
+                          // console.log("e.target.files[0].name", e.target.files[0].name);
                           setInfo({
                             ...info,
                             file: e.target.files[0],
@@ -179,7 +179,7 @@ export const Demo = () => {
                       if (!address || !info.file) return;
 
                       const spInfo = await selectSp();
-                      console.log('spInfo', spInfo);
+                      // console.log('spInfo', spInfo);
 
                       const provider = await connector?.getProvider();
                       const offChainData = await getOffchainAuthKeys(address, provider);
@@ -216,7 +216,7 @@ export const Demo = () => {
                           denom: 'BNB',
                         });
 
-                        console.log('simulateInfo', simulateInfo);
+                        // console.log('simulateInfo', simulateInfo);
 
                         const res = await createObjectTx.broadcast({
                           denom: 'BNB',
@@ -256,7 +256,7 @@ export const Demo = () => {
                       if (!address || !info.file) return;
 
                       const spInfo = await selectSp();
-                      console.log('spInfo', spInfo);
+                      // console.log('spInfo', spInfo);
 
                       const provider = await connector?.getProvider();
                       const offChainData = await getOffchainAuthKeys(address, provider);
@@ -286,7 +286,7 @@ export const Demo = () => {
                           bucketName: info.bucketName,
                           endpoint: 'https://gnfd-testnet-sp1.nodereal.io',
                         });
-                        console.log('listObjects', res);
+                        // console.log('listObjects', res);
                         const res2 = await client.object.getObjectPreviewUrl(
                           {
                             bucketName: info.bucketName,
@@ -305,7 +305,7 @@ export const Demo = () => {
                             seed: offChainData.seedString,
                           },
                         );
-                        console.log('getObjectPreviewUrl', res2);
+                        // console.log('getObjectPreviewUrl', res2);
                         setGreenfieldURL(res2);
 
                         navigator.clipboard.writeText(res2);
@@ -329,122 +329,12 @@ export const Demo = () => {
                   >
                     Add to Scene
                   </button>
-
-                  {/* Download */}
-                  {/* <div className='field'>
-          <button
-            className="button is-primary"
-            onClick={async () => {
-              if (!address) return;
-
-              const spInfo = await selectSp();
-              console.log('spInfo', spInfo);
-
-              const provider = await connector?.getProvider();
-              const offChainData = await getOffchainAuthKeys(address, provider);
-              if (!offChainData) {
-                alert('No offchain, please create offchain pairs first');
-                return;
-              }
-
-              const res = await client.object.downloadFile(
-                {
-                  bucketName: info.bucketName,
-                  objectName: info.objectName,
-                },
-                {
-                  type: 'EDDSA',
-                  address,
-                  domain: window.location.origin,
-                  seed: offChainData.seedString,
-                },
-              );
-
-              console.log(res);
-            }}
-          >
-            Download
-          </button>
-        </div> */}
-                  {/* create input filed with*/}
-                  {/* {
-          greenfieldURL &&
-          <>
-            <div className="field">
-              <div className="control">
-                <input
-                  className="input"
-                  type="text"
-                  value={greenfieldURL}
-                  placeholder="Greenfield URL"
-                  readOnly
-                />
-              </div>
-            </div>
-            <div className='field'>
-              <button
-                className="button is-primary"
-                onClick={() => {
-                  navigator.clipboard.writeText(greenfieldURL);
-                  alert('Copied to clipboard');
-                }}
-              >
-                Copy to Clipboard
-              </button>
-            </div>
-          </>
-        } */}
-                  {/* Fetch Assets */}
                   <button
                     className="button is-primary"
                     onClick={fetchAssets}
                   >
                     My Assets
                   </button>
-                  {/* {objectList.length} */}
-                  {/* <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '2px'
-                    }}>
-
-                    {
-                      objectList.map((object, index) => {
-                        let bucketName = object["ObjectInfo"]["BucketName"];
-                        let objectName = object["ObjectInfo"]["ObjectName"];
-                        let objectNameWithTimeStamp = objectName.split('.')[0].concat('_').concat(Date.now().toString())
-                        let owner = object["ObjectInfo"]["Owner"];
-                        let url = `https://gnfd-testnet-sp2.nodereal.io/download/${bucketName}/${objectName}`;
-                        if (owner === address || true)
-                          return (
-                            <button key={index} onClick={
-                              (e) => {
-                                navigator.clipboard.writeText(url);
-                                dispatch({
-                                  type: "ADD_OBJECT",
-                                  payload: {
-                                    link: url,
-                                    assetIdentifier: objectNameWithTimeStamp,
-                                    assetLink: url,
-                                    position: new THREE.Vector3(0, 0, 0),
-                                    quaternion: new THREE.Quaternion(0, 0, 0, 0),
-                                    scale: new THREE.Vector3(1, 1, 1),
-                                    worldMatrix: new THREE.Matrix4(),
-                                    collision: 'no', // no, yes, box, hull, trimesh (yes=box)
-                                    fixed: false // true, false
-                                  }
-                                })
-                                console.log("dispatch objectName", objectNameWithTimeStamp);
-                              }
-                            }
-                            >
-                              {objectName}
-                            </button>
-                          );
-                      })
-                    }
-                  </div> */}
                 </div>
               </div >
             </div>

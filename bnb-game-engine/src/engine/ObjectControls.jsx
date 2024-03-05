@@ -42,7 +42,7 @@ const ObjectControls = ({ stateEnv, setStateEnv }) => {
   };
 
   const handleUpdateObject = (value) => {
-    console.log("Updating object with identifier: ", currentObjectState);
+    // console.log("Updating object with identifier: ", currentObjectState);
     dispatch({
       type: "CHANGE_OBJECT",
       payload: currentObjectState,

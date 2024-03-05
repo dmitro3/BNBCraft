@@ -252,7 +252,7 @@ const reducer = (state, action) => {
 
     // CASE: TASK
     case "ADD_TASK":
-      console.log("Adding task", action.payload.assetIdentifer);
+      // console.log("Adding task", action.payload.assetIdentifer);
       return {
         ...state,
         objectMaster: [

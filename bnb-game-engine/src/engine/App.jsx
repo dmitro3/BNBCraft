@@ -290,9 +290,9 @@ function Scene() {
               );
 
               if (res.data && res.data.IpfsHash) {
-                console.log(
-                  `https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`
-                );
+                // console.log(
+                //   `https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`
+                // );
                 return `https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`;
               } else {
                 console.error("Failed to get IPFS link");
@@ -305,12 +305,14 @@ function Scene() {
             }
           };
 
+          const tasks = objectMaster.filter((object) => object.type === "task");
+
           const tx = await factoryContract_.createGame(
             gameName,
             getLink(),
             gamePrice,
             gameThumbnail,
-            ["one", "two"]
+            tasks
           );
           await tx.wait();
 
@@ -581,10 +583,10 @@ function Scene() {
                                   OnCollision: "",
                                 },
                               });
-                              console.log(
-                                "dispatch objectName",
-                                objectNameWithTimeStamp
-                              );
+                              // console.log(
+                              //   "dispatch objectName",
+                              //   objectNameWithTimeStamp
+                              // );
                             }}
                           >
                             <span className="bi bi-plus"></span>
