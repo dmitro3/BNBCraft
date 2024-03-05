@@ -255,24 +255,24 @@ export default function App() {
                         onPointerLeave={() => {
                           setText("")
                         }}
-                        // onClick={async () => {
-                        //   if (object.onClick != "")
-                        //     await playerContract.completeTask((object.onClick)).then((tx) => {
-                        //       console.log("1 task completed " , tx)
-                        //       if (tx) {
-                        //         menu(false, playerContract)
-                        //       }
-                        //     })
-                        // }}
-                        // onCollisionEnter={async () => {
-                        //   if (object.onCollision != "") await playerContract.completeTask((object.onCollision))
-                        // }}
-                        // onIntersectionEnter={async () => {
-                        //   if (object.onSensorEnter != "") await playerContract.completeTask((object.onSensorEnter))
-                        // }}
-                        // onIntersectionExit={async () => {
-                        //   if (object.onSensorExit != "") await playerContract.completeTask((object.onSensorExit))
-                        // }}
+                        onClick={async () => {
+                          if (object.onClick != "")
+                            await playerContract.completeTask((object.onClick)).then((tx) => {
+                              console.log("1 task completed " , tx)
+                              if (tx) {
+                                menu(false, playerContract)
+                              }
+                            })
+                        }}
+                        onCollisionEnter={async () => {
+                          if (object.onCollision != "") await playerContract.completeTask((object.onCollision))
+                        }}
+                        onIntersectionEnter={async () => {
+                          if (object.onSensorEnter != "") await playerContract.completeTask((object.onSensorEnter))
+                        }}
+                        onIntersectionExit={async () => {
+                          if (object.onSensorExit != "") await playerContract.completeTask((object.onSensorExit))
+                        }}
                         sensor={object.sensor}
                         key={object.assetIdentifier}
                         type={object.fixed ? "fixed" : "dynamic"}
