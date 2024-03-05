@@ -24,11 +24,11 @@ const PlayerControls = () => {
     dispatch({
       type: "CHANGE_ENVIRONMENT",
       payload: {
-        player_speed: currentEnv.speed,
-        player_mass: currentEnv.mass,
-        player_size: currentEnv.size,
-        player_jump: currentEnv.jump,
-        player_flycontrol: currentEnv.flycontrol,
+        player_speed: currentEnv.player_speed,
+        player_mass: currentEnv.player_mass,
+        player_size: currentEnv.player_size,
+        player_jump: currentEnv.player_jump,
+        player_flycontrol: currentEnv.player_flycontrol,
         player_music: currentEnv.player_music,
       },
     });
