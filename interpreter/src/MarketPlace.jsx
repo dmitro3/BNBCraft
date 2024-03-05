@@ -1,11 +1,12 @@
 // get all the games from GameFactory contract
-import { Grid, Card, CardContent, CardMedia, Typography, Button, ThemeProvider, createTheme } from "@mui/material"
+import { Input, Grid, Card, CardContent, CardMedia, Typography, Button, ThemeProvider, createTheme } from "@mui/material"
 
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
 import ContractAddress from "./contracts/contract-address.json"
 import GameFactory from "./contracts/GameFactory.json"
 import Game from "./contracts/Game.json"
+import { Center } from "@react-three/drei"
 
 const MarketPlace = () => {
   const [account, setAccount] = useState("")
@@ -57,7 +58,7 @@ const MarketPlace = () => {
 
   const DisplayGames = () => {
     return (
-      <Grid container spacing={2} sx={{ height: "100vh", overflowY: "auto" , backgroundColor: "#1e1e1e"}}>
+      <Grid container spacing={2} sx={{ justifyContent: "center" , height: "100vh", overflowY: "auto" , backgroundColor: "#1e1e1e"}}>
         {gameAddress.map((game, index) => (
           <Grid item key={index} >
             <GameCard gameAddress={game} />
@@ -105,7 +106,7 @@ const MarketPlace = () => {
     return (
       
       <Card sx={{ width: 300, margin: 2 , background: "#2d2d30" , color: 'white' , borderRadius: 5,
-       '&:hover': {background: "black" , color: "white" , boxShadow: "0 0 10px 2px white", scale: "1.05"}
+       '&:hover': {background: "black" , color: "white" ,  scale: "1.05"}
     }}
        >
         <CardMedia component="img" height="140" image={game.thumbnail} alt="Random Image" />
@@ -119,7 +120,9 @@ const MarketPlace = () => {
 
               <Typography variant="body1" sx={{color: "lightgreen",fontSize: "14px", marginTop:"5px"}}>{game.price*10**18} TBNB</Typography>
               <Typography variant="body2" >Played by {game.totalBuyers ? game.totalBuyers : 0} users</Typography>
-              <Button sx={{ bgcolor: "green" , borderRadius: 3, width: "100%", marginTop: "12px"}} variant="contained" color="primary" onClick={() => playGame(game.address)}>
+              <Button sx={{ bgcolor: "primary" , borderRadius: 3, width: "100%", marginTop: "12px",
+            '&:hover': {bgcolor: "green" , color: "white" ,  scale: "1.05"}
+            }} variant="contained" color="primary" onClick={() => playGame(game.address)}>
                 <b>Play</b>
               </Button>
             </div>
@@ -130,8 +133,11 @@ const MarketPlace = () => {
   }
 
   return (
-    <Card >
-      <Card sx={{ background: "black" , color: "white" , height:80, padding: 2 , fontSize: 30}}><b>BNBCraft Store</b></Card>
+    <Card sx={{ borderRadius: 0 }}>
+      <Card sx={{ borderRadius: 0, background: "black" , color: "white" , height:80, padding: 2 , fontSize: 20}}>
+      <b>BNBCraft <b style={{color: "lightgreen"}}>Store</b>  </b> 
+      <Input disableUnderline={true} sx={{ marginLeft:"250px" ,color:"white", disableUnderline: true , height: 40, width:"600px" ,padding:2, background:"#2d2d30", borderRadius:"20px"}} type="text" placeholder="Search"></Input>
+      </Card>
       <DisplayGames />
     </Card>
   )
