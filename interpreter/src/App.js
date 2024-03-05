@@ -51,7 +51,7 @@ export default function App() {
   let [objects, setObjects] = useState([])
   const [world_settings, setWorldSettings] = useState({})
   const [light, setLight] = useState([])
-  const [gameReady, setGameReady] = useState(false);
+  const [gameReady, setGameReady] = useState(false)
   const [data, setData] = useState()
 
   // takes whole JSON data and classifies it into world settings, light, and objects
@@ -74,10 +74,16 @@ export default function App() {
     })
   }
 
-  // gets the user's account and sets the account and user 
+  // gets the user's account and sets the account and user
   const web3Handler = async () => {
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" })
     setAccount(accounts[0])
+
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: "0x15EB" }],
+    })
+
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     setAccount(accounts[0])
     setUser(String(accounts[0])) // displaying user address
@@ -95,7 +101,6 @@ export default function App() {
     })
 
     return signer
-
   }
 
   // to display "You Won" or "Welcome to the game" when the game starts or ends
@@ -196,12 +201,10 @@ export default function App() {
   useEffect(() => {
     web3Handler().then((signer) => {
       if (testmode) test()
-
       else
         loadContracts(signer).then(() => {
           setGameReady(true)
         })
-
     })
   }, [])
 
@@ -212,94 +215,91 @@ export default function App() {
   }, [data])
 
   if (gameAddress === "loading...") return <MarketPlace />
-
   else
     return (
-
       <>
-        {gameReady ? (<KeyboardControls
-          map={[
-            { name: "forward", keys: ["ArrowUp", "w", "W"] },
-            { name: "backward", keys: ["ArrowDown", "s", "S"] },
-            { name: "left", keys: ["ArrowLeft", "a", "A"] },
-            { name: "right", keys: ["ArrowRight", "d", "D"] },
-            { name: "jump", keys: ["Space"] },
-          ]}>
-          <Suspense>
-            <Canvas camera={{ fov: 45 }} shadows>
-              <Stars />
-              <ambientLight intensity={world_settings.ambient_light} />
-              <color attach="background" args={[world_settings.sky_color]} />
-              {world_settings.stars && <Stars depth={100} />}
-              {light &&
-                light.map((light) => {
-                  return (
-                    <pointLight
-                      key={light.assetIdentifier}
-                      position={[light.position.x, light.position.y, light.position.z]}
-                      intensity={light.intensity}
-                      color={light.color}
-                    />
-                  )
-                })}
-              <Physics gravity={[0, -world_settings.gravity, 0]}>
-
-                {/* <Debug /> */}
-                {objects &&
-                  objects.map((object) => {
-                    if (object.colliders !== "no") {
-                      return (
-                        <RigidBody
-                          onPointerEnter={() => {
-                            setText(object.onHover)
-                          }}
-                          onPointerLeave={() => {
-                            setText("")
-                          }}
-                          onClick={async () => {
-                            if (object.OnClick != "")
-                              await playerContract.completeTask((object.OnClick)).then((tx) => {
-                                console.log("1 task completed ", tx)
-                                if (tx) {
-                                  menu(false, playerContract)
-                                }
-                              })
-                          }}
-                          // onCollisionEnter={async () => {
-                          //   if (object.OnCollision != "") await playerContract.completeTask((object.onCollision))
-                          // }}
-                          // onIntersectionEnter={async () => {
-                          //   if (object.onSensorEnter != "") await playerContract.completeTask((object.onSensorEnter))
-                          // }}
-                          // onIntersectionExit={async () => {
-                          //   if (object.onSensorExit != "") await playerContract.completeTask((object.onSensorExit))
-                          // }}
-                          sensor={object.sensor}
-                          key={object.assetIdentifier}
-                          type={object.fixed ? "fixed" : "dynamic"}
-                          colliders={object.colliders}
-                          mass={1}>
-                          <Model key={object.assetIdentifier} object={object} file={object.assetLink} />
-                        </RigidBody>
-                      )
-                    } else {
-                      return <Model key={object.assetIdentifier} object={object} file={object.assetLink} />
-                    }
+        {gameReady ? (
+          <KeyboardControls
+            map={[
+              { name: "forward", keys: ["ArrowUp", "w", "W"] },
+              { name: "backward", keys: ["ArrowDown", "s", "S"] },
+              { name: "left", keys: ["ArrowLeft", "a", "A"] },
+              { name: "right", keys: ["ArrowRight", "d", "D"] },
+              { name: "jump", keys: ["Space"] },
+            ]}>
+            <Suspense>
+              <Canvas camera={{ fov: 45 }} shadows>
+                <Stars />
+                <ambientLight intensity={world_settings.ambient_light} />
+                <color attach="background" args={[world_settings.sky_color]} />
+                {world_settings.stars && <Stars depth={100} />}
+                {light &&
+                  light.map((light) => {
+                    return (
+                      <pointLight
+                        key={light.assetIdentifier}
+                        position={[light.position.x, light.position.y, light.position.z]}
+                        intensity={light.intensity}
+                        color={light.color}
+                      />
+                    )
                   })}
-                <Player
-                  speed={world_settings.player_speed}
-                  mass={world_settings.player_mass}
-                  jump={world_settings.player_jump}
-                  size={world_settings.player_size}
-                  flycontrol={world_settings.flycontrol}
-                />
-              </Physics>
+                <Physics gravity={[0, -world_settings.gravity, 0]}>
+                  {/* <Debug /> */}
+                  {objects &&
+                    objects.map((object) => {
+                      if (object.colliders !== "no") {
+                        return (
+                          <RigidBody
+                            onPointerEnter={() => {
+                              setText(object.onHover)
+                            }}
+                            onPointerLeave={() => {
+                              setText("")
+                            }}
+                            onClick={async () => {
+                              if (object.OnClick != "")
+                                await playerContract.completeTask(object.OnClick).then((tx) => {
+                                  console.log("1 task completed ", tx)
+                                  if (tx) {
+                                    menu(false, playerContract)
+                                  }
+                                })
+                            }}
+                            // onCollisionEnter={async () => {
+                            //   if (object.OnCollision != "") await playerContract.completeTask((object.onCollision))
+                            // }}
+                            // onIntersectionEnter={async () => {
+                            //   if (object.onSensorEnter != "") await playerContract.completeTask((object.onSensorEnter))
+                            // }}
+                            // onIntersectionExit={async () => {
+                            //   if (object.onSensorExit != "") await playerContract.completeTask((object.onSensorExit))
+                            // }}
+                            sensor={object.sensor}
+                            key={object.assetIdentifier}
+                            type={object.fixed ? "fixed" : "dynamic"}
+                            colliders={object.colliders}
+                            mass={1}>
+                            <Model key={object.assetIdentifier} object={object} file={object.assetLink} />
+                          </RigidBody>
+                        )
+                      } else {
+                        return <Model key={object.assetIdentifier} object={object} file={object.assetLink} />
+                      }
+                    })}
+                  <Player
+                    speed={world_settings.player_speed}
+                    mass={world_settings.player_mass}
+                    jump={world_settings.player_jump}
+                    size={world_settings.player_size}
+                    flycontrol={world_settings.flycontrol}
+                  />
+                </Physics>
 
-              <PointerLockControls />
-            </Canvas>
-          </Suspense>
-
-        </KeyboardControls>
+                <PointerLockControls />
+              </Canvas>
+            </Suspense>
+          </KeyboardControls>
         ) : (
           <Loader />
         )}

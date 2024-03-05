@@ -13,9 +13,9 @@ const MarketPlace = () => {
 
   const darkTheme = createTheme({
     palette: {
-      mode: 'dark',
+      mode: "dark",
     },
-  });
+  })
 
   useEffect(() => {
     web3Handler()
@@ -24,6 +24,10 @@ const MarketPlace = () => {
   const web3Handler = async () => {
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" })
     setAccount(accounts[0])
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: "0x15EB" }],
+    })
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     setAccount(accounts[0])
 
@@ -51,9 +55,7 @@ const MarketPlace = () => {
   }
 
   const DisplayGames = () => {
-    const filteredGames = gameAddress.filter(game =>
-      game.toLowerCase().includes(searchInput.toLowerCase())
-    );
+    const filteredGames = gameAddress.filter((game) => game.toLowerCase().includes(searchInput.toLowerCase()))
 
     return (
       <Grid container spacing={2} sx={{ justifyContent: "center", height: "100vh", overflowY: "auto", backgroundColor: "#1e1e1e" }}>
@@ -96,21 +98,35 @@ const MarketPlace = () => {
     }, [gameAddress])
 
     return (
-      <Card sx={{ width: 300, margin: 2, background: "#2d2d30", color: 'white', borderRadius: 5,
-       '&:hover': {background: "black" , color: "white" ,  scale: "1.05"}
-    }}>
+      <Card
+        sx={{
+          width: 300,
+          margin: 2,
+          background: "#2d2d30",
+          color: "white",
+          borderRadius: 5,
+          "&:hover": { background: "black", color: "white", scale: "1.05" },
+        }}>
         <CardMedia component="img" height="140" image={game.thumbnail} alt="Random Image" />
         <CardContent>
           {loading ? (
             <Typography variant="body1">Loading...</Typography>
           ) : (
             <div>
-              <Typography variant="h6" ><b>{game.name}</b></Typography>
-              <Typography variant="body2"  sx={{fontSize: "12px", color:"gray"}}>{(game.address).slice(0,6) + "..." + (game.address).slice(-7,-1)}</Typography>
-              <Typography variant="body1" sx={{color: "lightgreen",fontSize: "14px", marginTop:"5px"}}>{game.price*10**18} TBNB</Typography>
-              <Button sx={{ bgcolor: "primary" , borderRadius: 3, width: "100%", marginTop: "12px",
-            '&:hover': {bgcolor: "green" , color: "white" ,  scale: "1.05"}
-            }} variant="contained" color="primary" onClick={() => playGame(game.address)}>
+              <Typography variant="h6">
+                <b>{game.name}</b>
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "12px", color: "gray" }}>
+                {game.address.slice(0, 6) + "..." + game.address.slice(-7, -1)}
+              </Typography>
+              <Typography variant="body1" sx={{ color: "lightgreen", fontSize: "14px", marginTop: "5px" }}>
+                {game.price * 10 ** 18} TBNB
+              </Typography>
+              <Button
+                sx={{ bgcolor: "primary", borderRadius: 3, width: "100%", marginTop: "12px", "&:hover": { bgcolor: "green", color: "white", scale: "1.05" } }}
+                variant="contained"
+                color="primary"
+                onClick={() => playGame(game.address)}>
                 <b>Play</b>
               </Button>
             </div>
@@ -123,7 +139,9 @@ const MarketPlace = () => {
   return (
     <Card sx={{ borderRadius: 0 }}>
       <Card sx={{ borderRadius: 0, background: "black", color: "white", height: 80, padding: 2, fontSize: 20 }}>
-        <b>BNBCraft <b style={{ color: "lightgreen" }}>Store</b>  </b>
+        <b>
+          BNBCraft <b style={{ color: "lightgreen" }}>Store</b>{" "}
+        </b>
         <Input
           disableUnderline={true}
           sx={{
@@ -134,7 +152,7 @@ const MarketPlace = () => {
             width: "600px",
             padding: 2,
             background: "#2d2d30",
-            borderRadius: "20px"
+            borderRadius: "20px",
           }}
           type="text"
           placeholder="🔎 Search Address"
